@@ -86,7 +86,7 @@ func DecryptData(encData string, password string) ([]byte, error) {
 
 	nonceSize := gcm.NonceSize()
 	if len(cipherText) < nonceSize {
-		return nil, errors.New("Ciphertext too short")
+		return nil, errors.New("ciphertext too short")
 	}
 
 	nonce, cipherText := cipherText[:nonceSize], cipherText[nonceSize:]
