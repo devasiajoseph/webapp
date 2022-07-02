@@ -58,17 +58,3 @@ func TestKeyPair(t *testing.T) {
 		t.Errorf("Key generation failed")
 	}
 }
-
-func TestX509(t *testing.T) {
-	config := X509Config{
-		CommonName: "bd.centipair.com",
-		OrgName:    "centipair",
-		DomainName: "localhost",
-		KeyName:    "centipair",
-	}
-	err := GenerateX509Certificate(config)
-	if err != nil {
-		t.Errorf("Key generation failed")
-	}
-
-}
