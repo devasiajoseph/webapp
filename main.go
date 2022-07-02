@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/devasiajoseph/webapp/app"
 	"github.com/devasiajoseph/webapp/core"
 	"github.com/devasiajoseph/webapp/db/postgres"
 	"github.com/devasiajoseph/webapp/uauth"
@@ -19,7 +20,7 @@ func main() {
 	r.HandleFunc("/usw.js", website.ServiceWorker)
 
 	uauth.Start(r)
-
+	app.Start(r)
 	website.Start(r)
 
 }

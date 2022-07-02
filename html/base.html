@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="img/ico" href="{{.StaticUrl}}/logo/favicon.ico">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{{.StaticUrl}}/theme/main.css">
+  <link rel="stylesheet" href="{{.StaticUrl}}/fontawesome/css/all.min.css">
+  <!--<link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;500;700&amp;display=swap" rel="stylesheet">-->
+  {{block "css".}}{{end}}
+  <title>Cemart India | {{block "title" .}}{{end}}</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+ 
+
+</head>
+
+<body>
+ 
+    {{block "content" .}}{{end}}
+  
+  
+
+  {{block "javascript".}}{{end}}
+  
+</body>
+
+</html>

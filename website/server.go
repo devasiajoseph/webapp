@@ -20,7 +20,6 @@ var userUIPath = core.AbsolutePath("cljs/user-ui")
 var fuserUIPath = core.AbsolutePath("cljs/resources/public/fcljs-out")
 var adminStaticPath = core.AbsolutePath("cljs/admin/static")
 var staticPath = core.AbsolutePath("static")
-var certsPath = core.AbsolutePath("certs")
 
 func ServerPort() string {
 	port := "8080"

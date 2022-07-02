@@ -101,7 +101,7 @@ func GetUserByAuth(uauth string) (AuthUser, error) {
 	}
 	if !au.Active {
 		log.Println("Inactive user => " + au.Email + ":" + au.Phone)
-		return au, errors.New("Inactive user")
+		return au, errors.New("inactive user")
 	}
 	return au, err
 }
