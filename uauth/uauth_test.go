@@ -9,33 +9,6 @@ import (
 	"github.com/devasiajoseph/webapp/db/postgres"
 )
 
-func TestUauthList(t *testing.T) {
-	core.Start()
-	postgres.InitDb()
-	user := UserAccount{
-		Email:    "devasiajoseph@gmail.com",
-		Password: "password",
-	}
-
-	err := user.Save()
-	if err != nil {
-		log.Println(err)
-		t.Errorf("User saving failed")
-	}
-
-	ul, err := fetchUsers(1, 50)
-	if err != nil {
-		log.Println(err)
-		t.Errorf("User fetch failed")
-	}
-	log.Println(len(ul.Data))
-	err = user.Delete()
-	if err != nil {
-		log.Println(err)
-		t.Errorf("User delete failed")
-	}
-}
-
 func TestLogin(t *testing.T) {
 	core.Start()
 	postgres.InitDb()

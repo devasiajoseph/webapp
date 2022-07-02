@@ -1,29 +1,53 @@
 package website
 
 import (
-	"crypto/tls"
+	//"context"
+
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 
 	"github.com/devasiajoseph/webapp/core"
 	"github.com/devasiajoseph/webapp/file"
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
-	"golang.org/x/crypto/acme"
-	"golang.org/x/crypto/acme/autocert"
 )
 
+var adminUIPath = core.AbsolutePath("cljs/admin-ui")
+var userUIPath = core.AbsolutePath("cljs/user-ui")
+var fuserUIPath = core.AbsolutePath("cljs/resources/public/fcljs-out")
+var adminStaticPath = core.AbsolutePath("cljs/admin/static")
+var staticPath = core.AbsolutePath("static")
 var certsPath = core.AbsolutePath("certs")
 
-func StartHttp(r *mux.Router) {
-	log.Println("Starting  webserver at port 8080")
+func ServerPort() string {
+	port := "8080"
+	if core.Config.Port > 0 {
+		port = strconv.Itoa(core.Config.Port)
+	}
 
-	//r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(StaticDir))))
+	if len(os.Args) > 1 {
+		if _, err := strconv.Atoi(os.Args[1]); err != nil {
+			log.Fatal("Inavlid port")
+		}
+		port = os.Args[1]
+	}
+	port = ":" + port
+	return port
+}
+
+func Start(r *mux.Router) {
+
+	port := ServerPort()
+	log.Println("Starting webserver at port" + port)
+	AddRoutes(r)
+
 	protectionMiddleware := func(handler http.Handler) http.Handler {
 		protectionFn := csrf.Protect(
-			[]byte(SKey),
-			csrf.Secure(false),
+			[]byte(core.SKey),
+			csrf.Secure(core.Secure),
 			csrf.Path("/"),
 		)
 
@@ -39,55 +63,14 @@ func StartHttp(r *mux.Router) {
 			handler.ServeHTTP(w, r)
 		})
 	}
-	err := http.ListenAndServe(":8080",
+	err := http.ListenAndServe(port,
 		protectionMiddleware(r),
 	)
-
-	if err != nil {
-		log.Println(err)
-	}
-}
-
-func StartMultiHttps(r *mux.Router) {
-	log.Println("Starting Secure webserver at port 80")
-	AddMultiRoutes(r)
-	certManager := autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		Cache:      autocert.DirCache(certsPath),
-		HostPolicy: autocert.HostWhitelist("wemebox.com", "www.wemebox.com"),
-	}
-
-	protectionMiddleware := func(handler http.Handler) http.Handler {
-		protectionFn := csrf.Protect(
-			[]byte(core.SKey),
-			csrf.Secure(core.Secure),
-		)
-
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Use some kind of condition here to see if the router should use
-			// the CSRF protection. For the sake of this example, we'll check
-			// the path prefix.
-			if !strings.HasPrefix(r.URL.Path, "/webhooks") {
-				protectionFn(handler).ServeHTTP(w, r)
-				return
-			}
-
-			handler.ServeHTTP(w, r)
-		})
-	}
-
-	server := &http.Server{
-		Addr:    ":443",
-		Handler: protectionMiddleware(r),
-		TLSConfig: &tls.Config{
-			//Certificates: nil, // <-- s.ListenAndServeTLS will populate this field
-			GetCertificate: certManager.GetCertificate,
-			NextProtos:     []string{acme.ALPNProto},
-		},
-	}
-
-	//go http.ListenAndServe(":80", certManager.HTTPHandler(nil))
-	err := server.ListenAndServeTLS("", "")
+	/*err := http.ListenAndServe(port,
+	csrf.Protect(
+		[]byte(core.SKey),
+		csrf.Secure(core.Secure), // Pass it *to* this constructor
+	)(r))*/
 	if err != nil {
 		log.Println(err)
 	}
