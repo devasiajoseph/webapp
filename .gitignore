@@ -1,0 +1,55 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+.DS_Store
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+#Emacs ignores
+*.*~
+.*~
+lock
+.emacs.*
+*.doc#
+
+build/
+target/
+.rebel_readline_history
+tmp/
+uploads/
+downloads/
+main
+repl
+repl.go
+supervisor
+compiled/
+compiled.zip
+bkp/
+id_rsa
+id_rsa.pub
+wemebox
+config.yml
+wfront/resources/public/fcljs-out/
+tmf
+reset
+sites
+*.zip
+user-ui/
+admin-ui/
+node-modules/
+test-config.yml
+*.code-workspace
+/deploy
+emart.zip
+authkey.go
+cleaned/
+.clj-kondo/
+out/
+fcljs-out/
+.lsp/
