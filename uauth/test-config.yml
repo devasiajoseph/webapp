@@ -1,0 +1,15 @@
+port: 8081
+ssl: false
+compress: false
+domain: example.com
+dev: true
+maildomain: mail.wemebox.com
+mailpkey: key-d5748e587457b6ad9a6b254ebd11e0e5
+sqldbname: blockchain
+sqluser: devasia
+sqlpassword: d3v@s1@
+sqlhost: localhost
+sqlport: 5432
+smsauthkey: 350485A9KX5aWaB1d5fea19c3P1
+recapsitekey: 6LdL7KkcAAAAAEnq6kOevBqdPlKmCxmbqnlMjpXH
+recapsecretkey: 6LdL7KkcAAAAANZzLvgh9ga3GNz6KGy1Mzfye1Ac
