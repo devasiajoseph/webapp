@@ -32,4 +32,3 @@ var sqlSearchUsers = "SELECT * FROM user_account WHERE full_name ILIKE $1 OR ema
 
 var sqlSearchUsersTotal = "SELECT count(*) FROM user_account WHERE full_name LIKE $1 OR email LIKE $1 OR phone LIKE $1;"
 var sqlDeletePasswordResetKey = "delete from user_keys where user_account_id=$1 and key_name=$2;"
-var sqlKeepAlive = "update user_session set session_expiry=$1 where auth_token=$2"
