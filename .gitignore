@@ -42,7 +42,7 @@ sites
 *.zip
 user-ui/
 admin-ui/
-node-modules/
+node_modules/
 test-config.yml
 *.code-workspace
 /deploy
