@@ -1,3 +1,5 @@
-(ns centipair.core)
+(ns centipair.core
+  (:require [app.home :as app]))
 
-(println "hello figweel")
+
+(app/render-home)
