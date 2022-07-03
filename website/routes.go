@@ -8,6 +8,7 @@
 package website
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/NYTimes/gziphandler"
@@ -43,6 +44,7 @@ func AddRoutes(r *mux.Router) {
 		r.PathPrefix("/app/user-ui/").Handler(fcljsapp)
 
 	} else {
+		fmt.Println("here roited")
 		cljs := http.StripPrefix("/admin-ui/", http.FileServer(http.Dir(adminUIPath)))
 		r.PathPrefix("/admin-ui/").Handler(cljs)
 
@@ -55,8 +57,8 @@ func AddRoutes(r *mux.Router) {
 		fcljs := http.StripPrefix("/user-ui/", http.FileServer(http.Dir(userUIPath)))
 		r.PathPrefix("/user-ui/").Handler(fcljs)
 
-		figcljs := http.StripPrefix("/fcljs-out/", http.FileServer(http.Dir(fuserUIPath)))
-		r.PathPrefix("/fcljs-out/").Handler(figcljs)
+		figcljs := http.StripPrefix("/cljs-out/", http.FileServer(http.Dir(fuserUIPath)))
+		r.PathPrefix("/cljs-out/").Handler(figcljs)
 
 		fcljsp := http.StripPrefix("/p/user-ui/", http.FileServer(http.Dir(userUIPath)))
 		r.PathPrefix("/p/user-ui/").Handler(fcljsp)

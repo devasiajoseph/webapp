@@ -45,7 +45,7 @@ type PageData struct {
 	Id             int           `storm:"id,increment" json:"Id" `
 	Slug           string        `storm:"index,unique" json:"Slug"`
 	Title          string        `json:"Title"`
-	HtmlContent    template.HTML `json: "HtmlContent"`
+	HtmlContent    template.HTML `json:"HtmlContent"`
 	Markdown       string        `json:"Markdown"`
 	PageType       string        `json:"PageType"`
 	Meta           []MetaData    `json:"Meta"`
@@ -132,21 +132,27 @@ func DbPath(dirPath string, dbFile string) string {
 
 func PageError(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusInternalServerError)
-	tmpl500, err500 := template.ParseFiles(tmpDir+"base.html", tmpDir+"500.html")
-	err500 = tmpl500.Execute(w, nil)
-	HandlePageError(err500)
+	tmpl500, err := template.ParseFiles(tmpDir+"base.html", tmpDir+"500.html")
+	if err != nil {
+		log.Println(err)
+	}
+	err = tmpl500.Execute(w, nil)
+	HandlePageError(err)
 }
 
 func PageNotFound(w http.ResponseWriter, r *http.Request, p Paths) {
 	w.WriteHeader(http.StatusNotFound)
-	tmpl404, err404 := template.ParseFiles(core.FixPathSlash(p.DirPath+"/html/base.html"), core.FixPathSlash(p.DirPath+"/html/404.html"))
+	tmpl404, err := template.ParseFiles(core.FixPathSlash(p.DirPath+"/html/base.html"), core.FixPathSlash(p.DirPath+"/html/404.html"))
+	if err != nil {
+		log.Println(err)
+	}
 	pd := PageData{
 		//Title: "hello",
 		Csrf:      csrf.Token(r),
 		StaticUrl: p.StaticUrl,
 	}
-	err404 = tmpl404.Execute(w, pd)
-	HandlePageError(err404)
+	err = tmpl404.Execute(w, pd)
+	HandlePageError(err)
 }
 
 func RenderPage(w http.ResponseWriter, r *http.Request, pd PageData) {
