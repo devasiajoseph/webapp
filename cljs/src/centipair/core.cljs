@@ -2,4 +2,5 @@
   (:require [app.home :as app]))
 
 
-(app/render-home)
+;;(app/render-home)
+(app/init!)
