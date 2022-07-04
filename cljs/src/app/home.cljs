@@ -45,7 +45,6 @@
 
    ["/about"
     {:name ::about
-     :view about-page
      :controllers [{:start render-about}]}]])
 
 (defn init! []
