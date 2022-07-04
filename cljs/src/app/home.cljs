@@ -5,18 +5,21 @@
              [reitit.frontend.easy :as rfe]
              [reitit.frontend.controllers :as rfc]
              [reitit.coercion.schema :as rsc]
+             [centipair.components.input :as input]
              ))
 
 (defonce match (r/atom nil))
 
+(defonce email (r/atom {:type "text" :id "email" :class "form-control"}))
+
 (defn home-page []
   [:div {:class "mt-5"}
    [:h2 "Welcome to APP"]
-   [:p "This page is rendered from clojurescript reagent"]])
+   [:p "This page is rendered from clojurescript reagent"]
+   [:p (input/text email)]])
 
 
 (defn render-home []
-  (print "*******" @match)
   (rdom/render [home-page] (.getElementById js/document "app")))
 
 (defn about-page []
@@ -26,7 +29,6 @@
 
 
 (defn render-about []
-  (print "*******" @match)
   (rdom/render [about-page] (.getElementById js/document "app")))
 
 
@@ -46,24 +48,11 @@
      :view about-page
      :controllers [{:start render-about}]}]])
 
-(defn current-page []
-  [:div
-   [:ul
-    [:li [:a {:href (rfe/href ::frontpage)} "Frontpage"]]
-    [:li
-     [:a {:href (rfe/href ::item-list)} "Item list"]]]
-   (if @match
-     (let [view (:view (:data @match))]
-       [view @match]))
-   [:pre (with-out-str (print @match))]])
-
 (defn init! []
   (rfe/start!
    (rf/router routes {:data {:coercion rsc/coercion}})
-   (fn [new-match]
-    (print (:query-params new-match) ) 
+   (fn [new-match] 
      (swap! match (fn [old-match]
-                    (print "+++++++" old-match)
                     (if new-match
                       (assoc new-match :controllers (rfc/apply-controllers (:controllers old-match) new-match))))))
     ;; set to false to enable HistoryAPI
