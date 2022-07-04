@@ -1,5 +1,5 @@
 (ns centipair.core
-  (:require [app.home :as app]))
+  (:require [app.router :as app]))
 
 
 ;;(app/render-home)

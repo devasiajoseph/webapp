@@ -1,14 +1,7 @@
 (ns app.home
-   (:require [reagent.dom :as rdom]
-             [reagent.core :as r]
-             [reitit.frontend :as rf]
-             [reitit.frontend.easy :as rfe]
-             [reitit.frontend.controllers :as rfc]
-             [reitit.coercion.schema :as rsc]
+   (:require [reagent.core :as r]
              [centipair.components.input :as input]
-             ))
-
-(defonce match (r/atom nil))
+             [centipair.ui :as ui]))
 
 (defonce email (r/atom {:type "text" :id "email" :class "form-control"}))
 
@@ -20,7 +13,7 @@
 
 
 (defn render-home []
-  (rdom/render [home-page] (.getElementById js/document "app")))
+  (ui/render-ui home-page "app"))
 
 (defn about-page []
   [:div {:class "mt-5"}
@@ -29,32 +22,6 @@
 
 
 (defn render-about []
-  (rdom/render [about-page] (.getElementById js/document "app")))
+  (ui/render-ui about-page "app"))
 
 
-(defn log-fn [& params]
-  (fn [_]
-    (apply js/console.log params)))
-
-(def routes
-  [["/"
-    {:name ::frontpage
-     :view home-page
-     :controllers [{:start render-home
-                    :stop (fn [] (print "stopped home"))}]}]
-
-   ["/about"
-    {:name ::about
-     :controllers [{:start render-about}]}]])
-
-(defn init! []
-  (rfe/start!
-   (rf/router routes {:data {:coercion rsc/coercion}})
-   (fn [new-match] 
-     (swap! match (fn [old-match]
-                    (if new-match
-                      (assoc new-match :controllers (rfc/apply-controllers (:controllers old-match) new-match))))))
-    ;; set to false to enable HistoryAPI
-   {:use-fragment true})
-  ;;(rdom/render [home-page] (.getElementById js/document "app"))
-  )
