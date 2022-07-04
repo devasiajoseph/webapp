@@ -54,3 +54,4 @@ out/
 fcljs-out/
 .lsp/
 .cpcache/
+.sass-cache/
