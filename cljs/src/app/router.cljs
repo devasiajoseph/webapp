@@ -4,7 +4,8 @@
             [reitit.frontend.easy :as rfe]
             [reitit.frontend.controllers :as rfc]
             [reitit.coercion.schema :as rsc]
-            [app.home :as home]))
+            [app.home :as home]
+            [app.uauth :as uauth]))
 
 (defonce match (r/atom nil))
 
@@ -18,7 +19,12 @@
 
    ["/about"
     {:name ::about
-     :controllers [{:start home/render-about}]}]])
+     :controllers [{:start home/render-about}]}]
+   
+   ["/login"
+    {:name ::login
+     :controllers [{:start uauth/render-login-form}]}]
+   ])
 
 (defn init! []
   (rfe/start!
