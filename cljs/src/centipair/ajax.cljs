@@ -171,7 +171,7 @@
       (notify 403))))
 
 
-(defn form-error-handler [url form function-handler response]
+(defn form-error-handler [form function-handler response]
   
   (let [status (:status response)]
     (case status
@@ -208,7 +208,7 @@
       (POST url
         :params (assoc params :recap-token recap-token)
         :handler (partial success-handler function-handler)
-        :error-handler (partial form-error-handler url form function-handler)
+        :error-handler (partial form-error-handler form function-handler)
         :format (url-request-format)
         :headers {:X-CSRF-Token (dom/get-value "csrf_token")}
         :response-format (json-response-format {:keywords? true})))))
@@ -227,7 +227,7 @@
     (POST url
       :params (reduce to-key {} form)
       :handler (partial success-handler function-handler)
-      :error-handler (partial form-error-handler url form function-handler)
+      :error-handler (partial form-error-handler form function-handler)
       :format (url-request-format)
       :headers {:X-CSRF-Token (dom/get-value "csrf_token")}
       :response-format (json-response-format {:keywords? true}))))
