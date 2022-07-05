@@ -1,3 +1,12 @@
+;; Copyright (C) Centipair Technologies Private Limited - All Rights Reserved
+;; Unauthorized copying of this file, via any medium is strictly prohibited
+;; Proprietary and confidential
+;; Written By Devasia Joseph <devasiajoseph@centipair.com>, December 2018
+
+;; ==================
+;; Purpose and Design
+;; ==================
+;; Notification UI
 (ns centipair.components.notifier
   (:require [reagent.dom :as r]
             [reagent.core :as reagent]

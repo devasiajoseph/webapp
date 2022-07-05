@@ -2,23 +2,30 @@
   (:require [reagent.core :as r]
             [centipair.ui :as ui]
             [centipair.components.input :as input]
-            [centipair.components.form :as form]))
+            [centipair.components.form :as form]
+            [centipair.validators :as v]
+            [centipair.ajax :as ajax]
+            [app.api :as api]))
 
-(def userid (r/atom {:id "userid" :type "text" :class "form-control"}))
-(def password (r/atom {:id "password" :type "password" :class "form-control"}))
+(def userid (r/atom {:id "userid" :type "text" :class "form-control form-control-lg" :validator v/required}))
+(def password (r/atom {:id "password" :type "password" :class "form-control form-control-lg" :validator v/required}))
 
+(defn login 
+  []
+  (ajax/form-post (api/url :user-login) [userid password] (fn [response])))
+
+(def login-button (r/atom {:id "login-button" :label "Login" :on-click login}))
 
 (defn login-form 
   []
-  [:div {:class "form-data"}
-   [:div {:class "forms-inputs mb4"} [:span "Phone"]
+  [:form
+   [:div {:class " mb-4"} [:label "Phone"]
     (input/text userid)
-    [:label {:id "userid-error"}]]
-   [:div {:class "forms-inputs mb4"} [:span "Password"]
+    [:div {:id "userid-error" :class "invalid-field"} (:message @userid)]]
+   [:div {:class "mb-4"} [:label "Password"]
     (input/text password)
-    [:label {:id "password-error"}]]
-   [:div {:class "mb-3"} [:a {:class "btn btn-primary w-100"} "Login"]]
-   ])
+    [:div {:id "userid-error" :class "invalid-field"} (:message @password)]]
+   (input/button login-button [userid password])])
 
 (defn login-page
   []

@@ -1,3 +1,12 @@
+;; Copyright (C) Centipair Technologies Private Limited - All Rights Reserved
+;; Unauthorized copying of this file, via any medium is strictly prohibited
+;; Proprietary and confidential
+;; Written By Devasia Joseph <devasiajoseph@centipair.com>, December 2018
+
+;; ==================
+;; Purpose and Design
+;; ==================
+;; HTML Input components
 (ns centipair.components.input
   (:require [centipair.error :refer [append-field-error]]
             [centipair.components.notifier :as notifier]))
@@ -13,13 +22,7 @@
 
 (defn make-valid
   [field]
-  (if (nil? (:class-name @field))
-    true
-    (do
-      (swap! field assoc
-             :message ""
-             :class-name (clojure.string/replace (:class-name @field) #" has-error" ""))
-      true)))
+  (swap! field assoc :message "") true)
 
 (defn valid-field?
   [field]
@@ -27,7 +30,7 @@
     (do
       (make-valid field)
       true)
-    (let [result ((:validator @field) @field)]
+    (let [result ((:validator @field) @field)] 
       (if (:valid result)
         (make-valid field)
         (do
@@ -62,7 +65,7 @@
                           (:placeholder @field))}])
 
 (defn button [action-button form-fields]
-  [:div {:class "mt-3"} [:a {:class "btn btn-primary"
+  [:div {:class "mb-3"} [:a {:class "btn btn-primary w-100"
                              :on-click #(perform-action (:on-click @action-button) form-fields)
                              :disabled (if (nil? (:disabled action-button)) "" "disabled")
                              :key (:id @action-button)}

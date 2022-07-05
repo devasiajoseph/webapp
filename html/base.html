@@ -18,6 +18,7 @@
 </head>
 
 <body>
+  <div id="notifier"></div>
   <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
     <div class="container">
       <ul class="navbar-nav">
@@ -38,7 +39,7 @@
   </nav>
   <div class="container"> {{block "content" .}}{{end}}</div> 
   
-  
+  <input type="hidden" id="csrf_token" value="{{.Csrf}}" />
 
   {{block "javascript".}}{{end}}
   <script src="/cljs-out/centipair-main.js"></script>

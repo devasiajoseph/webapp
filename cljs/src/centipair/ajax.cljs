@@ -15,8 +15,7 @@
             [centipair.error :refer [append-error remove-error]]
             [centipair.components.notifier :refer [notify]]
             [reagent.core :as reagent]
-            [reagent.dom :as r]
-            ))
+            [reagent.dom :as r]))
 
 
 (def csrf-token (atom nil))
@@ -45,11 +44,18 @@
 (defn handle-deleted []
   (println "deleted"))
 
-(defn error-handler [response]
-  (println "error")
-  (println response)
+
+(defn success-handler
+  [function-handler response]
+  (notify (:status response))
+  (function-handler response))
+
+
+(defn error-handler [function-handler response]
   (let [status (:status response)]
     (case status
+      200 (success-handler function-handler response)
+      201 (success-handler function-handler response)
       202 (handle-deleted)
       204 (notify 204)
       400 (notify 400)
@@ -58,19 +64,14 @@
       404 (notify 404)
       405 (notify 405)
       500 (notify 500)
-      422 (notify 422 "The submitted data is not valid"))))
-
-
-(defn success-handler
-  [function-handler response]
-  (notify (:status response))
-  (function-handler response))
+      422 (notify 422 "The submitted data is not valid")
+      (notify 403 "Unknown request"))))
 
 
 (defn delete-success-handler
   [function-handler response]
   (do 
-    (dom/hide-element "delete-modal")
+    (js/hideDeleteModal)
     (success-handler function-handler response)))
 
 (defn text-to-key [previous each]
@@ -80,6 +81,11 @@
   (if (= (:checked @each) "checked")
       (assoc previous (keyword (:id @each)) true)
       (assoc previous (keyword (:id @each)) false)))
+
+(defn toggle-to-key [previous each]
+  (if (= (:checked @each) "checked")
+    (assoc previous (keyword (:id @each)) true)
+    (assoc previous (keyword (:id @each)) false)))
 
 (defn image-spec-to-key[previous each]
   (assoc previous 
@@ -106,6 +112,7 @@
   (case (:type @each)
     "text" (text-to-key previous each)
     "checkbox" (check-to-key previous each)
+    "toggle" (toggle-to-key previous each)
     "image-spec" (image-spec-to-key previous each)
     "hidden" (text-to-key previous each)
     "select" (select-to-key previous each)
@@ -114,11 +121,10 @@
     (assoc previous (keyword (:id @each)) (set-value-type each))))
 
 
-(defn handle-form-error [form-state form response]
+(defn handle-form-error [form response]
   (notify 422 "The submitted data is not valid")
-  (let [combined (conj form form-state)]
-    (doseq [each combined]
-      (append-error (:Errors (:response response)) each))))
+  (doseq [each form]
+      (append-error (:Errors (:response response)) each)))
 
 
 (defn execute-ajax-json [url params function-handler]
@@ -155,26 +161,29 @@
 (declare form-post)
 
 (defn access-denied-handler
-  [form-state url form function-handler res]
+  [url form function-handler res]
+  (println res)
   (let [response (:response res)
         error-code (aget (clj->js response) "error-code")]
     (case error-code
-      "csrf" (prepare-api (partial form-post form-state url form function-handler))
+      "csrf" (prepare-api (partial form-post url form function-handler))
       "invalid-session" (spa/redirect "/logout")
       (notify 403))))
 
 
-(defn form-error-handler [form-state url form function-handler response]
+(defn form-error-handler [url form function-handler response]
+  
   (let [status (:status response)]
     (case status
       200 (success-handler function-handler response)
       201 (success-handler function-handler response)
       401 (notify 401)
-      403 (access-denied-handler form-state url form function-handler response)
+      403 (notify 403)
       404 (notify 404)
       405 (notify 405)
       500 (notify 500)
-      422 (handle-form-error form-state form response)
+      409 (notify 409)
+      422 (handle-form-error form response)
       0 (notify 500 "Network error")
       (notify 500 "Data send error"))))
 
@@ -185,20 +194,45 @@
     url
     (str url "/" id)))
 
+(defn form-to-key
+  [form]
+  (reduce to-key {} form))
 
-(defn form-post [form-state url form function-handler]
+
+(defn rform-post [url form function-handler & [recap-token]]
+  (do
+   
+    (doseq [each form]
+      (remove-error  each))
+    (let [params (reduce to-key {} form)]
+      (POST url
+        :params (assoc params :recap-token recap-token)
+        :handler (partial success-handler function-handler)
+        :error-handler (partial form-error-handler url form function-handler)
+        :format (url-request-format)
+        :headers {:X-CSRF-Token (dom/get-value "csrf_token")}
+        :response-format (json-response-format {:keywords? true})))))
+
+
+(defn recap-form-post
+  [url form function-handler]
+    (notify 102 "Loading")
+    (js/recap (partial rform-post url form function-handler)))
+
+(defn form-post [url form function-handler ]
   (do
     (notify 102 "Loading")
-    (let [combined (conj form form-state)]
-      (doseq [each combined]
-        (remove-error  each)))
+    (doseq [each form]
+      (remove-error  each))
     (POST url
-          :params (reduce to-key {} form)
-          :handler (partial success-handler function-handler)
-          :error-handler (partial form-error-handler form-state url form function-handler)
-          :format (url-request-format)
-          :headers {:X-CSRF-Token (dom/get-value "csrf_token")}
-          :response-format (json-response-format {:keywords? true}))))
+      :params (reduce to-key {} form)
+      :handler (partial success-handler function-handler)
+      :error-handler (partial form-error-handler url form function-handler)
+      :format (url-request-format)
+      :headers {:X-CSRF-Token (dom/get-value "csrf_token")}
+      :response-format (json-response-format {:keywords? true}))))
+
+
 
 
 (defn post-raw [url params function-handler]
@@ -207,7 +241,7 @@
     (POST url
           :params params
           :handler (partial success-handler function-handler)
-          :error-handler error-handler
+          :error-handler (partial error-handler function-handler)
           :format (url-request-format)
           :headers {:X-CSRF-Token (dom/get-value "csrf_token")}
           :response-format (json-response-format {:keywords? true}))))
@@ -229,15 +263,20 @@
 (def delete-obj (reagent/atom {}))
 (declare delete-request)
 
-(defn delete-modal
-  []
-  [:div {:class "w3-modal" :id "delete-modal"}
-   [:div {:class "w3-modal-content" :style {:max-width "377px"}}
-    [:div {:class "w3-container"}
-     [:span {:class "w3-closebtn" :on-click #(dom/hide-element "delete-modal")} "x"]
-     [:div {:class "w3-section"} "Do you want to delete this?"]
-     [:button {:class "w3-btn w3-green" :on-click #(delete-request (:url @delete-obj) (:function-handler @delete-obj))} "Delete"]
-     [:button {:class "w3-btn w3-red" :on-click #(dom/hide-element "delete-modal")} "Cancel"]]]])
+
+(defn delete-modal []
+  [:div {:class "modal" :role "dialog" :tab-index "-1" :id "delete-modal"}
+   [:div {:class "modal-dialog" :role "document"}
+    [:div {:class "modal-content"}
+     [:div {:class "modal-header"}
+      [:h5 {:class "modal-title"} "Delete Data"]
+      [:button {:type "button" :class "close" :data-dismiss "modal" :aria-label "Close"}]]
+     [:div {:class "modal-body"}
+      [:p "Are you sure you want to delete this?"]]
+     [:div {:class "modal-footer"}
+      [:button {:type "button" :class "btn btn-primary"
+                :on-click #(delete-request (:url @delete-obj) (:function-handler @delete-obj))} "Delete"]
+      [:button {:type "button" :class "btn btn-secondary" :data-dismiss "modal"} "Cancel"]]]]])
 
 
 (defn render-element
@@ -250,8 +289,7 @@
 (defn render-delete-modal
   []
   (render-element delete-modal "delete-modal-container")
-  (dom/show-element "delete-modal")
-  )
+  (js/showDeleteModal))
 
 
 (defn delete-access-denied-handler 

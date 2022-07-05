@@ -19,7 +19,7 @@ type AppPageData struct {
 	Title          string             `json:"Title"`
 	FileName       string             `storm:"index,unique" json:"FileName"`
 	BaseFileName   string             `json:"BaseFileName"`
-	HtmlContent    template.HTML      `json: "HtmlContent"`
+	HtmlContent    template.HTML      `json:"HtmlContent"`
 	Markdown       string             `json:"Markdown"`
 	PageType       string             `json:"PageType"`
 	Meta           []website.MetaData `json:"Meta"`
