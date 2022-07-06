@@ -25,6 +25,9 @@ $navbar-dark-hover-color:   #fff;
 $font-family-sans-serif: "Muli", sans-serif;
 
 $dropdown-link-active-bg:map-get($theme-colors, "primary");
+.text-dark {
+    color: #212529!important;
+}
 
 @import "node_modules/bootstrap/scss/bootstrap";
 

@@ -5,7 +5,9 @@
             [reitit.frontend.controllers :as rfc]
             [reitit.coercion.schema :as rsc]
             [app.home :as home]
-            [app.uauth :as uauth]))
+            [app.uauth :as uauth]
+            [fintech.asset :as asset]
+            ))
 
 (defonce match (r/atom nil))
 
@@ -24,6 +26,9 @@
    ["/login"
     {:name ::login
      :controllers [{:start uauth/render-login-form}]}]
+  ["/asset"
+   {:name ::asset
+    :controllers [{:start asset/render-asset-page}]}] 
    ])
 
 (defn init! []
