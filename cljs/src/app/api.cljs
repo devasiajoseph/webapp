@@ -5,3 +5,4 @@
           :user-logout "/api/uauth/logout"
           :user-register "/api/uauth/register"
           :user-status "/api/uauth/status"})
+
