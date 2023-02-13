@@ -1,13 +1,12 @@
 package bitcoin
 
 import (
-	"crypto/sha256"
-	"log"
+	"encoding/hex"
+	"fmt"
 
 	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcutil/base58"
 )
 
 type BtcAccount struct {
@@ -16,46 +15,32 @@ type BtcAccount struct {
 	Address    string
 }
 
-// doubleSHA256 calculates sha256(sha256(b)).
-func DoubleSHA256(b []byte) []byte {
-	first := sha256.Sum256(b)
-	second := sha256.Sum256(first[:])
-	return second[:]
-}
-
 func NewAccount() BtcAccount {
 	var btca BtcAccount
 	// Create a new private key.
 	// Create a new private key.
-	privateKey, err := btcec.NewPrivateKey(btcec.S256())
+	privateKey, err := btcec.NewPrivateKey()
 	if err != nil {
-		log.Fatalf("failed to generate private key: %s", err)
+		fmt.Println(err)
+		return btca
 	}
 
-	// Encode the private key in WIF format.
-	wif, err := btcutil.NewWIF(privateKey, &chaincfg.MainNetParams, true)
+	publicKey := privateKey.PubKey()
+	hash := btcutil.Hash160(publicKey.SerializeCompressed())
+
+	segwitAddress, err := btcutil.NewAddressWitnessPubKeyHash(hash, &chaincfg.MainNetParams)
 	if err != nil {
-		log.Fatalf("failed to encode private key as WIF: %s", err)
+		fmt.Println("here")
+		fmt.Println(err)
+		return btca
 	}
 
-	// Get the public key from the private key.
-	publicKey := privateKey.PubKey().SerializeCompressed()
+	fmt.Printf("Private Key (hex): %x\n", privateKey.Serialize())
+	fmt.Printf("Public Key (hex): %x\n", publicKey.SerializeCompressed())
+	fmt.Printf("SegWit Address: %s\n", segwitAddress.EncodeAddress())
 
-	publicKeyHash := sha256.Sum256(publicKey)
-	// Create the witness program for the pay-to-witness-public-key-hash (p2wpkh) address.
-	witnessProgram := []byte{0x00, 0x14}
-	witnessProgram = append(witnessProgram, publicKeyHash[:]...)
-	// Create the address for the pay-to-witness-public-key-hash (p2wpkh) address.
-	address, err := btcutil.NewAddressWitnessPubKeyHash(witnessProgram, &chaincfg.MainNetParams)
-	if err != nil {
-		log.Fatalf("failed to generate address: %s", err)
-	}
-
-	// Encode the address in base58check format.
-	addressBase58 := base58.Encode(address.ScriptAddress())
-
-	// Output the address.
-	log.Printf("Address: %s\n", addressBase58)
-	log.Printf("Private Key (WIF): %s\n", wif.String())
+	btca.PrivateKey = hex.EncodeToString(privateKey.Serialize())
+	btca.PublicKey = hex.EncodeToString(publicKey.SerializeCompressed())
+	btca.Address = segwitAddress.EncodeAddress()
 	return btca
 }

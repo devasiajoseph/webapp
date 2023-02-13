@@ -1,9 +1,11 @@
 package bitcoin
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestNewAccount(t *testing.T) {
-	NewAccount()
+	btca := NewAccount()
+	fmt.Println(btca)
 }
