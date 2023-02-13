@@ -3,7 +3,7 @@ package bitcoin
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 
@@ -87,7 +87,7 @@ func GetBalance(address string) (int64, error) {
 	}
 
 	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		fmt.Println("Error while reading API response:", err)
 		return balance, err
@@ -121,7 +121,7 @@ func GetUTXOAPI(address string, limit int, after int) (UTXOs, error) {
 	defer resp.Body.Close()
 
 	// Read the response body
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error reading response:", err)
 		return utxos, err
@@ -156,7 +156,7 @@ func GetUTXOBc(address string) {
 	}
 
 	// Read the response body
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		fmt.Println(err)
 		return
