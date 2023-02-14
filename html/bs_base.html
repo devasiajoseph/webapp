@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="img/ico" href="{{.StaticUrl}}/logo/favicon.ico">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{{.StaticUrl}}/theme/main.css">
+  <link rel="stylesheet" href="{{.StaticUrl}}/fontawesome/css/all.min.css">
+  <!--<link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;500;700&amp;display=swap" rel="stylesheet">-->
+  {{block "css".}}{{end}}
+  <title> | {{block "title" .}}{{end}}</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+ 
+
+</head>
+
+<body>
+  <div id="notifier"></div>
+  <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+    <div class="container">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Active</a>
+        </li>
+       <li class="nav-item">
+          <a class="nav-link" href="#/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#/login">Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container"> {{block "content" .}}{{end}}</div> 
+  
+  <input type="hidden" id="csrf_token" value="{{.Csrf}}" />
+
+  {{block "javascript".}}{{end}}
+  <script src="/cljs-out/centipair-main.js"></script>
+</body>
+
+</html>
