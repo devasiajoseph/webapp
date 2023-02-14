@@ -5,43 +5,56 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 type UTXO struct {
-	TxHash   string  `json:"tx_hash"`
-	Block    int     `json:"block_height"`
-	Value    float64 `json:"value"`
-	Script   string  `json:"script"`
-	TxInputs []struct {
-		PrevHash    string `json:"prev_hash"`
-		OutputIndex int    `json:"output_index"`
-	} `json:"txinputs"`
+	Address                      string  `json:"address"`
+	TotalReceived                int64   `json:"total_received"`
+	TotalSent                    int64   `json:"total_sent"`
+	Balance                      int64   `json:"balance"`
+	UnconfirmedBalance           int64   `json:"unconfirmed_balance"`
+	TransactionsNumber           int     `json:"n_tx"`
+	UnconfirmedNumberTransaction int     `json:"unconfirmed_n_tx"`
+	FinalNumberTransactions      int     `json:"final_n_tx"`
+	TxRefs                       []TxRef `json:"txrefs"`
 }
 
-func GetUTXO(address string) {
+type TxRef struct {
+	TxHash        string    `json:"tx_hash"`
+	BlockHeight   int       `json:"block_height"`
+	TxInputN      int       `json:"tx_input_n"`
+	TxOutputN     int       `json:"tx_output_n"`
+	Value         int64     `json:"value"`
+	RefBalance    int64     `json:"ref_balance"`
+	Spent         bool      `json:"spent"`
+	Confirmations int       `json:"confirmations"`
+	Confirmed     time.Time `json:"confirmed"`
+	DoubleSpend   bool      `json:"double_spend"`
+}
 
-	response, err := http.Get(fmt.Sprintf("https://api.blockcypher.com/v1/btc/main/addrs/%s?unspentOnly=true", address))
+func GetUTXO(address string) (UTXO, error) {
+	var utxo UTXO
+	response, err := http.Get(fmt.Sprintf(unspentApi, address, 1))
 	if err != nil {
 		fmt.Println(err)
-		return
+		return utxo, err
 	}
 
 	// Read the response body
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return utxo, err
 	}
 
 	// Unmarshal the response into a slice of UTXOs
-	var utxos []UTXO
-	err = json.Unmarshal(body, &utxos)
+	err = json.Unmarshal(body, &utxo)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return utxo, err
 	}
 
-	// Print the retrieved UTXOs
-	fmt.Println(utxos)
+	return utxo, err
 
 }
