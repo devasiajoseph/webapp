@@ -10,15 +10,23 @@
 (ns centipair.components.notifier
   (:require [reagent.dom :as r]
             [reagent.core :as reagent]
+            [centipair.dom :as dom]
             ))
 
 
 (def notifier-state (reagent/atom {:class "notify" :text ""}))
 (def alert-state (reagent/atom {:type "" :message ""}))
 
-(defn notifier-component 
+(defn notifier-component-bs
   []
   [:div {:class (:class @notifier-state)} (:text @notifier-state)])
+
+
+(defn notifier-component []
+  [:div {:class "relative"}
+   [:div  {:class "flex justify-center mt-3 fixed top-0 left-0 right-0"}
+    [:button {:id "nob" :type "button", :class "inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 transition ease-in-out duration-150 cursor-not-allowed"}
+     [:img {:src "/static/img/loader.svg", :class "mr-3 h-6 w-6"}] (:text @notifier-state)]]])
 
 (defn render-notifier-component 
   []
@@ -27,7 +35,32 @@
    (. js/document (getElementById "notifier"))))
 
 
-(defn notify [code & [message]]
+(defn show-notifier 
+  [] 
+  (dom/remove-class "notifier","hidden"))
+
+(defn hide-notifier 
+  []
+  (dom/add-class "notifier","hidden"))
+
+(defn error-notifier
+  []
+  (dom/remove-class "nob" "bg-indigo-500") 
+  (dom/add-class "nob" "bg-red-500"))
+
+
+(defn notify
+  [code & [message]]
+  (show-notifier)
+  (case code
+    200 (hide-notifier)
+    102 (reset! notifier-state {:text (or message "Loading ...")})
+    (do
+      (reset! notifier-state {:text message})
+      (error-notifier))))
+
+
+(defn notify-bs [code & [message]]
     (case code
       201 (reset! notifier-state {:class "notify notify-loading" :text (or message "Saved")})
       200 (reset! notifier-state {:class "notify" :text ""})
@@ -113,3 +146,11 @@
   (swap! info-state assoc :title "Info" :body info )
   (set! (.. js/document -documentElement -scrollTop) 0)
   (show-info))
+
+
+
+
+(defn notify-tl
+  []
+  
+  )

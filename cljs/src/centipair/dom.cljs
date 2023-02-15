@@ -53,3 +53,15 @@
   [element-id]
   (if (object-exists? element-id)
     (set! (.-display (.-style (.getElementById js/document element-id))) "none")))
+
+
+(defn add-class
+  [id class]
+  (let [element (.getElementById js/document id)]
+    (println element)
+    (.add (.-classList element) class)))
+
+(defn remove-class
+  [id class]
+  (let [element (.getElementById js/document id)]
+    (.remove (.-classList element) class)))
