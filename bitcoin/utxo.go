@@ -12,12 +12,6 @@ import (
 	"github.com/btcsuite/btcd/rpcclient"
 )
 
-type BlockcypherAddress struct {
-	Address string `json:"address"`
-	Balance int64  `json:"balance"`
-	Final   int    `json:"final_balance"`
-}
-
 type UTXOs struct {
 	Notice         string `json:"notice"`
 	UnspentOutputs []UTXO `json:"unspent_outputs"`
@@ -75,34 +69,6 @@ func GetUTXO(client *rpcclient.Client, address string) ([]UnspentTransaction, er
 	}
 
 	return unspentTransactions, nil
-}
-
-func GetBalance(address string) (int64, error) {
-	var balance int64
-	url := fmt.Sprintf("https://api.blockcypher.com/v1/btc/main/addrs/%s", address)
-	response, err := http.Get(url)
-	if err != nil {
-		fmt.Println("Error while making API request:", err)
-		return balance, err
-	}
-
-	defer response.Body.Close()
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		fmt.Println("Error while reading API response:", err)
-		return balance, err
-	}
-
-	var data BlockcypherAddress
-	err = json.Unmarshal(body, &data)
-	if err != nil {
-		fmt.Println("Error while unmarshaling API response:", err)
-		return balance, err
-	}
-
-	fmt.Println("Address:", data.Address)
-	fmt.Println("Balance:", data.Balance, "satoshis")
-	return balance, err
 }
 
 func GetUTXOAPI(address string, limit int, after int) (UTXOs, error) {

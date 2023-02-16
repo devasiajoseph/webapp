@@ -23,16 +23,6 @@ func TestUTXO(t *testing.T) {
 	fmt.Println(utxo)
 }
 
-func TestBalance(t *testing.T) {
-	b, err := GetBalance("1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2")
-	if err != nil {
-		log.Println(err)
-		t.Errorf("Error getting balance")
-	}
-
-	log.Println(b)
-}
-
 func TestUtxoApi(t *testing.T) {
 	_, err := GetUTXOAPI("1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2", 20, 0)
 	if err != nil {

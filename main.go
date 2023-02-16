@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/devasiajoseph/webapp/app"
+	"github.com/devasiajoseph/webapp/bitcoin"
 	"github.com/devasiajoseph/webapp/core"
 	"github.com/devasiajoseph/webapp/db/postgres"
 	"github.com/devasiajoseph/webapp/uauth"
@@ -18,7 +19,7 @@ func main() {
 	//r.HandleFunc("/sp/{page}", website.StandAlonePageHandler)
 	//r.HandleFunc("/page/{page}", website.MDPageHandler)
 	r.HandleFunc("/usw.js", website.ServiceWorker)
-
+	bitcoin.Start(r)
 	uauth.Start(r)
 	app.Start(r)
 	website.Start(r)

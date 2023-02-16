@@ -1,19 +1,27 @@
 (ns app.home
    (:require [reagent.core :as r]
              [centipair.components.input :as input]
+              [centipair.components.notifier :as notifier]
              [centipair.ui :as ui]
              [centipair.ajax :as ajax]))
 
 (defonce email (r/atom {:type "text" :id "email" :class "form-control"}))
 
 (def search-box (r/atom {:type "text" :value "" :id "search-input" :placeholder "Enter bitcoin address"
-                         :show-results true}))
+                         :show-results false}))
+
+(def bitquery (r/atom {:balance 0}))
 
 
 (defn search-bitcoin
   []
-  (ajax/get-json "/api/bitcoin/balance" {} (fn [response] ))
-  )
+  (ajax/get-json "/api/bitcoin/balance" {:addr (:value @search-box)}
+                 (fn [response]
+                   
+                   (do
+                     (notifier/notify 200)
+                     (reset! bitquery response)
+                     (swap! search-box assoc :show-results true)))))
 
 (defn home-page []
   [:div {:class "mx-auto content-center max-w-2xl"}
@@ -27,13 +35,20 @@
      [:input {:type (:type @search-box), :id (:id @search-box), :placeholder (:placeholder @search-box) :value (:value @search-box)
               :on-change #(input/update-value search-box (-> % .-target .-value))
               :class "search-box"}]
-     [:button {:type "submit", :class "search-btn"} "Search"]]
+     [:button {:type "submit", :class "search-btn" :on-click search-bitcoin} "Search"]]
     [:div {:class "mt-6"}
-     [:div {:class "card"}
+     [:div {:class (str "card" (if (:show-results @search-box) "" " hidden"))}
       [:div {:class "px-6 py-6"}
-       [:div {:class "font-bold text-xl mb-2"} "The Coldest Sunset"]
-       [:p {:class "text-gray-700 text-base"}
-        "test"]]]]]])
+       [:div {:class "text-sm text-gray-400 mb-2"} "Bitcoin Balance"]
+
+       [:p [:span {:class "text-gray-700 text-base text-5xl" } (:balance @bitquery)]
+        [:span {:class "text-sm text-gray-500 mb-2" } " Satoshis"]]
+       [:table {:class "w-full"}
+        [:tbody 
+         [:tr [:td "Total Received:"] [:td (:total_received @bitquery)]]
+         [:tr [:td "Total Sent:"] [:td (:total_sent @bitquery)]]
+         [:tr [:td "Unconfirmed Balance:"] [:td (:unconfirmed_balance @bitquery)]]
+         [:tr [:td "Final Balance:"] [:td (:final_balance @bitquery)]]]]]]]]])
 
 
 (defn render-home []
