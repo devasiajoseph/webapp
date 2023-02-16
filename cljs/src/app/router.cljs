@@ -12,12 +12,11 @@
 (defonce match (r/atom nil))
 
 
-
 (def routes
   [["/"
     {:name ::frontpage 
      :controllers [{:start home/render-home
-                    :stop (fn [] (print "stopped home"))}]}]
+                    :stop (fn [] )}]}]
 
    ["/about"
     {:name ::about

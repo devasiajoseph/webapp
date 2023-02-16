@@ -57,8 +57,7 @@
 
 (defn add-class
   [id class]
-  (let [element (.getElementById js/document id)]
-    (println element)
+  (let [element (.getElementById js/document id)] 
     (.add (.-classList element) class)))
 
 (defn remove-class
