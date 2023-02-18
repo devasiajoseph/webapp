@@ -41,4 +41,9 @@ CREATE TABLE user_session(
        ON DELETE CASCADE
        );
       
-
+create table page (
+    page_id  serial primary key,
+    page_slug varchar(1024),
+    page_file varchar(255),
+    base_page_file varchar(255) not null default 'base.html',
+);

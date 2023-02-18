@@ -48,7 +48,7 @@ INSERT INTO district (district_id, district_name, state_id) VALUES
 (16,'Coimbatore',1),
 (17,'Tenkasi',1),
 (18,'Kanyakumari',1),
-(19, 'Tirunelveli',1);
+(19,'Tirunelveli',1);
 
 
 CREATE TABLE city_type (
@@ -426,4 +426,13 @@ create table applog (
        time timestamp not null default now(),
        log text,
        raw text
+);
+
+
+
+create table page (
+    page_id  serial primary key,
+    page_slug varchar(1024),
+    page_file varchar(255),
+    base_page_file varchar(255) not null default 'base.html'
 );

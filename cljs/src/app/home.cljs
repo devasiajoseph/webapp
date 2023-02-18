@@ -42,15 +42,16 @@
        [:div {:class "text-sm text-gray-400 mb-2"} "Bitcoin Balance"]
 
        [:p [:span {:class "text-gray-700 text-base text-5xl" } (:balance @bitquery)]
-        [:span {:class "text-sm text-gray-500 mb-2" } " Satoshis"]]
+        [:span {:class "text-sm text-gray-500" } " Satoshis"]]
+       [:div {:class "mb-5 border-b"}]
        [:table {:class "w-full"}
         [:tbody 
-         [:tr [:td "Total Received:"] [:td (:total_received @bitquery)]]
+         [:tr [:td {:class "font-bold"}"Total Received:"] [:td (:total_received @bitquery)]]
          [:tr [:td "Total Sent:"] [:td (:total_sent @bitquery)]]
          [:tr [:td "Unconfirmed Balance:"] [:td (:unconfirmed_balance @bitquery)]]
          [:tr [:td "Final Balance:"] [:td (:final_balance @bitquery)]]]]]]]]])
 
-
+;;
 (defn render-home []
   (ui/render-ui home-page "app"))
 
