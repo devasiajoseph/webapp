@@ -436,3 +436,5 @@ create table page (
     page_file varchar(255),
     base_page_file varchar(255) not null default 'base.html'
 );
+
+insert into page (page_slug,page_file,base_page_file) values ('components','components.html','base.html',)

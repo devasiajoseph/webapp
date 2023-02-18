@@ -7,8 +7,8 @@
 
 (defonce email (r/atom {:type "text" :id "email" :class "form-control"}))
 
-(def search-box (r/atom {:type "text" :value "" :id "search-input" :placeholder "Enter bitcoin address"
-                         :show-results false}))
+(def search-box (r/atom {:type "text" :value "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2" :id "search-input" :placeholder "Enter bitcoin address"
+                         :show-results false }))
 
 (def bitquery (r/atom {:balance 0}))
 
@@ -46,10 +46,10 @@
        [:div {:class "mb-5 border-b"}]
        [:table {:class "w-full"}
         [:tbody 
-         [:tr [:td {:class "font-bold"}"Total Received:"] [:td (:total_received @bitquery)]]
-         [:tr [:td "Total Sent:"] [:td (:total_sent @bitquery)]]
-         [:tr [:td "Unconfirmed Balance:"] [:td (:unconfirmed_balance @bitquery)]]
-         [:tr [:td "Final Balance:"] [:td (:final_balance @bitquery)]]]]]]]]])
+         [:tr [:td {:class ""}"Total Received:"] [:td {:class "font-bold"}(:total_received @bitquery)]]
+         [:tr [:td {:class "font-bold"}"Total Sent:"] [:td (:total_sent @bitquery)]]
+         [:tr [:td {:class "font-bold"}"Unconfirmed Balance:"] [:td (:unconfirmed_balance @bitquery)]]
+         [:tr [:td {:class "font-bold"}"Final Balance:"] [:td (:final_balance @bitquery)]]]]]]]]])
 
 ;;
 (defn render-home []
