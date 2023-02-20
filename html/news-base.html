@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" class="dark">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="img/ico" href="{{.StaticUrl}}/logo/favicon.ico">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{{.StaticUrl}}/tailwind/dist/output.css">
+  <link rel="stylesheet" href="{{.StaticUrl}}/fontawesome/css/all.min.css">
+  <!--<link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;500;700&amp;display=swap" rel="stylesheet">-->
+  {{block "css".}}{{end}}
+  <title> [C] News | {{block "title" .}}{{end}}</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+ 
+
+</head>
+
+<body class="bg-blue-200">
+  <div id="notifier" class="hidden"></div>
+  <div class="navbar bg-red-500 text-white">
+   
+    <div class="flex-1">
+      <a class="btn btn-ghost normal-case text-xl">[C]News</a>
+    </div>
+   
+   
+  </div>
+  
+ <div>{{block "hero" .}}{{end}}</div>
+  <div class="container mx-auto px-4"> {{block "content" .}}{{end}}</div> 
+  
+  <input type="hidden" id="csrf_token" value="{{.Csrf}}" />
+
+  {{block "javascript".}}{{end}}
+  
+</body>
+
+</html>
