@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 
+  
+
+
 .notifier{
     @apply inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 transition ease-in-out duration-150 cursor-not-allowed
 }
@@ -16,4 +19,8 @@
 
 .card {
     @apply rounded overflow-hidden shadow-lg
+}
+
+.post-box {
+    @apply pr-5 pb-5 bg-white border-b border-gray-200  hover:bg-gray-200 cursor-pointer max-w-2xl mx-auto rounded-md;
 }

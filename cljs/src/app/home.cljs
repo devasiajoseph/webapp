@@ -7,7 +7,7 @@
 
 (defonce email (r/atom {:type "text" :id "email" :class "form-control"}))
 
-(def search-box (r/atom {:type "text" :value "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2" :id "search-input" :placeholder "Enter bitcoin address"
+(def search-box (r/atom {:type "text" :value "" :id "search-input" :placeholder "Search profiles"
                          :show-results false }))
 
 (def bitquery (r/atom {:balance 0}))
@@ -25,8 +25,7 @@
 
 (defn home-page []
   [:div {:class "mx-auto content-center max-w-2xl"}
-   [:div {:id "home-search-box" }
-    [:h3 {:class "flex justify-center font-bold text-2xl"} "Search Bitcoin"]
+   [:div {:id "home-search-box" } 
     [:label {:for "default-search", :class "mb-2 text-sm font-medium text-gray-900 sr-only"} "Search"]
     [:div {:class "relative"}
      [:div {:class "absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"}

@@ -1,31 +1,53 @@
 <!doctype html>
 <html lang="en" class="dark">
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="icon" type="img/ico" href="{{.StaticUrl}}/logo/favicon.ico">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="{{.StaticUrl}}/tailwind/dist/output.css">
-  <link rel="stylesheet" href="{{.StaticUrl}}/fontawesome/css/all.min.css">
-  <!--<link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;500;700&amp;display=swap" rel="stylesheet">-->
-  {{block "css".}}{{end}}
-  <title> | {{block "title" .}}{{end}}</title>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
- 
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,
+      shrink-to-fit=no">
+    <link rel="icon" type="img/ico" href="{{.StaticUrl}}/logo/favicon.ico">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{.StaticUrl}}/tailwind/dist/output.css">
+    <!--<link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;500;700&amp;display=swap" rel="stylesheet">-->
+    {{block "css".}}{{end}}
+    <title> Auth Profile | {{block "title" .}}{{end}}</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
 
-</head>
 
-<body>
-  <div id="notifier" class="hidden"></div>
- <div>{{block "hero" .}}{{end}}</div>
-  <div class="container mx-auto px-4"> {{block "content" .}}{{end}}</div> 
-  
-  <input type="hidden" id="csrf_token" value="{{.Csrf}}" />
+  </head>
 
-  {{block "javascript".}}{{end}}
-  <script src="/cljs-out/centipair-main.js"></script>
-</body>
+  <body class="bg-stone-100">
+    <div id="notifier" class="hidden"></div>
+    <div>{{block "hero" .}}{{end}}</div>
+    <div class="navbar bg-blue-500 text-white">
+      <div class="container">
+        <div class="flex-1">
+          <a class="btn btn-ghost normal-case text-xl">Auth Profile</a>
+        </div>
+        <div class="flex-none gap-2">
+          <ul class="menu menu-horizontal px-1">
+            <li>
+              <a href="#/login">Login</a>
+            </li>
+            <li>
+              <a href="#/register">Register</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    
+
+
+    </div>
+
+    
+
+    <div class="container mx-auto px-4 h-screen"> {{block "content" .}}{{end}}</div>
+    <input type="hidden" id="csrf_token" value="{{.Csrf}}" />
+
+    {{block "javascript".}}{{end}}
+    <script src="/cljs-out/centipair-main.js"></script>
+  </body>
 
 </html>
