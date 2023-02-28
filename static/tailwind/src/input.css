@@ -22,5 +22,5 @@
 }
 
 .post-box {
-    @apply pr-5 pb-5 bg-white border-b border-gray-200  hover:bg-gray-200 cursor-pointer max-w-2xl mx-auto rounded-md;
+    @apply pr-5 pb-5 bg-white border-b border-gray-200  hover:bg-gray-200 cursor-pointer max-w-3xl mx-auto rounded-md;
 }
