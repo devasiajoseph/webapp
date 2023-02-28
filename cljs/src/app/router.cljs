@@ -25,6 +25,9 @@
    ["/login"
     {:name ::login
      :controllers [{:start user/render-login}]}]
+    ["/register"
+     {:name ::register
+      :controllers [{:start user/render-register}]}]
    ])
 
 (defn init! []
