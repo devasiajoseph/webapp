@@ -28,6 +28,9 @@
     ["/register"
      {:name ::register
       :controllers [{:start user/render-register}]}]
+   ["/reset-password"
+    {:name ::reset-password
+     :controllers [{:start user/render-reset-password}]}]
    ])
 
 (defn init! []

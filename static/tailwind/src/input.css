@@ -25,11 +25,35 @@
     @apply pr-5 pb-5 bg-white border-b border-gray-200  hover:bg-gray-200 cursor-pointer max-w-3xl mx-auto rounded-md;
 }
 
-.card-form-container {
+.cfc {
     @apply mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8
 }
 
-.card-form{
+.cf{
     @apply mx-auto max-w-lg bg-white pt-10 rounded-md
 }
 
+.cfh{
+    @apply text-center text-2xl font-bold text-indigo-600 sm:text-3xl
+}
+.cff{
+    @apply mt-6 mb-0 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8
+}
+
+.cfp{
+    @apply text-center text-lg font-medium
+}
+.cfi{
+    @apply w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm
+}
+
+.cfb{
+    @apply block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white
+}
+
+.cfps{
+    @apply absolute inset-y-0 right-0 grid place-content-center px-4
+}
+.cfm{
+    @apply text-center text-sm text-gray-500
+}

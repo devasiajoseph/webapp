@@ -4,25 +4,27 @@
 
 (defn login-page 
   []
-  [:div {:class "mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8"}
-   [:div {:class "mx-auto max-w-lg bg-white pt-10 rounded-md"}
-    [:h1 {:class "text-center text-2xl font-bold text-indigo-600 sm:text-3xl"} "Login"]
-    [:form { :class "mt-6 mb-0 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8"}
+  [:div {:class "cfc"}
+   [:div {:class "cf"}
+    [:h1 {:class "cfh"} "Login"]
+    [:form { :class "cff"}
      [:p {:class "text-center text-lg font-medium"} "Sign in to your account"]
      [:div
       [:label {:for "email", :class "sr-only"} "Email"]
       [:div {:class "relative"}
-       [:input {:type "email", :class "w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm", :placeholder "Enter email"}]
-       [:span {:class "absolute inset-y-0 right-0 grid place-content-center px-4"}
-       ]]]
+       [:input {:type "email", :class "cfi", :placeholder "Enter email"}]
+       [:span {:class "cfps"} "✉"]]]
      [:div
       [:label {:for "password", :class "sr-only"} "Password"]
       [:div {:class "relative"}
-       [:input {:type "password", :class "w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm", :placeholder "Enter password"}]
-       [:span {:class "absolute inset-y-0 right-0 grid place-content-center px-4"}]]]
-     [:button {:type "input", :class "block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white"} "Sign in"]
-     [:p {:class "text-center text-sm text-gray-500"} "No account?"
-      [:a {:class "underline", :href ""} "Sign up"]]]]])
+       [:input {:type "password", :class "cfi", :placeholder "Enter password"}]
+       [:span {:class "cfps" } "🔑"]]]
+     [:button {:type "input", :class "cfb"} "Sign in"]
+     [:p {:class "text-center text-sm text-gray-500"} "No account? "
+      [:a {:class "underline", :href "#/register"} "Sign up"]]
+     [:p {:class "text-center text-sm text-gray-500"} "Forgot password? "
+      [:a {:class "underline", :href "#/reset-password"} "Reset password"]]
+     ]]])
 
 
 (defn render-login
@@ -33,26 +35,50 @@
 
 (defn register-page
   []
-  [:div {:class "mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8"}
-   [:div {:class "mx-auto max-w-lg bg-white pt-10 rounded-md"}
-    [:h1 {:class "text-center text-2xl font-bold text-indigo-600 sm:text-3xl"} "Sign up"]
-    [:form {:class "mt-6 mb-0 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8"}
+  [:div {:class "cfc"}
+   [:div {:class "cf"}
+    [:h1 {:class "cfh"} "Sign up"]
+    [:form {:class "cff"}
      [:p {:class "text-center text-lg font-medium"} "Register a new account"]
      [:div
       [:label {:for "email", :class "sr-only"} "Email"]
       [:div {:class "relative"}
-       [:input {:type "email", :class "w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm", :placeholder "Enter email"}]
-       [:span {:class "absolute inset-y-0 right-0 grid place-content-center px-4"}]]]
+       [:input {:type "email", :class "cfi", :placeholder "Enter email"}]
+       [:span {:class "cfps"} "✉"]]]
      [:div
       [:label {:for "password", :class "sr-only"} "Password"]
       [:div {:class "relative"}
-       [:input {:type "password", :class "w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm", :placeholder "Enter password"}]
-       [:span {:class "absolute inset-y-0 right-0 grid place-content-center px-4"}]]]
-     [:button {:type "input", :class "block w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white"} "Register"]
-     [:p {:class "text-center text-sm text-gray-500"} "No account?"
-      [:a {:class "underline", :href ""} "Sign up"]]]]])
+       [:input {:type "password", :class "cfi", :placeholder "Enter password"}]
+       [:span {:class "cfps"}  "🔑"]]]
+     [:button {:type "input", :class "cfb"} "Register"]
+     [:p {:class "cfm"} "Already registered? "
+      [:a {:class "underline", :href "#/login"} "Login"]]]]])
 
 
 (defn render-register
   []
   (ui/render-ui register-page "app"))
+
+
+
+(defn reset-password-page
+  []
+  [:div {:class "cfc"}
+   [:div {:class "cf"}
+    [:h1 {:class "cfh"} "Reset password"]
+    [:form {:class "cff"}
+     [:p {:class "text-center text-lg font-medium"} "Enter your email to reset password"]
+     [:div
+      [:label {:for "email", :class "sr-only"} "Email"]
+      [:div {:class "relative"}
+       [:input {:type "email", :class "cfi", :placeholder "Enter your email"}]
+       [:span {:class "cfps"} "✉"]]]
+     [:button {:type "input", :class "cfb"} "Reset password"]
+     [:p {:class "cfm"} "No Account? "
+      [:a {:class "underline", :href "#/register"} "Sign up"]]
+     ]]])
+
+
+(defn render-reset-password
+  []
+  (ui/render-ui reset-password-page "app"))

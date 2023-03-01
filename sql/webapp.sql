@@ -438,3 +438,8 @@ create table page (
 );
 
 insert into page (page_slug,page_file,base_page_file) values ('components','components.html','base.html');
+insert into page (page_slug,page_file,base_page_file) values ('login','login.html','base.html');
+insert into page (page_slug,page_file,base_page_file) values ('register','register.html','base.html');
+insert into page (page_slug,page_file,base_page_file) values ('feed','feed.html','base.html');
+
+insert into page (page_slug,page_file,base_page_file) values ('dashboard','dashboard.html','base.html');
