@@ -6,7 +6,7 @@
             [reitit.coercion.schema :as rsc]
             [app.home :as home]
             [aupro.user :as user]
-            
+            [aupro.dashboard :as dash]
             ))
 
 (defonce match (r/atom nil))
@@ -31,6 +31,9 @@
    ["/reset-password"
     {:name ::reset-password
      :controllers [{:start user/render-reset-password}]}]
+   ["/dashboard"
+    {:name ::dashboard
+     :controllers [{:start dash/render-dashboard}]}]
    ])
 
 (defn init! []

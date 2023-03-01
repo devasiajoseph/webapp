@@ -41,15 +41,25 @@
     [:form {:class "cff"}
      [:p {:class "text-center text-lg font-medium"} "Register a new account"]
      [:div
+      [:label {:for "full-name", :class "sr-only"} "Full Name"]
+      [:div {:class "relative"}
+       [:input {:type "text", :class "cfi", :placeholder "Full Name"}]
+       [:span {:class "cfps"} ]]]
+     [:div
       [:label {:for "email", :class "sr-only"} "Email"]
       [:div {:class "relative"}
-       [:input {:type "email", :class "cfi", :placeholder "Enter email"}]
-       [:span {:class "cfps"} "✉"]]]
+       [:input {:type "email", :class "cfi", :placeholder "Enter Email"}]
+       [:span {:class "cfps"}]]]
      [:div
       [:label {:for "password", :class "sr-only"} "Password"]
       [:div {:class "relative"}
-       [:input {:type "password", :class "cfi", :placeholder "Enter password"}]
-       [:span {:class "cfps"}  "🔑"]]]
+       [:input {:type "password", :class "cfi", :placeholder "Enter Password"}]
+       [:span {:class "cfps"} ]]]
+     [:div
+      [:label {:for "phone", :class "sr-only"} "Phone"]
+      [:div {:class "relative"}
+       [:input {:type "text", :class "cfi", :placeholder "Enter Phone"}]
+       [:span {:class "cfps"}]]]
      [:button {:type "input", :class "cfb"} "Register"]
      [:p {:class "cfm"} "Already registered? "
       [:a {:class "underline", :href "#/login"} "Login"]]]]])
