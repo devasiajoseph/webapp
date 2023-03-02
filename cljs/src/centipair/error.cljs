@@ -30,7 +30,6 @@
   (doseq [error errors] 
     (if (= (:id error) (:id @field))
       (do
-        (println (:id error))
         (swap! field assoc :message (:message error))))))
 
 (defn remove-error
