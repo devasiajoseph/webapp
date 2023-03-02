@@ -24,9 +24,9 @@
 
 (defn notifier-component []
   [:div {:class "relative"}
-   [:div  {:class "flex justify-center mt-3 fixed top-0 left-0 right-0"}
+   [:div  {:class "flex justify-center mt-10 fixed top-0 left-0 right-0"}
     [:button {:id "nob" :type "button", :class "notifier"}
-     [:img {:src "/static/img/loader.svg", :class "mr-3 h-6 w-6"}] (:text @notifier-state)]]])
+      (:text @notifier-state)]]])
 
 (defn render-notifier-component 
   []

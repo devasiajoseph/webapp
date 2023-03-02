@@ -30,7 +30,7 @@
 }
 
 .cf{
-    @apply mx-auto max-w-lg bg-white pt-10 rounded-md
+    @apply mx-auto max-w-lg pt-10 rounded-md
 }
 
 .cfh{

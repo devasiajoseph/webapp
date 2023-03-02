@@ -45,25 +45,24 @@ func IsAdmin(r *http.Request) bool {
 func ValidateReg(r *http.Request) validator.ValidatorResponse {
 	res := validator.InitResponse()
 	//validator.RequiredStringValidation(r.FormValue("Email"), "Email", &res)
-	validator.EmailValue(r.FormValue("Email"), "Email", &res)
-	validator.RequiredStringValidation(r.FormValue("Phone"), "Phone", &res)
-	validator.IndianPhoneValidation(r.FormValue("Phone"), "Phone", &res)
-	validator.RequiredStringValidation(r.FormValue("Password"), "Password", &res)
-	validator.RequiredStringValidation(r.FormValue("FullName"), "FullName", &res)
-	//UniqueEmailValidation(r.FormValue("Email"), "Email", &res)
-	UniquePhoneValidation(r.FormValue("Phone"), "Phone", &res)
+	validator.RequiredEmailValidation(r.FormValue("email"), "email", &res)
+	validator.RequiredStringValidation(r.FormValue("phone"), "phone", &res)
+	validator.RequiredStringValidation(r.FormValue("password"), "password", &res)
+	validator.RequiredStringValidation(r.FormValue("full-name"), "full-name", &res)
+	UniqueEmailValidation(r.FormValue("Email"), "Email", &res)
+	UniquePhoneValidation(r.FormValue("phone"), "phone", &res)
 	return res
 }
 
 func ValidateUpdate(r *http.Request) validator.ValidatorResponse {
 	res := validator.InitResponse()
-	phone := r.FormValue("Phone")
-	validator.RequiredStringValidation(phone, "Phone", &res)
-	validator.RequiredStringValidation(r.FormValue("FullName"), "FullName", &res)
-	ua := UserAccount{Phone: phone}
+	email := r.FormValue("email")
+	validator.RequiredStringValidation(email, "email", &res)
+	validator.RequiredStringValidation(r.FormValue("full-name"), "full-name", &res)
+	ua := UserAccount{Email: email}
 	err := ua.Data()
 	if err == nil {
-		UpdatePhoneValidation(ua, phone, "Phone", &res)
+		UpdatePhoneValidation(ua, email, "phone", &res)
 	}
 	return res
 }

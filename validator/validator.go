@@ -12,28 +12,28 @@ import (
 
 var emailRegexp = regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
 
-//ValidationError validation error structure for json response
+// ValidationError validation error structure for json response
 type ValidationError struct {
-	ID      string `json:"Id"`
-	Message string `json:"Message"`
-	Label   string `json:"Label"`
+	ID      string `json:"id"`
+	Message string `json:"message"`
+	Label   string `json:"label"`
 }
 
-//ValidatorResponse list of errors in a form
+// ValidatorResponse list of errors in a form
 type ValidatorResponse struct {
-	Message string            `json:"Message"`
-	Valid   bool              `json:"Valid"`
-	Errors  []ValidationError `json:"Errors"`
+	Message string            `json:"message"`
+	Valid   bool              `json:"valid"`
+	Errors  []ValidationError `json:"errors"`
 }
 
-//Response list of errors in a form
+// Response list of errors in a form
 type Response struct {
-	Message string            `json:"Message"`
-	Valid   bool              `json:"Valid"`
-	Errors  []ValidationError `json:"Errors"`
+	Message string            `json:"message"`
+	Valid   bool              `json:"valid"`
+	Errors  []ValidationError `json:"errors"`
 }
 
-//InitResponse initializes valiadtion error response
+// InitResponse initializes valiadtion error response
 func InitResponse() ValidatorResponse {
 	var ve = []ValidationError{}
 	vr := ValidatorResponse{
@@ -43,8 +43,8 @@ func InitResponse() ValidatorResponse {
 	return vr
 }
 
-//EmptyString checks for empty string
-//"" "<space>" etc are empty strings
+// EmptyString checks for empty string
+// "" "<space>" etc are empty strings
 func EmptyString(v string) bool {
 	v = strings.Replace(v, " ", "", -1)
 	if len(v) == 0 || v == "null" {
@@ -53,7 +53,7 @@ func EmptyString(v string) bool {
 	return false
 }
 
-//InvalidEmail checks for email format
+// InvalidEmail checks for email format
 func InvalidEmail(v string) bool {
 	if EmptyString(v) {
 		return false
@@ -65,7 +65,7 @@ func InvalidEmail(v string) bool {
 	}
 }
 
-//FileExist check if a file exist
+// FileExist check if a file exist
 func FileExist(f string) bool {
 	if _, err := os.Stat(f); os.IsNotExist(err) {
 		return false
@@ -74,8 +74,8 @@ func FileExist(f string) bool {
 	}
 }
 
-//ValidFileExtension checks if the extension of a file in file path matches
-//parameters : filepath, extension
+// ValidFileExtension checks if the extension of a file in file path matches
+// parameters : filepath, extension
 func ValidFileExtension(fp string, ext string) bool {
 	if filepath.Ext(fp) != ext {
 		return false
@@ -83,7 +83,7 @@ func ValidFileExtension(fp string, ext string) bool {
 	return true
 }
 
-//AppendError appends validator error to Validator response
+// AppendError appends validator error to Validator response
 func AppendError(em string, id string, r *ValidatorResponse) {
 	r.Message = "Validation Failed"
 	r.Valid = false
@@ -93,7 +93,7 @@ func AppendError(em string, id string, r *ValidatorResponse) {
 	r.Errors = append(r.Errors, verror)
 }
 
-//EmailValidation adds email validation check to ValidatorResponse
+// EmailValidation adds email validation check to ValidatorResponse
 func EmailValidation(v string, id string, r *ValidatorResponse) {
 	if InvalidEmail(v) {
 		AppendError("Invalid Email", id, r)
@@ -124,6 +124,18 @@ func RequiredNumberValidation(v string, id string, r *ValidatorResponse) {
 	}
 }
 
+func RequiredEmailValidation(v string, id string, r *ValidatorResponse) {
+	if EmptyString(v) {
+		AppendError("This field is required", id, r)
+		return
+	}
+
+	if InvalidEmail(v) {
+		AppendError("Invalid Email", id, r)
+	}
+
+}
+
 func FileExistValidation(v string, id string, r *ValidatorResponse) {
 	if EmptyString(v) {
 		AppendError("This field is required", id, r)
@@ -146,7 +158,7 @@ func FileNotExistValidation(v string, id string, r *ValidatorResponse) {
 	}
 }
 
-//IntegerValueValidation checks if the value is a valid integer
+// IntegerValueValidation checks if the value is a valid integer
 func IntegerValueValidation(v string, id string, r *ValidatorResponse) {
 	if EmptyString(v) {
 		AppendError("This field is required", id, r)
@@ -158,7 +170,7 @@ func IntegerValueValidation(v string, id string, r *ValidatorResponse) {
 	}
 }
 
-//DBIntegerValidation checks for a positive id related to an sql row primary key
+// DBIntegerValidation checks for a positive id related to an sql row primary key
 func DBIntegerValidation(v string, id string, r *ValidatorResponse) {
 	if EmptyString(v) {
 		AppendError(id+":ID required", id, r)
@@ -171,7 +183,7 @@ func DBIntegerValidation(v string, id string, r *ValidatorResponse) {
 
 }
 
-//ValidationErrorResponse generic validation error response
+// ValidationErrorResponse generic validation error response
 func ValidationErrorResponse(w http.ResponseWriter, vRes ValidatorResponse) {
 	w.Header().Set("Content-Type", "application/json")
 	responseJSON, _ := json.Marshal(vRes)
@@ -180,7 +192,7 @@ func ValidationErrorResponse(w http.ResponseWriter, vRes ValidatorResponse) {
 	return
 }
 
-//EmailValue if not null check for email value
+// EmailValue if not null check for email value
 func EmailValue(v string, id string, r *ValidatorResponse) {
 	if EmptyString(v) {
 		return

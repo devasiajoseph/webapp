@@ -53,7 +53,7 @@
 
 (defn text [field]
   ^{:key (:id @field)}
-  [:input {:class (:class @field)
+  [:input {:class "input input-bordered w-full"
            :type (:type @field)
            :id (:id @field) 
            :value (:value @field)

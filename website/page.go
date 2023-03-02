@@ -11,22 +11,18 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 
 	"github.com/devasiajoseph/webapp/core"
 	"github.com/devasiajoseph/webapp/db/postgres"
 
-	//"gopkg.in/russross/blackfriday.v2"
 	"html/template"
-	//"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/gorilla/csrf"
-	//"os"
-	//	"strings"
 )
 
 type Paths struct {
@@ -72,7 +68,7 @@ func HandlePageError(e error) {
 
 var tmpDir = core.AbsolutePath("html/")
 
-//AuthUser current authenticated user
+// AuthUser current authenticated user
 type AuthUser struct {
 	UserAccountID int       `db:"user_account_id" json:"UserAccountID"`
 	FullName      string    `db:"full_name" json:"FullName"`
@@ -89,7 +85,7 @@ var sqlFetchAuthUser = "SELECT user_session.session_expiry, " +
 	"from user_session, user_account WHERE auth_token=$1 " +
 	"AND user_session.user_account_id=user_account.user_account_id;"
 
-//GetUserByAuth gets user by auth token
+// GetUserByAuth gets user by auth token
 func GetUserByAuth(uauth string) (AuthUser, error) {
 	db := postgres.Db
 	var au AuthUser
@@ -201,7 +197,7 @@ func ValidRecaptcha(token string) bool {
 		return false
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("Read error: could not read body")
 		log.Println(err)

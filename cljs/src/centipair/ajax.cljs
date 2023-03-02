@@ -124,7 +124,7 @@
 (defn handle-form-error [form response]
   (notify 422 "The submitted data is not valid")
   (doseq [each form]
-      (append-error (:Errors (:response response)) each)))
+      (append-error (:errors (:response response)) each)))
 
 
 (defn execute-ajax-json [url params function-handler]
@@ -200,8 +200,7 @@
 
 
 (defn rform-post [url form function-handler & [recap-token]]
-  (do
-   
+  (do 
     (doseq [each form]
       (remove-error  each))
     (let [params (reduce to-key {} form)]
@@ -214,10 +213,20 @@
         :response-format (json-response-format {:keywords? true})))))
 
 
+(defn recap
+  [func]
+  (.ready
+   js/grecaptcha
+   (fn []
+     (.then
+      (.execute js/grecaptcha (dom/get-value "rsk") #js {:action "submit"})
+      (fn [token] (func token))))))
+
+
 (defn recap-form-post
   [url form function-handler]
     (notify 102 "Loading")
-    (js/recap (partial rform-post url form function-handler)))
+    (recap (partial rform-post url form function-handler)))
 
 (defn form-post [url form function-handler ]
   (do
@@ -231,9 +240,6 @@
       :format (url-request-format)
       :headers {:X-CSRF-Token (dom/get-value "csrf_token")}
       :response-format (json-response-format {:keywords? true}))))
-
-
-
 
 (defn post-raw [url params function-handler]
   (do

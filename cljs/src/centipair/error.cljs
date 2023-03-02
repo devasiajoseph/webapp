@@ -26,10 +26,12 @@
     (append-default-error field error)))
 
 
-(defn append-error [errors field]
-  (doseq [error errors]
-    (if (= (:Id error) (:id @field))
-      (swap! field assoc :message (:Message error)))))
+(defn append-error [errors field] 
+  (doseq [error errors] 
+    (if (= (:id error) (:id @field))
+      (do
+        (println (:id error))
+        (swap! field assoc :message (:message error))))))
 
 (defn remove-error
   [field]

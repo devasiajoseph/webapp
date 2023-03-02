@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" data-theme="corporate">
 
   <head>
     <!-- Required meta tags -->
@@ -20,35 +20,25 @@
   <body class="bg-gray-100">
     <div id="notifier" class="hidden"></div>
     <div>{{block "hero" .}}{{end}}</div>
-    <div class="navbar bg-indigo-600 text-white">
-      <div class="container">
-        <div class="flex-1">
-          <a class="btn btn-ghost normal-case text-xl" href="#/">authProfile</a>
-        </div>
-        <div class="flex-none gap-2">
-          <ul class="menu menu-horizontal px-1">
-            <li>
-              <a href="#/dashboard">Dashboard</a>
-            </li>
-            <li>
-              <a href="#/login">Login</a>
-            </li>
-            <li>
-              <a href="#/register">Register</a>
-            </li>
-          </ul>
-        </div>
+
+    <div class="navbar bg-base-100">
+      <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl" href="#/">authProfile</a>
       </div>
-    
-
-
+      <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+          <li><a href="#/login">LOGIN</a></li>
+          <li><a href="#/register">REGISTER</a></li>
+          <li><a href="#/dashboard">DASHBOARD</a></li>
+        </ul>
+      </div>
     </div>
 
     
 
     <div class="container mx-auto px-4 h-screen"> {{block "content" .}}{{end}}</div>
     <input type="hidden" id="csrf_token" value="{{.Csrf}}" />
-
+    <input type="hidden" id="rsk" value="{{.RecapSiteKey}}"/>
     {{block "javascript".}}
     {{end}}
     <script src="/cljs-out/centipair-main.js"></script>
