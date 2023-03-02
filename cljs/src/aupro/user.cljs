@@ -1,7 +1,8 @@
 (ns aupro.user
   (:require [centipair.ui :as ui]
             [centipair.components.input :as input]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [centipair.ajax :as ajax]))
 
 (def email (r/atom {:id "email" :type "email" :class "cfi" :placeholder "Enter Email" :label "Email"}))
 (def password (r/atom {:id "password" :type "password" :class "cfi" :placeholder "Enter Password" :label "Password"}))
@@ -17,8 +18,11 @@
 (def login-button (r/atom {:label "Login" :on-click login}))
 
 
-(def register
-  [])
+(defn register
+  []
+  (ajax/form-post "/api/uauth/register" [email password full-name phone] 
+                  (fn [response])))
+
 (def register-button (r/atom {:label "Register" :on-click register}))
 
 (defn text [field]
@@ -53,7 +57,6 @@
                  login-button
                  [no-account-link forgot-password-link]))
 
-
 (defn render-login
   []
   (ui/render-ui login-page "app"))
@@ -66,12 +69,9 @@
                  register-button
                  [already-registered-link]))
 
-
 (defn render-register
   []
   (ui/render-ui register-page "app"))
-
-
 
 (defn reset-password-page
   []

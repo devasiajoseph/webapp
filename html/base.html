@@ -9,7 +9,7 @@
     <link rel="icon" type="img/ico" href="{{.StaticUrl}}/logo/favicon.ico">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{.StaticUrl}}/tailwind/dist/output.css">
-    <!--<link href="https://fonts.googleapis.com/css2?family=Muli:wght@400;500;700&amp;display=swap" rel="stylesheet">-->
+    <script src="https://www.google.com/recaptcha/api.js?render={{.RecapSiteKey}}"></script>
     {{block "css".}}{{end}}
     <title> Auth Profile | {{block "title" .}}{{end}}</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -49,7 +49,8 @@
     <div class="container mx-auto px-4 h-screen"> {{block "content" .}}{{end}}</div>
     <input type="hidden" id="csrf_token" value="{{.Csrf}}" />
 
-    {{block "javascript".}}{{end}}
+    {{block "javascript".}}
+    {{end}}
     <script src="/cljs-out/centipair-main.js"></script>
   </body>
 

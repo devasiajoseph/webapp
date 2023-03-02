@@ -158,10 +158,10 @@ func RegRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ua := UserAccount{
-		Email:    r.FormValue("Email"),
-		Phone:    r.FormValue("Phone"),
-		Password: r.FormValue("Password"),
-		FullName: r.FormValue("FullName"),
+		Email:    r.FormValue("email"),
+		Phone:    r.FormValue("phone"),
+		Password: r.FormValue("password"),
+		FullName: r.FormValue("full-name"),
 	}
 	//_, err := ua.Register()
 	uk, err := ua.Register()
@@ -182,7 +182,7 @@ func RegRequest(w http.ResponseWriter, r *http.Request) {
 	//LoginAPI(w, r)
 }
 
-//LoginAPI handles user login request
+// LoginAPI handles user login request
 func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	userStatus := UserStatus{LoggedIn: false, Role: ""}
 	//r.ParseForm()
@@ -825,7 +825,7 @@ func adminDeleteUser(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-//AddRoutes adds uauth routes to main application
+// AddRoutes adds uauth routes to main application
 func AddRoutes(r *mux.Router) {
 	r.HandleFunc("/api/uauth/logout", logoutAPI).Methods("GET")
 	r.HandleFunc("/api/uauth/status", userStatus).Methods("GET")
@@ -856,7 +856,7 @@ func AddRoutes(r *mux.Router) {
 	r.HandleFunc("/api/admin/uauth/password", adminChangeUserPassword).Methods("POST")
 }
 
-//Start initializes uauth based functions
+// Start initializes uauth based functions
 func Start(r *mux.Router) {
 	AddRoutes(r)
 }

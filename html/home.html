@@ -16,6 +16,14 @@
 {{end}}
 
 {{define "javascript"}}
-
+<script>
+    function recap(func) {
+      grecaptcha.ready(function () {
+        grecaptcha.execute('{{.RecapSiteKey}}', { action: 'submit' }).then(function (token) {
+          func(token);
+        });
+      });
+    }
+</script>
 
 {{end}}
