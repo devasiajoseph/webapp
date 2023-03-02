@@ -1,68 +1,70 @@
 (ns aupro.user
-  (:require [centipair.ui :as ui]))
+  (:require [centipair.ui :as ui]
+            [centipair.components.input :as input]
+            [reagent.core :as r]))
+
+(def email (r/atom {:id "email" :type "email" :class "cfi" :placeholder "Enter Email" :label "Email"}))
+(def password (r/atom {:id "password" :type "password" :class "cfi" :placeholder "Enter Password" :label "Password"}))
+(def phone (r/atom {:id "phone" :type "text" :class "cfi" :placeholder "Enter Phone"}))
+(def full-name (r/atom {:id "full-name" :type "text" :class "cfi" :placeholder "Enter Full Name"}))
+
+(def no-account-link (r/atom {:text "No Account? " :label "Sign up" :href "#/register"}))
+(def forgot-password-link (r/atom {:text "Forgot password? " :label "Reset password" :href "#/reset-password"}))
+(def already-registered-link (r/atom {:text "Already registered? " :label "Login" :href "#/login"}))
+
+(def login
+  [])
+(def login-button (r/atom {:label "Login" :on-click login}))
+
+
+(def register
+  [])
+(def register-button (r/atom {:label "Register" :on-click register}))
+
+(defn text [field]
+  [:div
+   [:label {:for (:id @field), :class "sr-only"} (:label @field)]
+   [:div {:class "relative"}
+    (input/text field)
+    [:span {:class "cfps"} (:icon @field)]]])
+
+(defn footer-link
+  [link]
+  [:p {:class "text-center text-sm text-gray-500"} (:text @link)
+   [:a {:class "underline", :href (:href @link)} (:label @link)]])
+
+(defn generate-form
+  [title header inputs button footer-links]
+   [:div {:class "cfc"}
+    [:div {:class "cf"}
+     [:h1 {:class "cfh"} title]
+     [:form {:class "cff"}
+      [:p {:class "text-center text-lg font-medium"} header]
+      (map text inputs)
+      [:button {:type "input", :class "cfb" :on-click (:on-click @button)} (:label @button)]
+      (map footer-link footer-links)]]])
 
 
 (defn login-page 
   []
-  [:div {:class "cfc"}
-   [:div {:class "cf"}
-    [:h1 {:class "cfh"} "Login"]
-    [:form { :class "cff"}
-     [:p {:class "text-center text-lg font-medium"} "Sign in to your account"]
-     [:div
-      [:label {:for "email", :class "sr-only"} "Email"]
-      [:div {:class "relative"}
-       [:input {:type "email", :class "cfi", :placeholder "Enter email"}]
-       [:span {:class "cfps"} "✉"]]]
-     [:div
-      [:label {:for "password", :class "sr-only"} "Password"]
-      [:div {:class "relative"}
-       [:input {:type "password", :class "cfi", :placeholder "Enter password"}]
-       [:span {:class "cfps" } "🔑"]]]
-     [:button {:type "input", :class "cfb"} "Sign in"]
-     [:p {:class "text-center text-sm text-gray-500"} "No account? "
-      [:a {:class "underline", :href "#/register"} "Sign up"]]
-     [:p {:class "text-center text-sm text-gray-500"} "Forgot password? "
-      [:a {:class "underline", :href "#/reset-password"} "Reset password"]]
-     ]]])
+  (generate-form "Login"
+                 "Sign in to your account"
+                 [email password]
+                 login-button
+                 [no-account-link forgot-password-link]))
 
 
 (defn render-login
   []
   (ui/render-ui login-page "app"))
 
-
-
 (defn register-page
   []
-  [:div {:class "cfc"}
-   [:div {:class "cf"}
-    [:h1 {:class "cfh"} "Sign up"]
-    [:form {:class "cff"}
-     [:p {:class "text-center text-lg font-medium"} "Register a new account"]
-     [:div
-      [:label {:for "full-name", :class "sr-only"} "Full Name"]
-      [:div {:class "relative"}
-       [:input {:type "text", :class "cfi", :placeholder "Full Name"}]
-       [:span {:class "cfps"} ]]]
-     [:div
-      [:label {:for "email", :class "sr-only"} "Email"]
-      [:div {:class "relative"}
-       [:input {:type "email", :class "cfi", :placeholder "Enter Email"}]
-       [:span {:class "cfps"}]]]
-     [:div
-      [:label {:for "password", :class "sr-only"} "Password"]
-      [:div {:class "relative"}
-       [:input {:type "password", :class "cfi", :placeholder "Enter Password"}]
-       [:span {:class "cfps"} ]]]
-     [:div
-      [:label {:for "phone", :class "sr-only"} "Phone"]
-      [:div {:class "relative"}
-       [:input {:type "text", :class "cfi", :placeholder "Enter Phone"}]
-       [:span {:class "cfps"}]]]
-     [:button {:type "input", :class "cfb"} "Register"]
-     [:p {:class "cfm"} "Already registered? "
-      [:a {:class "underline", :href "#/login"} "Login"]]]]])
+  (generate-form "Sign up"
+                 "Register a new account"
+                 [full-name email password phone]
+                 register-button
+                 [already-registered-link]))
 
 
 (defn render-register
@@ -73,20 +75,11 @@
 
 (defn reset-password-page
   []
-  [:div {:class "cfc"}
-   [:div {:class "cf"}
-    [:h1 {:class "cfh"} "Reset password"]
-    [:form {:class "cff"}
-     [:p {:class "text-center text-lg font-medium"} "Enter your email to reset password"]
-     [:div
-      [:label {:for "email", :class "sr-only"} "Email"]
-      [:div {:class "relative"}
-       [:input {:type "email", :class "cfi", :placeholder "Enter your email"}]
-       [:span {:class "cfps"} "✉"]]]
-     [:button {:type "input", :class "cfb"} "Reset password"]
-     [:p {:class "cfm"} "No Account? "
-      [:a {:class "underline", :href "#/register"} "Sign up"]]
-     ]]])
+  (generate-form "Reset Password"
+                 "Enter email to reset password"
+                 [email]
+                 login-button
+                 [no-account-link]))
 
 
 (defn render-reset-password
