@@ -46,7 +46,7 @@
      [:form {:class "cff"}
       [:p {:class "text-center text-lg font-medium"} header]
       (doall (map text inputs))
-      [:button {:type "input", :class "btn btn-primary w-full" :on-click (:on-click @button)} (:label @button)]
+      [:a {:type "input", :class "btn btn-primary w-full" :on-click (:on-click @button)} (:label @button)]
       (map footer-link footer-links)]]])
 
 
