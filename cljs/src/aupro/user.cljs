@@ -2,7 +2,8 @@
   (:require [centipair.ui :as ui]
             [centipair.components.input :as input]
             [reagent.core :as r]
-            [centipair.ajax :as ajax]))
+            [centipair.ajax :as ajax]
+            [centipair.components.notifier :as notifier]))
 
 (def email (r/atom {:id "email" :type "email" :class "cfi" :placeholder "Enter Email" :label "Email"}))
 (def password (r/atom {:id "password" :type "password" :class "cfi" :placeholder "Enter Password" :label "Password"}))
@@ -15,8 +16,10 @@
 
 (defn login
   []
-  (ajax/form-post "/api/uauth/register" [email password]
-                        (fn [response] (println response)))
+  (ajax/form-post "/api/uauth/login" [email password]
+                        (fn [response] (if (not (:loggedin response))
+                                         (notifier/notify 102 (:message response))
+                                         (js/alert "logged in"))))
   )
 (def login-button (r/atom {:label "Login" :on-click login}))
 

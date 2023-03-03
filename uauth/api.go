@@ -9,7 +9,6 @@ package uauth
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 
 	"github.com/devasiajoseph/webapp/api"
 	"github.com/devasiajoseph/webapp/core"
@@ -185,18 +184,25 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	userStatus := UserStatus{LoggedIn: false, Role: ""}
 	//r.ParseForm()
 	var ua UserAccount
-	err := ua.Account(r.FormValue("LoginID"))
+	err := ua.Account(r.FormValue("email"))
 
-	if err != nil || !ua.Active {
-		fmt.Println("not active")
-		w.WriteHeader(http.StatusUnauthorized)
+	if err != nil {
+		userStatus.Message = "Invalid Login"
+		api.ObjectResponse(w, userStatus)
 		return
 	}
 
-	userSession, err := ua.Login(r.FormValue("Password"))
+	if !ua.Active {
+		userStatus.Message = "User not active"
+		api.ObjectResponse(w, userStatus)
+		return
+	}
+
+	userSession, err := ua.Login(r.FormValue("password"))
 	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusUnauthorized)
+		userStatus.Message = "Invalid Login"
+		api.ObjectResponse(w, userStatus)
+		return
 
 	} else {
 		//UpdateLoginTime(userSession.UserAccountID)
@@ -212,13 +218,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 		userStatus.LoggedIn = true
 	}
 
-	statusJSON, err := json.Marshal(userStatus)
-	if err != nil {
-		log.Println("Error while json conversion")
-		http.Error(w, "Server Error", http.StatusInternalServerError)
-		return
-	}
-	w.Write(statusJSON)
+	api.ObjectResponse(w, userStatus)
 }
 
 func logoutAPI(w http.ResponseWriter, r *http.Request) {

@@ -70,9 +70,11 @@ type UserSession struct {
 
 // UserStatus holds login status
 type UserStatus struct {
-	Username string `json:"Username"`
-	LoggedIn bool   `json:"LoggedIn"`
-	Role     string `json:"Role"`
+	Username string `json:"username"`
+	LoggedIn bool   `json:"loggedin"`
+	Active   bool   `json:"active"`
+	Role     string `json:"role"`
+	Message  string `json:"message"`
 }
 
 // AuthUser current authenticated user
@@ -244,10 +246,9 @@ func (ua *UserAccount) Data() error {
 // Account gets account data with phone or email
 func (ua *UserAccount) Account(pe string) error {
 	db := postgres.Db
-	bsql := "select * from user_account where phone=$1;"
+	bsql := "select * from user_account where email=$1;"
 	err := db.Get(ua, bsql, pe)
 	if err != nil {
-		fmt.Println(err)
 		log.Println("Unable to fetch user data with id")
 	}
 	return err
@@ -267,7 +268,6 @@ func (ua *UserAccount) Login(password string) (UserSession, error) {
 	var us UserSession
 	err := ua.Data()
 	if err != nil {
-		log.Println(err)
 		return us, errors.New("user account not found")
 	}
 	if crypt.CheckPasswordHash(password, ua.Password) {
