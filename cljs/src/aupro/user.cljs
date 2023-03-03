@@ -9,11 +9,11 @@
 (def phone (r/atom {:id "phone" :type "text" :class "cfi" :placeholder "Enter Phone"}))
 (def full-name (r/atom {:id "full-name" :type "text" :class "cfi" :placeholder "Enter Full Name"}))
 
-(def no-account-link (r/atom {:text "No Account? " :label "Sign up" :href "#/register"}))
-(def forgot-password-link (r/atom {:text "Forgot password? " :label "Reset password" :href "#/reset-password"}))
-(def already-registered-link (r/atom {:text "Already registered? " :label "Login" :href "#/login"}))
+(def no-account-link (r/atom {:text "No Account? " :label "Sign up" :href "#/register" :id "noacclnk"}))
+(def forgot-password-link (r/atom {:text "Forgot password? " :label "Reset password" :href "#/reset-password" :id "rsplnk"}))
+(def already-registered-link (r/atom {:text "Already registered? " :label "Login" :href "#/login" :id "lglnk"}))
 
-(def login
+(defn login
   [])
 (def login-button (r/atom {:label "Login" :on-click login}))
 
@@ -25,7 +25,14 @@
 
 (def register-button (r/atom {:label "Register" :on-click register}))
 
+
+(defn activate
+  [])
+(def activate-button (r/atom {:label "Login" :on-click activate}))
+
+
 (defn text [field]
+   ^{:key (:id @field)}
   [:div
    [:label {:for (:id @field), :class "sr-only"} (:label @field)]
    [:div {:class "relative"}
@@ -35,6 +42,7 @@
 
 (defn footer-link
   [link]
+  ^{:key (:id @link)}
   [:p {:class "text-center text-sm text-gray-500"} (:text @link)
    [:a {:class "underline", :href (:href @link)} (:label @link)]])
 
@@ -47,11 +55,11 @@
       [:p {:class "text-center text-lg font-medium"} header]
       (doall (map text inputs))
       [:a {:type "input", :class "btn btn-primary w-full" :on-click (:on-click @button)} (:label @button)]
-      (map footer-link footer-links)]]])
+      (doall (map footer-link footer-links))]]])
 
 
 (defn login-page 
-  []
+  [] 
   (generate-form "Login"
                  "Sign in to your account"
                  [email password]

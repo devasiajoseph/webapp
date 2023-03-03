@@ -162,7 +162,7 @@ func RegRequest(w http.ResponseWriter, r *http.Request) {
 		Password: r.FormValue("password"),
 		FullName: r.FormValue("full-name"),
 	}
-	//_, err := ua.Register()
+
 	uk, err := ua.Register()
 	if err != nil {
 		http.Error(w, "Server Error", http.StatusInternalServerError)
@@ -176,9 +176,7 @@ func RegRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(responseJSON)
-	return
 
-	//LoginAPI(w, r)
 }
 
 // LoginAPI handles user login request

@@ -1,20 +1,29 @@
 (ns app.router
-  (:require [reagent.core :as r]
-            [reitit.frontend :as rf]
-            [reitit.frontend.easy :as rfe]
-            [reitit.frontend.controllers :as rfc]
-            [reitit.coercion.schema :as rsc]
+  (:require [reagent.core :as r] 
             [app.home :as home]
             [aupro.user :as user]
+            [centipair.ui :as ui]
             [aupro.dashboard :as dash]
-            ))
+            [secretary.core :as secretary :refer-macros [defroute]]
+            [goog.events :as events]
+            [goog.history.EventType :as HistoryEventType])
+  
+  (:import goog.History))
 
 (defonce match (r/atom nil))
 
 
+
+
+(defn test-query 
+  [qp]
+  (println qp)
+  )
+
 (def routes
   [["/"
-    {:name ::frontpage 
+    {:name ::frontpage
+     :view home/render-home
      :controllers [{:start home/render-home
                     :stop (fn [] )}]}]
 
@@ -25,25 +34,34 @@
    ["/login"
     {:name ::login
      :controllers [{:start user/render-login}]}]
-    ["/register"
-     {:name ::register
-      :controllers [{:start user/render-register}]}]
+   ["/register"
+    {:name ::register
+     :controllers [{:start user/render-register}]}]
    ["/reset-password"
     {:name ::reset-password
      :controllers [{:start user/render-reset-password}]}]
    ["/dashboard"
     {:name ::dashboard
-     :controllers [{:start dash/render-dashboard}]}]
+     :controllers [{:start dash/render-dashboard}]}] 
    ])
 
+
+
+
+(defroute home "/" [] (home/render-home))
+(defroute login "/login" [] (user/render-login))
+(defroute register "/register" [] (user/render-register))
+(defroute reset-password "/reset-password" [] (user/render-reset-password))
+(defroute dashboard "/dashboard" [] (dash/render-dashboard))
+(defroute "*" [] (ui/render-ui (fn [] [:h2 "404 Not Found"]) "app"))
+
+(defn hook-browser-navigation! []
+  (doto (History.)
+    (events/listen
+     HistoryEventType/NAVIGATE
+     (fn [event]
+       (secretary/dispatch! (.-token event))))
+    (.setEnabled true)))
+
 (defn init! []
-  (rfe/start!
-   (rf/router routes {:data {:coercion rsc/coercion}})
-   (fn [new-match]
-     (swap! match (fn [old-match]
-                    (if new-match
-                      (assoc new-match :controllers (rfc/apply-controllers (:controllers old-match) new-match))))))
-    ;; set to false to enable HistoryAPI
-   {:use-fragment true})
-  ;;(rdom/render [home-page] (.getElementById js/document "app"))
-  )
+  (hook-browser-navigation!))

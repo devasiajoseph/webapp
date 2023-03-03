@@ -33,7 +33,7 @@ const passwordResetKey = "password-reset"
 const registrationKey = "registration-key"
 const RoleAdmin = "admin"
 
-//UserAccount User data structure
+// UserAccount User data structure
 type UserAccount struct {
 	UserAccountID int       `db:"user_account_id" json:"UserAccountID"`
 	Email         string    `db:"email" json:"Email"`
@@ -46,7 +46,7 @@ type UserAccount struct {
 	Role          string    `db:"role" json:"Role"`
 }
 
-//UserKeys has user login creds
+// UserKeys has user login creds
 type UserKeys struct {
 	UserKeysID    int    `db:"user_keys_id" json:"UserKeysID"`
 	UserAccountID int    `db:"user_account_id" json:"UserAccountID"`
@@ -60,7 +60,7 @@ type OTPSession struct {
 	KeyValue string `db:"key_value" json:"KeyValue"`
 }
 
-//UserSession holds user session creds
+// UserSession holds user session creds
 type UserSession struct {
 	UserSessionID int       `db:"user_session_id" json:"UserSessionID"`
 	UserAccountID int       `db:"user_account_id" json:"UserAccountID"`
@@ -68,14 +68,14 @@ type UserSession struct {
 	SessionExpiry time.Time `db:"session_expiry" json:"SessionExpiry"`
 }
 
-//UserStatus holds login status
+// UserStatus holds login status
 type UserStatus struct {
 	Username string `json:"Username"`
 	LoggedIn bool   `json:"LoggedIn"`
 	Role     string `json:"Role"`
 }
 
-//AuthUser current authenticated user
+// AuthUser current authenticated user
 type AuthUser struct {
 	UserAccountID int       `db:"user_account_id" json:"UserAccountID"`
 	FullName      string    `db:"full_name" json:"FullName"`
@@ -96,7 +96,7 @@ type ObjList struct {
 	Query string        `json:"query"`
 }
 
-//Create creates new user account
+// Create creates new user account
 func (ua *UserAccount) Create() error {
 	db := postgres.Db
 	var sqlInsertUser = "INSERT INTO user_account" +
@@ -143,7 +143,7 @@ func (ua *UserAccount) CreateRaw() error {
 	return err
 }
 
-//Update updates user account
+// Update updates user account
 func (ua *UserAccount) Update() error {
 	db := postgres.Db
 	var sqlUpdateUser = "UPDATE user_account " +
@@ -166,7 +166,7 @@ func (ua *UserAccount) Update() error {
 	return err
 }
 
-//UpdateProfile updates user profile
+// UpdateProfile updates user profile
 func (ua *UserAccount) UpdateProfile() error {
 	db := postgres.Db
 	var sqlUpdateUser = "UPDATE user_account " +
@@ -190,7 +190,7 @@ func (ua *UserAccount) UpdateProfile() error {
 	return err
 }
 
-//Activate activates user
+// Activate activates user
 func (ua *UserAccount) Activate() error {
 	err := ua.Data()
 	if err != nil {
@@ -206,7 +206,7 @@ func (ua *UserAccount) Activate() error {
 	return err
 }
 
-//Save saves or updates user acccount
+// Save saves or updates user acccount
 func (ua *UserAccount) Save() error {
 	if ua.UserAccountID == 0 {
 		return ua.Create()
@@ -214,7 +214,7 @@ func (ua *UserAccount) Save() error {
 	return ua.Update()
 }
 
-//Data fetches user account data based on id or phone or email
+// Data fetches user account data based on id or phone or email
 func (ua *UserAccount) Data() error {
 	db := postgres.Db
 	bsql := "select * from user_account where "
@@ -249,7 +249,7 @@ func (ua *UserAccount) Data() error {
 	return errors.New("No fetch parameter provided")
 }
 
-//Account gets account data with phone or email
+// Account gets account data with phone or email
 func (ua *UserAccount) Account(pe string) error {
 	db := postgres.Db
 	bsql := "select * from user_account where phone=$1;"
@@ -270,7 +270,7 @@ func (ua *UserAccount) SetLoginTime() {
 	}
 }
 
-//Login logs in a user
+// Login logs in a user
 func (ua *UserAccount) Login(password string) (UserSession, error) {
 	var us UserSession
 	err := ua.Data()
@@ -297,7 +297,7 @@ func keepAlive(cookie string) {
 	}
 }
 
-//CreateUserSession creates user session
+// CreateUserSession creates user session
 func (ua *UserAccount) CreateUserSession() (UserSession, error) {
 	var us UserSession
 	db := postgres.Db
@@ -315,7 +315,7 @@ func (ua *UserAccount) CreateUserSession() (UserSession, error) {
 
 var sqlDeleteUserSession = "DELETE FROM user_session WHERE auth_token=$1;"
 
-//Logout user
+// Logout user
 func Logout(uaid string) error {
 	db := postgres.Db
 	_, err := db.Exec(sqlDeleteUserSession, uaid)
@@ -325,7 +325,7 @@ func Logout(uaid string) error {
 	return err
 }
 
-//GetUserByAuth gets user by auth token
+// GetUserByAuth gets user by auth token
 func GetUserByAuth(uauth string) (AuthUser, error) {
 	db := postgres.Db
 	var au AuthUser
@@ -343,7 +343,7 @@ func GetUserByAuth(uauth string) (AuthUser, error) {
 
 var sqlCreateUserKey = "insert into user_keys (user_account_id, key_name, key_value,otp) values($1,$2,$3,$4);"
 
-//Save saves userkeys
+// Save saves userkeys
 func (uk *UserKeys) Save() error {
 	db := postgres.Db
 	_, err := db.Exec(sqlCreateUserKey, uk.UserAccountID, uk.KeyName, uk.KeyValue, uk.OTP)
@@ -357,7 +357,7 @@ func (uk *UserKeys) Save() error {
 
 var sqlFetchUserKey = "select * from user_keys where key_name=$1 and key_value=$2;"
 
-//Data gets userkeys data
+// Data gets userkeys data
 func (uk *UserKeys) Data() error {
 	db := postgres.Db
 	err := db.Get(uk, sqlFetchUserKey, uk.KeyName, uk.KeyValue)
@@ -370,7 +370,7 @@ func (uk *UserKeys) Data() error {
 	return err
 }
 
-//Delete deletes user keys
+// Delete deletes user keys
 func (uk *UserKeys) Delete() error {
 	db := postgres.Db
 	stmt, err := db.Prepare("delete from user_keys where user_keys_id=$1")
@@ -389,7 +389,7 @@ func (uk *UserKeys) Delete() error {
 	return err
 }
 
-//Delete deletes user keys
+// Delete deletes user keys
 func (uk *UserKeys) DeleteUserKey() error {
 	db := postgres.Db
 	stmt, err := db.Prepare("delete from user_keys where key_name=$1 and user_account_id=$2")
@@ -408,7 +408,7 @@ func (uk *UserKeys) DeleteUserKey() error {
 	return err
 }
 
-//VerifyOTP verifies generated otp
+// VerifyOTP verifies generated otp
 func (uk *UserKeys) VerifyOTP(otp string) bool {
 	err := uk.Data()
 	if err != nil {
@@ -422,7 +422,7 @@ func (uk *UserKeys) VerifyOTP(otp string) bool {
 	return true
 }
 
-//VerifyOTP verifies generated otp
+// VerifyOTP verifies generated otp
 func (uk *UserKeys) UpdateKey(keyValue string) error {
 	db := postgres.Db
 
@@ -436,7 +436,7 @@ func (uk *UserKeys) UpdateKey(keyValue string) error {
 
 }
 
-//VerifyKey verifies a user key
+// VerifyKey verifies a user key
 func (uk *UserKeys) VerifyKey(key string, value string) bool {
 	err := uk.Data()
 	if err != nil {
@@ -448,7 +448,7 @@ func (uk *UserKeys) VerifyKey(key string, value string) bool {
 	return true
 }
 
-//SendOTP sends OTP via SMS
+// SendOTP sends OTP via SMS
 func (uk *UserKeys) SendOTP() {
 	ua := UserAccount{UserAccountID: uk.UserAccountID}
 	err := ua.Data()
@@ -465,7 +465,7 @@ func (uk *UserKeys) SendOTP() {
 
 }
 
-//GenerateOTP generates OTP for verification
+// GenerateOTP generates OTP for verification
 func (ua *UserAccount) GenerateOTP(keyName string) (UserKeys, error) {
 	var uk UserKeys
 	authKey := crypt.UID()
@@ -579,7 +579,7 @@ func PhoneExistValidation(v string, id string, r *validator.ValidatorResponse) {
 	return
 }
 
-//UpdatePhoneValidation checks for unique phone number while updating
+// UpdatePhoneValidation checks for unique phone number while updating
 func UpdatePhoneValidation(ua UserAccount, phone string, id string, r *validator.ValidatorResponse) {
 	uaCheck := UserAccount{Phone: phone}
 	err := uaCheck.Data()
@@ -617,7 +617,7 @@ func (ua *UserAccount) Exist() bool {
 	return false
 }
 
-//AccountExistValidation Checks if active account exist
+// AccountExistValidation Checks if active account exist
 func AccountExistValidation(v string, id string, r *validator.ValidatorResponse) {
 	var ua UserAccount
 	err := ua.Account(v)
@@ -666,7 +666,7 @@ func (ol *ObjList) Search() error {
 	return err
 }
 
-//RemovePasswordResetKey deletes password reset key
+// RemovePasswordResetKey deletes password reset key
 func (ua *UserAccount) RemovePasswordResetKey() error {
 	log.Println("REmoving key")
 	db := postgres.Db
@@ -686,7 +686,7 @@ func (ua *UserAccount) RemovePasswordResetKey() error {
 	return err
 }
 
-//SetPasswordResetKey sets password reset key for changing password
+// SetPasswordResetKey sets password reset key for changing password
 func (ua *UserAccount) SetPasswordResetKey() (string, error) {
 	err := ua.RemovePasswordResetKey()
 	if err != nil {
@@ -709,7 +709,7 @@ func (ua *UserAccount) SetPasswordResetKey() (string, error) {
 
 var sqlSetUserPassword = "update user_account set password=$1 where user_account_id=$2;"
 
-//SetPassword sets new password for existing user accounr
+// SetPassword sets new password for existing user accounr
 func (ua *UserAccount) SetPassword(password string) error {
 	db := postgres.Db
 	res := db.MustExec(sqlSetUserPassword, crypt.HashPassword(password), ua.UserAccountID)
@@ -723,7 +723,7 @@ func (ua *UserAccount) SetPassword(password string) error {
 	return nil
 }
 
-//ResetPasswordRequest initializes password reset process
+// ResetPasswordRequest initializes password reset process
 func (ua *UserAccount) ResetPasswordRequest() error {
 	resetKey, err := ua.SetPasswordResetKey()
 	if err != nil {
@@ -783,19 +783,20 @@ func (ua *UserAccount) sendRegistrationOTP() (UserKeys, error) {
 
 	}
 
-	tempSettings, err := settings.GetSettings(settings.OTPRegistrationVerificationTemplateID)
-	if err != nil {
-		fmt.Println("Error gettings")
-		fmt.Println(err)
-		return uk, err
-	}
+	/*
+		tempSettings, err := settings.GetSettings(settings.OTPRegistrationVerificationTemplateID)
+		if err != nil {
+			fmt.Println("Error gettings")
+			fmt.Println(err)
+			return uk, err
+		}
 
-	err = sms.SendOTP(uk.OTP, "91"+ua.Phone, tempSettings.SettingsValue)
-	if err != nil {
-		fmt.Println(err)
-		return uk, err
-	}
-
+		err = sms.SendOTP(uk.OTP, "91"+ua.Phone, tempSettings.SettingsValue)
+		if err != nil {
+			fmt.Println(err)
+			return uk, err
+		}
+	*/
 	return uk, err
 
 }
@@ -817,7 +818,7 @@ func (uk *UserKeys) verifyOTP(otp string) bool {
 	return false
 }
 
-//ResetPasswordRequest initializes password reset process with OTP
+// ResetPasswordRequest initializes password reset process with OTP
 func (ua *UserAccount) ForgotPasswordRequest() error {
 	resetKey, err := ua.SetPasswordResetKey()
 	if err != nil {
@@ -844,7 +845,7 @@ func (ua *UserAccount) ForgotPasswordRequest() error {
 	return err
 }
 
-//CompletePasswordReset completes password reset process
+// CompletePasswordReset completes password reset process
 func (uk *UserKeys) CompletePasswordReset(newPassword string) error {
 	err := uk.Data()
 	if err != nil {
@@ -872,7 +873,7 @@ func (uk *UserKeys) CompletePasswordReset(newPassword string) error {
 	return nil
 }
 
-//GenerateTestUser generates a userd for testing
+// GenerateTestUser generates a userd for testing
 func GenerateTestUser() (UserAccount, error) {
 	ua := UserAccount{
 		Email:    "testuser00944127890452834834@mailfromnowhere.com",
