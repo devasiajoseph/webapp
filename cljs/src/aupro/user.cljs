@@ -14,7 +14,10 @@
 (def already-registered-link (r/atom {:text "Already registered? " :label "Login" :href "#/login" :id "lglnk"}))
 
 (defn login
-  [])
+  []
+  (ajax/form-post "/api/uauth/register" [email password]
+                        (fn [response] (println response)))
+  )
 (def login-button (r/atom {:label "Login" :on-click login}))
 
 

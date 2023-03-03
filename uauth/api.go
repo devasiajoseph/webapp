@@ -9,6 +9,7 @@ package uauth
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/devasiajoseph/webapp/api"
 	"github.com/devasiajoseph/webapp/core"
@@ -49,7 +50,7 @@ func ValidateReg(r *http.Request) validator.ValidatorResponse {
 	validator.RequiredStringValidation(r.FormValue("phone"), "phone", &res)
 	validator.RequiredStringValidation(r.FormValue("password"), "password", &res)
 	validator.RequiredStringValidation(r.FormValue("full-name"), "full-name", &res)
-	UniqueEmailValidation(r.FormValue("Email"), "Email", &res)
+	UniqueEmailValidation(r.FormValue("email"), "email", &res)
 	UniquePhoneValidation(r.FormValue("phone"), "phone", &res)
 	return res
 }
@@ -187,6 +188,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	err := ua.Account(r.FormValue("LoginID"))
 
 	if err != nil || !ua.Active {
+		fmt.Println("not active")
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}

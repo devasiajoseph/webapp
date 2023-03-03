@@ -222,27 +222,19 @@ func (ua *UserAccount) Data() error {
 	if ua.UserAccountID > 0 {
 		bsql += " user_account_id=$1;"
 		err = db.Get(ua, bsql, ua.UserAccountID)
-		if err != nil {
-			fmt.Println(err)
-			log.Println("Unable to fetch user data with id")
-		}
 		return err
 	}
 	if ua.Phone != "" {
 		bsql += " phone=$1;"
 		err := db.Get(ua, bsql, ua.Phone)
-		if err != nil {
-			log.Println("Unable to fetch user data with phone ")
-		}
+
 		return err
 	}
 
 	if ua.Email != "" {
 		bsql += " email=$1;"
 		err := db.Get(ua, bsql, ua.Email)
-		if err != nil {
-			log.Println("Unable to fetch user data with email ")
-		}
+
 		return err
 	}
 

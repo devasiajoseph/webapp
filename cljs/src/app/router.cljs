@@ -12,42 +12,6 @@
 
 (defonce match (r/atom nil))
 
-
-
-
-(defn test-query 
-  [qp]
-  (println qp)
-  )
-
-(def routes
-  [["/"
-    {:name ::frontpage
-     :view home/render-home
-     :controllers [{:start home/render-home
-                    :stop (fn [] )}]}]
-
-   ["/about"
-    {:name ::about
-     :controllers [{:start home/render-about}]}]
-   
-   ["/login"
-    {:name ::login
-     :controllers [{:start user/render-login}]}]
-   ["/register"
-    {:name ::register
-     :controllers [{:start user/render-register}]}]
-   ["/reset-password"
-    {:name ::reset-password
-     :controllers [{:start user/render-reset-password}]}]
-   ["/dashboard"
-    {:name ::dashboard
-     :controllers [{:start dash/render-dashboard}]}] 
-   ])
-
-
-
-
 (defroute home "/" [] (home/render-home))
 (defroute login "/login" [] (user/render-login))
 (defroute register "/register" [] (user/render-register))
