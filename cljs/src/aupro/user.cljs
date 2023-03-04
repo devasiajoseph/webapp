@@ -3,6 +3,7 @@
             [centipair.components.input :as input]
             [reagent.core :as r]
             [centipair.ajax :as ajax]
+            [centipair.spa :as spa]
             [centipair.components.notifier :as notifier]))
 
 (def email (r/atom {:id "email" :type "email" :class "cfi" :placeholder "Enter Email" :label "Email"}))
@@ -14,13 +15,39 @@
 (def forgot-password-link (r/atom {:text "Forgot password? " :label "Reset password" :href "#/reset-password" :id "rsplnk"}))
 (def already-registered-link (r/atom {:text "Already registered? " :label "Login" :href "#/login" :id "lglnk"}))
 
+
+
+(defn menu
+  [loggedin]
+  (if loggedin
+    [:ul {:class "menu menu-horizontal px-1"}
+     [:li
+      [:a {:href "#/dashboard"} "DASHBOARD"]]]
+    [:ul {:class "menu menu-horizontal px-1"}
+     [:li
+      [:a {:href "#/login"} "LOGIN"]]
+     [:li
+      [:a {:href "#/register"} "REGISTER"]]]))
+
+
+(defn render-menu
+  [loggedin]
+  (ui/render-ui (partial menu loggedin) "nav-menu"))
+
+
+(defn fetch-menu
+  []
+  (ajax/get-json "/api/uauth/status" nil
+                 (fn [response]
+                   (render-menu  (:loggedin response)))))
+
 (defn login
   []
   (ajax/form-post "/api/uauth/login" [email password]
-                        (fn [response] (if (not (:loggedin response))
-                                         (notifier/notify 102 (:message response))
-                                         (js/alert "logged in"))))
-  )
+                        (fn [response] (if (:loggedin response)
+                                         (do (render-menu true)
+                                             (spa/redirect "/"))
+                                        (notifier/notify 102 (:message response))))))
 (def login-button (r/atom {:label "Login" :on-click login}))
 
 
@@ -100,3 +127,6 @@
 (defn render-reset-password
   []
   (ui/render-ui reset-password-page "app"))
+
+
+

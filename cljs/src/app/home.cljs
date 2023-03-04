@@ -1,7 +1,7 @@
 (ns app.home
    (:require [reagent.core :as r]
              [centipair.components.input :as input]
-              [centipair.components.notifier :as notifier]
+             [centipair.components.notifier :as notifier]
              [centipair.ui :as ui]
              [centipair.ajax :as ajax]))
 
@@ -59,6 +59,9 @@
   [:div {:class "mt-5"}
    [:h2 "Welcome to about"]
    [:p "This is about page"]])
+
+
+
 
 
 (defn render-about []

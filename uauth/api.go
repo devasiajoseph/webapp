@@ -223,7 +223,6 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 
 func logoutAPI(w http.ResponseWriter, r *http.Request) {
 	userStatus := UserStatus{LoggedIn: false, Role: ""}
-	log.Println("Logging out")
 	cookie, err := r.Cookie("uauth-token")
 	if err == nil {
 		go Logout(cookie.Value)
@@ -826,7 +825,7 @@ func adminDeleteUser(w http.ResponseWriter, r *http.Request) {
 
 // AddRoutes adds uauth routes to main application
 func AddRoutes(r *mux.Router) {
-	r.HandleFunc("/api/uauth/logout", logoutAPI).Methods("GET")
+	r.HandleFunc("/api/uauth/logout", logoutAPI).Methods("POST")
 	r.HandleFunc("/api/uauth/status", userStatus).Methods("GET")
 	r.HandleFunc("/api/uauth/register", RegRequest).Methods("POST")
 	r.HandleFunc("/api/uauth/login", LoginAPI).Methods("POST")

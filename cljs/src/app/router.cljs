@@ -1,5 +1,5 @@
 (ns app.router
-  (:require [reagent.core :as r] 
+  (:require [centipair.ajax :as ajax]
             [app.home :as home]
             [aupro.user :as user]
             [centipair.ui :as ui]
@@ -10,7 +10,8 @@
   
   (:import goog.History))
 
-(defonce match (r/atom nil))
+
+
 
 (defroute home "/" [] (home/render-home))
 (defroute login "/login" [] (user/render-login))
@@ -28,4 +29,5 @@
     (.setEnabled true)))
 
 (defn init! []
+  (user/fetch-menu)
   (hook-browser-navigation!))
