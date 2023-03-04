@@ -17,12 +17,21 @@
 
 
 
+(declare render-menu)
+
+(defn logout 
+  []
+  (ajax/form-post "/api/uauth/logout" nil (fn [response] (render-menu false))))
+
+
 (defn menu
   [loggedin]
   (if loggedin
     [:ul {:class "menu menu-horizontal px-1"}
      [:li
-      [:a {:href "#/dashboard"} "DASHBOARD"]]]
+      [:a {:href "#/dashboard"} "DASHBOARD"]]
+     [:li
+      [:a {:on-click logout} "LOGOUT"]]]
     [:ul {:class "menu menu-horizontal px-1"}
      [:li
       [:a {:href "#/login"} "LOGIN"]]
