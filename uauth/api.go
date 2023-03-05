@@ -141,6 +141,12 @@ func resendOTP(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+type UserRegistrationResponse struct {
+	Message       string `json:"message"`
+	Success       bool   `json:"success"`
+	ActivationKey string `json:"activation-key"`
+}
+
 func RegRequest(w http.ResponseWriter, r *http.Request) {
 	if !website.ValidRecaptcha(r.FormValue("recap-token")) {
 		api.AuthError(w)
@@ -165,17 +171,12 @@ func RegRequest(w http.ResponseWriter, r *http.Request) {
 
 	uk, err := ua.Register()
 	if err != nil {
-		http.Error(w, "Server Error", http.StatusInternalServerError)
+		api.ServerError(w)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	responseJSON, err := json.Marshal(uk)
-	if err != nil {
-		http.Error(w, "Server Error", http.StatusInternalServerError)
-		return
-	}
-	w.Write(responseJSON)
+	regR := UserRegistrationResponse{Message: "success", Success: true, ActivationKey: uk.KeyValue}
+	api.ObjectResponse(w, regR)
 
 }
 

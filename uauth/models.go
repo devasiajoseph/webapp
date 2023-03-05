@@ -484,6 +484,7 @@ func (ua *UserAccount) Register() (UserKeys, error) {
 		return uk, err
 	}
 	uk, err = ua.sendRegistrationOTP()
+
 	return uk, err
 }
 
