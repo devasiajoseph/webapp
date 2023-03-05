@@ -16,6 +16,7 @@
 (defroute home "/" [] (home/render-home))
 (defroute login "/login" [] (user/render-login))
 (defroute register "/register" [] (user/render-register))
+(defroute activate "/activate/:key" [key] (user/render-activate key))
 (defroute reset-password "/reset-password" [] (user/render-reset-password))
 (defroute dashboard "/dashboard" [] (dash/render-dashboard))
 (defroute "*" [] (ui/render-ui (fn [] [:h2 "404 Not Found"]) "app"))

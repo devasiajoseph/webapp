@@ -10,7 +10,8 @@
 (def password (r/atom {:id "password" :type "password" :class "cfi" :placeholder "Enter Password" :label "Password"}))
 (def phone (r/atom {:id "phone" :type "text" :class "cfi" :placeholder "Enter Phone"}))
 (def full-name (r/atom {:id "full-name" :type "text" :class "cfi" :placeholder "Enter Full Name"}))
-
+(def otp (r/atom {:id "otp" :type "text" :class "cfi" :placeholder "Enter activation code"}))
+(def registration-key (r/atom {:id "registration-key"}))
 (def no-account-link (r/atom {:text "No Account? " :label "Sign up" :href "#/register" :id "noacclnk"}))
 (def forgot-password-link (r/atom {:text "Forgot password? " :label "Reset password" :href "#/reset-password" :id "rsplnk"}))
 (def already-registered-link (r/atom {:text "Already registered? " :label "Login" :href "#/login" :id "lglnk"}))
@@ -21,7 +22,11 @@
 
 (defn logout 
   []
-  (ajax/form-post "/api/uauth/logout" nil (fn [response] (render-menu false))))
+  (ajax/form-post "/api/uauth/logout" nil
+                  (fn [response]
+                    (do
+                      (render-menu false)
+                      (spa/redirect "/")))))
 
 
 (defn menu
@@ -63,14 +68,14 @@
 (defn register
   []
   (ajax/recap-form-post "/api/uauth/register" [email password full-name phone] 
-                  (fn [response])))
+                  (fn [response] 
+                    (if (:success response)
+                      (spa/redirect (str "/activate/" (:activation-key response)))
+                      (notifier/notify 102 (:message response))))))
 
 (def register-button (r/atom {:label "Register" :on-click register}))
 
 
-(defn activate
-  [])
-(def activate-button (r/atom {:label "Login" :on-click activate}))
 
 
 (defn text [field]
@@ -138,4 +143,27 @@
   (ui/render-ui reset-password-page "app"))
 
 
+(defn activate
+  []
+  (ajax/form-post "/api/uauth/otp-activate"
+                  [registration-key otp]
+                  (fn [response]
+                    (if (:success response)
+                      (spa/redirect "/login")
+                      (notifier/notify 102 "Invalid code")))))
 
+
+(def activate-button (r/atom {:label "Activate account" :on-click activate}))
+
+(defn activate-form [] 
+  (generate-form "Activate"
+                 "Enter activation code to activate your account"
+                 [otp]
+                 activate-button
+                 nil))
+
+
+(defn render-activate 
+  [ak]
+   (swap! registration-key assoc :value ak)
+ (ui/render-ui activate-form "app"))
