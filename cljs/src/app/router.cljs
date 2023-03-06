@@ -2,6 +2,7 @@
   (:require [centipair.ajax :as ajax]
             [app.home :as home]
             [aupro.user :as user]
+            [aupro.feed :as feed]
             [centipair.ui :as ui]
             [aupro.dashboard :as dash]
             [secretary.core :as secretary :refer-macros [defroute]]
@@ -18,6 +19,7 @@
 (defroute register "/register" [] (user/render-register))
 (defroute activate "/activate/:key" [key] (user/render-activate key))
 (defroute reset-password "/reset-password" [] (user/render-reset-password))
+(defroute post "/post/:id" [id] (feed/render-post id))
 (defroute dashboard "/dashboard" [] (dash/render-dashboard))
 (defroute "*" [] (ui/render-ui (fn [] [:h2 "404 Not Found"]) "app"))
 
