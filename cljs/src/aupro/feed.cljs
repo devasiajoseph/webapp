@@ -3,16 +3,16 @@
             [centipair.ui :as ui]))
 
 
-(def feed (r/atom {}))
+(def post (r/atom {}))
 
 
 
-(defn post 
+(defn post-ui 
   []
   [:div {:class "post-box"}
    
    [:div {:class "flex flex-shrink-0 p-4 pb-0"}
-    [:a {:href "#/profile/joe-biden", :class "flex-shrink-0 group block"}
+    [:a {:href (:profile-link post) :class "flex-shrink-0 group block"}
      [:div {:class "flex items-top"}
       [:div
        [:img {:class "inline-block h-9 w-9 rounded-full", :src "https://pbs.twimg.com/profile_images/1308769664240160770/AfgzWVE7_normal.jpg"}]]
@@ -41,4 +41,4 @@
 
 (defn render-post
   [id]
- (ui/render-ui post "app"))
+ (ui/render-ui post-ui "app"))
