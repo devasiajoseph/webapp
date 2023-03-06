@@ -443,3 +443,4 @@ insert into page (page_slug,page_file,base_page_file) values ('register','regist
 insert into page (page_slug,page_file,base_page_file) values ('feed','feed.html','base.html');
 
 insert into page (page_slug,page_file,base_page_file) values ('dashboard','dashboard.html','base.html');
+insert into page (page_slug,page_file,base_page_file) values ('profile','profile.html','base.html');
