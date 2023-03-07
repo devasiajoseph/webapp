@@ -31,7 +31,7 @@ func main() {
 			CountryName: each[1],
 			CountryCode: each[0],
 		}
-		err := c.Save()
+		err := c.Create()
 		if err != nil {
 			log.Println(err)
 		}

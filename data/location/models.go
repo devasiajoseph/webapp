@@ -13,7 +13,7 @@ type Country struct {
 	CountryCode string `db:"country_code" json:"country_code"`
 }
 
-func (c *Country) Save() error {
+func (c *Country) Create() error {
 	db := postgres.Db
 	_, err := db.NamedExec("insert into country (country_name,country_code) values (:country_name,:country_code)", c)
 	if err != nil {
