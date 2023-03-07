@@ -3,10 +3,9 @@ CREATE EXTENSION Postgis;
 CREATE TABLE country(
        country_id serial PRIMARY KEY,
        country_name varchar(255) UNIQUE NOT NULL,
-       country_phone_code varchar(10) NOT NULL
+       country_code varchar(5) unique NOT NULL
 );
 
-INSERT INTO country (country_name,country_phone_code) VALUES ('India','91');
 CREATE TABLE state(
        state_id serial PRIMARY KEY,
        state_name varchar(255) NOT NULL,
@@ -444,3 +443,26 @@ insert into page (page_slug,page_file,base_page_file) values ('feed','feed.html'
 
 insert into page (page_slug,page_file,base_page_file) values ('dashboard','dashboard.html','base.html');
 insert into page (page_slug,page_file,base_page_file) values ('profile','profile.html','base.html');
+
+
+
+
+create table profile (
+       profile_id serial primary key,
+       full_name varchar(255),
+       country_id integer,
+       about text,
+       profile_pic varchar(255),
+);
+
+
+
+create table post (
+       id serial primary key,
+       title varchar(1024),
+       content text,
+       pic varchar(255),
+       likes integer,
+       comments integer,
+       views integer
+);
