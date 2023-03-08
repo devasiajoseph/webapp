@@ -464,8 +464,6 @@ create table profile (
        ON DELETE CASCADE
 );
 
-
-
 create table post (
        id serial primary key,
        title varchar(1024),
