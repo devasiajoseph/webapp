@@ -450,9 +450,12 @@ insert into page (page_slug,page_file,base_page_file) values ('profile','profile
 create table profile (
        profile_id serial primary key,
        full_name varchar(255),
-       country_id integer,
        about text,
        profile_pic varchar(255),
+       country_id integer,
+       CONSTRAINT profile_country_id_fkey FOREIGN KEY (country_id)
+       REFERENCES country (country_id) MATCH SIMPLE 
+       ON DELETE CASCADE
 );
 
 
@@ -464,5 +467,9 @@ create table post (
        pic varchar(255),
        likes integer,
        comments integer,
-       views integer
+       views integer,
+       profile_id integer,
+       CONSTRAINT post_profile_id_fkey FOREIGN KEY (profile_id)
+       REFERENCES profile (profile_id) MATCH SIMPLE 
+       ON DELETE CASCADE
 );
