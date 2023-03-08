@@ -452,6 +452,12 @@ create table profile (
        full_name varchar(255),
        about text,
        profile_pic varchar(255),
+       instagram varchar(255),
+       linkedin varchar(255),
+       facebook varchar(255),
+       twitter varchar(255),
+       youtube varchar(255),
+       tiktok varchar (255),
        country_id integer,
        CONSTRAINT profile_country_id_fkey FOREIGN KEY (country_id)
        REFERENCES country (country_id) MATCH SIMPLE 
