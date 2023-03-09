@@ -7,11 +7,17 @@ import (
 )
 
 type Profile struct {
-	ProfileID  int    `json:"profile_id" db:"profile_id"`
-	FullName   string `json:"full_name" db:"full_name"`
-	About      string `json:"about" db:"about"`
-	ProfilePic string `json:"profile_pic" db:"profile_pic"`
-	CountryID  int    `json:"country_id" db:"country_id"`
+	ProfileID   int    `json:"profile_id" db:"profile_id"`
+	FullName    string `json:"full_name" db:"full_name"`
+	Designation string `json:"designation" db:"designation"`
+	About       string `json:"about" db:"about"`
+	ProfilePic  string `json:"profile_pic" db:"profile_pic"`
+	Instagram   string `json:"instagram" db:"instagram"`
+	Facebook    string `json:"facebook" db:"facebook"`
+	Twitter     string `json:"twitter" db:"twitter"`
+	Youtube     string `json:"youtube" db:"youtube"`
+	Tiktok      string `json:"tiktok" db:"tiktok"`
+	CountryID   int    `json:"country_id" db:"country_id"`
 }
 
 var sqlCreate = "insert into profile (full_name,about,profile_pic,country_id) " +

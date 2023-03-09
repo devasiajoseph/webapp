@@ -450,6 +450,7 @@ insert into page (page_slug,page_file,base_page_file) values ('profile','profile
 create table profile (
        profile_id serial primary key,
        full_name varchar(255),
+       designation varchar(255),
        about text,
        profile_pic varchar(255),
        instagram varchar(255),
@@ -463,6 +464,13 @@ create table profile (
        REFERENCES country (country_id) MATCH SIMPLE 
        ON DELETE CASCADE
 );
+
+
+create table title(
+       title_id serial primary key,
+       description varchar(255),
+
+)
 
 create table post (
        id serial primary key,
