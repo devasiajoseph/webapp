@@ -128,13 +128,11 @@ CREATE TABLE company(
        company_name VARCHAR (1024) NOT NULL,
        company_description text,
        company_type varchar(100) NOT NULL default 'sp',
-       company_reg_no varchar(20) NOT NULL default '',
-       company_pan varchar(20) NOT NULL default '',
-       company_gst varchar(20) NOT NULL default '',
-       company_website varchar(255) NOT NULL default '',
+       company_reg_no varchar(20) NOT NULL default '',,
        company_email varchar(255) NOT NULL default '',
        individual boolean NOT NULL DEFAULT false,
-       company_owner integer not null,
+       stock_symbol varchar(20),
+       listed_exchange varchar(50),
        active boolean,
        created_date timestamp not null default NOW()
        );
@@ -450,7 +448,6 @@ insert into page (page_slug,page_file,base_page_file) values ('profile','profile
 create table profile (
        profile_id serial primary key,
        full_name varchar(255),
-       designation varchar(255),
        about text,
        profile_pic varchar(255),
        instagram varchar(255),
@@ -469,6 +466,14 @@ create table profile (
 create table title(
        title_id serial primary key,
        description varchar(255),
+       profile_id integer,
+       company_id integer,
+       CONSTRAINT title_profile_id_fkey FOREIGN KEY (profile_id)
+       REFERENCES profile (profile_id) MATCH SIMPLE 
+       ON DELETE CASCADE,
+       CONSTRAINT title_company_id_fkey FOREIGN KEY (company_id)
+       REFERENCES company (company_id) MATCH SIMPLE 
+       ON DELETE CASCADE
 
 )
 
