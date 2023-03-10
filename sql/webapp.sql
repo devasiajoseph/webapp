@@ -463,6 +463,18 @@ create table profile (
        ON DELETE CASCADE
 );
 
+create table profile_manager (
+       profile_manager_id serial primary key,
+       profile_id integer,
+       user_account_id integer,
+       CONSTRAINT profile_manger_user_account_id_fkey FOREIGN KEY (user_account_id)
+       REFERENCES user_account (user_account_id) MATCH SIMPLE 
+       ON DELETE CASCADE,
+       CONSTRAINT company_manger_profile_id_fkey FOREIGN KEY (profile_id)
+       REFERENCES profile (profile_id) MATCH SIMPLE 
+       ON DELETE CASCADE
+);
+
 
 create table title(
        title_id serial primary key,

@@ -48,7 +48,8 @@ func main() {
 		pro := profile.Profile{
 			FullName:  cleanName(each[0]),
 			About:     each[2] + "," + each[3],
-			CountryID: c.CountryID}
+			CountryID: c.CountryID,
+			Slug:      profile.Slugify(each[0])}
 
 		err = pro.Create()
 		if err != nil {
