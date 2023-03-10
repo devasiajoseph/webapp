@@ -456,6 +456,7 @@ create table profile (
        twitter varchar(255),
        youtube varchar(255),
        tiktok varchar (255),
+       slug varchar(255) unique not null,
        country_id integer,
        CONSTRAINT profile_country_id_fkey FOREIGN KEY (country_id)
        REFERENCES country (country_id) MATCH SIMPLE 
@@ -465,6 +466,7 @@ create table profile (
 
 create table title(
        title_id serial primary key,
+       title varchar(255),
        description varchar(255),
        profile_id integer,
        company_id integer,
@@ -474,8 +476,7 @@ create table title(
        CONSTRAINT title_company_id_fkey FOREIGN KEY (company_id)
        REFERENCES company (company_id) MATCH SIMPLE 
        ON DELETE CASCADE
-
-)
+);
 
 create table post (
        id serial primary key,
