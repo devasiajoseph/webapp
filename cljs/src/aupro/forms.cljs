@@ -30,3 +30,4 @@
      (doall (map text inputs))
      [:a {:type "input", :class "btn btn-primary w-full" :on-click (:on-click @button)} (:label @button)]
      (doall (map footer-link footer-links))]]])
+
