@@ -1,9 +1,9 @@
 (ns aupro.user
   (:require [centipair.ui :as ui]
-            [centipair.components.input :as input]
             [reagent.core :as r]
             [centipair.ajax :as ajax]
             [centipair.spa :as spa]
+            [centipair.components.input :as input]
             [centipair.components.notifier :as notifier]))
 
 (def email (r/atom {:id "email" :type "email" :class "cfi" :placeholder "Enter Email" :label "Email"}))
