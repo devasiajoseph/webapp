@@ -4,6 +4,13 @@
 
 
 
+(defn file [field]
+  ^{:key (:id @field)}
+  [:div {:class "form-control"}
+   [:input {:type "file", :class "mx-auto file-input w-full max-w-xs"}]
+   [:p {:id (str (:id @field) "-message") :class "link-error"} (:message @field)]])
+
+
 (defn text [field]
   ^{:key (:id @field)}
   [:div

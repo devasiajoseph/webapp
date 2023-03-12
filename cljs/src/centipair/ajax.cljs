@@ -47,7 +47,9 @@
 
 (defn success-handler
   [function-handler response]
-  (notify (:status response))
+  (if (:status response)
+    (notify (:status response))
+    (notify 200))
   (function-handler response))
 
 
@@ -144,7 +146,7 @@
       (if (nil? (request-key @ajax-cache))
         (execute-ajax-json url params (fn [response]
                                         (do
-                                          (swap! ajax-cache assoc request-key response)
+                                          (swap! ajax-cache assoc request-key response) 
                                           (function-handler response))))
         (success-handler function-handler (request-key @ajax-cache)))
       (execute-ajax-json url params function-handler))))

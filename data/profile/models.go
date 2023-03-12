@@ -8,8 +8,8 @@ import (
 	"github.com/devasiajoseph/webapp/db/postgres"
 )
 
-type Profile struct {
-	ProfileID   int    `json:"profile_id" db:"profile_id"`
+type Object struct {
+	ID          int    `json:"profile_id" db:"profile_id"`
 	FullName    string `json:"full_name" db:"full_name"`
 	Designation string `json:"designation" db:"designation"`
 	About       string `json:"about" db:"about"`
@@ -43,7 +43,7 @@ func Slugify(str string) string {
 var sqlCreate = "insert into profile (full_name,about,profile_pic,country_id) " +
 	"values (:full_name,:about,:profile_pic,:country_id);"
 
-func (p *Profile) Create() error {
+func (p *Object) Create() error {
 	db := postgres.Db
 	_, err := db.NamedExec(sqlCreate, p)
 	if err != nil {

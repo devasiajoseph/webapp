@@ -42,7 +42,6 @@
 
 (defn handle-auth
   [response]
-  (println response)
   (if (:loggedin response)
     (do
       (reset! auth response)

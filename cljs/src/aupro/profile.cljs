@@ -16,18 +16,22 @@
 (def twitter (r/atom {:id "twitter" :type "text" :class "cfi" :placeholder "Twitter link"}))
 (def youtube (r/atom {:id "youtube" :type "text" :class "cfi" :placeholder "Youtube link"}))
 (def tiktok (r/atom {:id "tiktok" :type "text" :class "cfi" :placeholder "Tiktok link"}))
-
+(def profile-pic (r/atom {:id "profile-pic" :url ""}))
 
 (defn save-profile[])
 
 (def save-profile-button (r/atom {:label "Save" :on-click save-profile}))
 (defn profile-form 
   []
-  (form/generate-form "Profile"
+  [:div
+  [:img {:src "http://t3.gstatic.com/licensed-image?q=tbn:ANd9GcQcKtPg4LQ1A7_j_7_ph7FfTTTjQrnqOdC2EPUHdeqAZ01JOImw19i9gvYHROXo0HahI13E_dZ1ZekfGEE" 
+         :class "mx-auto shadow-xl border-solid border-2 border-gray-300 w-44 rounded-lg"}]
+   (form/file profile-pic)
+   (form/generate-form "Profile"
                        "Update profile details"
                        [full-name about instagram facebook twitter youtube tiktok]
                        save-profile-button
-                       []))
+                       [])])
 
 
 
