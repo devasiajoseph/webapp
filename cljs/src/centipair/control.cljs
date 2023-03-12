@@ -35,14 +35,15 @@
 
 (defn activate-navigation
   []
-  (if (:logged_in @auth)
+  (if (:loggedin @auth)
     (let [nav-menu @dashboard-menu]
       (go (>! navigation-channel nav-menu)))))
 
 
 (defn handle-auth
   [response]
-  (if (:LoggedIn response)
+  (println response)
+  (if (:loggedin response)
     (do
       (reset! auth response)
       ;;(activate-navigation)
@@ -51,7 +52,7 @@
     (spa/render-initial)))
 
 
-(def auth-url (db/api :user-status))
+(def auth-url "/api/uauth/status")
 
 (defn load-auth [& [auth-handler]]
   (ajax/get-json auth-url nil (or auth-handler handle-auth)))

@@ -13,6 +13,23 @@
     [:span {:class "cfps"} (:icon @field)]]
    [:p {:id (str (:id @field) "-message") :class "link-error"} (:message @field)]])
 
+
+(defn text-area [field]
+  ^{:key (:id @field)}
+  [:div
+   [:label {:for (:id @field), :class "sr-only"} (:label @field)]
+   [:div {:class "relative"}
+    (input/text-area field)
+    [:span {:class "cfps"} (:icon @field)]]
+   [:p {:id (str (:id @field) "-message") :class "link-error"} (:message @field)]])
+
+
+(defn input-field
+  [field]
+  (case (:type @field)
+    "text" (text field)
+    "text-area" (text-area field)))
+
 (defn footer-link
   [link]
   ^{:key (:id @link)}
@@ -27,7 +44,7 @@
     [:h1 {:class "cfh"} title]
     [:form {:class "cff"}
      [:p {:class "text-center text-lg font-medium"} header]
-     (doall (map text inputs))
+     (doall (map input-field inputs))
      [:a {:type "input", :class "btn btn-primary w-full" :on-click (:on-click @button)} (:label @button)]
      (doall (map footer-link footer-links))]]])
 

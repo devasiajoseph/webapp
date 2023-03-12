@@ -22,7 +22,7 @@
 (defn ui-authorized?
   [permission-key auth]
   (if (nil? permission-key)
-    (:LoggedIn auth)
+    (:loggedin auth)
     (permission-key auth)))
 
 (defn auth-render

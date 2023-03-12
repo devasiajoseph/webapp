@@ -64,6 +64,19 @@
                           ""
                           (:placeholder @field))}])
 
+
+(defn text-area
+  [field]
+  ^{:key (:id @field)}
+  [:textarea {:class (:class @field)  
+              :id (:id @field)
+              :value (:value @field)
+              :on-change #(update-value field (-> % .-target .-value))
+              :disabled (if (:disabled @field) "disabled" "")
+              :placeholder (if (nil? (:placeholder @field))
+                             ""
+                             (:placeholder @field))}])
+
 (defn button [action-button form-fields]
   [:div {:class "mb-3"} [:a {:class "btn btn-primary w-100"
                              :on-click #(perform-action (:on-click @action-button) form-fields)
