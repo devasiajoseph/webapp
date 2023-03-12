@@ -4,7 +4,8 @@
              [centipair.ajax :as ajax]
              [centipair.spa :as spa]
              [centipair.components.input :as input]
-             [centipair.components.notifier :as notifier]))
+             [centipair.components.notifier :as notifier]
+             [aupro.form :as form]))
 
 
 
@@ -22,9 +23,23 @@
 (def save-profile-button (r/atom {:label "Login" :on-click save-profile}))
 (defn profile-form 
   []
-)
+  (form/generate-form "Profile"
+                       "Update profile details"
+                       [full-name about instagram facebook twitter youtube tiktok]
+                       save-profile-button
+                       []))
 
 
 
-(defn render-profile-form
-  [])
+(defn new-profile-form
+  [] 
+  (ui/render profile-form "app"))
+
+
+
+(defn get-profile
+  [id])
+
+(defn edit-profile-form
+  [id]
+  (ui/render profile-form "app"))
