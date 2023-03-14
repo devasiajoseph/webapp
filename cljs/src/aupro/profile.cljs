@@ -8,8 +8,8 @@
              [aupro.form :as form]))
 
 
-(def profile-id (r/atom {:id "id" :value 0}))
-(def full-name (r/atom {:id "full-name" :type "text" :class "cfi" :placeholder "Enter Full Name"}))
+(def profile-id (r/atom {:id "profile_id" :value 0}))
+(def full-name (r/atom {:id "full_name" :type "text" :class "cfi" :placeholder "Enter Full Name"}))
 (def about (r/atom {:id "about" :type "text-area" :class "textarea textarea-bordered textarea-lg w-full max-w-xs" :placeholder "About"}))
 (def instagram (r/atom {:id "instagram" :type "text" :class "cfi" :placeholder "Instagram link"}))
 (def facebook (r/atom {:id "facebook" :type "text" :class "cfi" :placeholder "Facebook link"}))

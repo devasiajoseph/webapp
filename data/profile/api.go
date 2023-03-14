@@ -1,7 +1,6 @@
 package profile
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -20,7 +19,13 @@ func (obj *Object) hasAuth(w http.ResponseWriter, r *http.Request) bool {
 		return false
 	}
 
-	obj.ProfileID = api.PostInt(r, "profile_id")
+	switch r.Method {
+	case http.MethodPost:
+		obj.ProfileID = api.PostInt(r, "profile_id")
+	case http.MethodGet:
+		obj.ProfileID = api.ObjID(r, "profile_id")
+	}
+
 	auth, err := obj.IsManager(ua)
 
 	if err != nil {
@@ -52,7 +57,6 @@ func deleteApi(w http.ResponseWriter, r *http.Request) {
 }
 
 func getApi(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Method)
 	obj := Object{}
 	if !obj.hasAuth(w, r) {
 		return
@@ -62,7 +66,7 @@ func getApi(w http.ResponseWriter, r *http.Request) {
 
 func AddRoutes(r *mux.Router) {
 	r.HandleFunc("/api/"+apiObj, saveApi).Methods("POST")
-	r.HandleFunc("/api/"+apiObj, getApi).Methods("GET")
+	r.HandleFunc("/api/"+apiObj+"/{profile-id}", getApi).Methods("GET")
 }
 
 // Start initializes bitcoin based functions

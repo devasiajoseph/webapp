@@ -55,6 +55,7 @@
   (case code
     200 (hide-notifier)
     102 (reset! notifier-state {:text (or message "Loading ...")})
+    401 (reset! notifier-state {:text (or message "Access denied")})
     (do
       (reset! notifier-state {:text message})
       (error-notifier))))
