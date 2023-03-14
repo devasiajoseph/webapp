@@ -4,6 +4,7 @@ import (
 	"github.com/devasiajoseph/webapp/app"
 	"github.com/devasiajoseph/webapp/bitcoin"
 	"github.com/devasiajoseph/webapp/core"
+	"github.com/devasiajoseph/webapp/data/profile"
 	"github.com/devasiajoseph/webapp/db/postgres"
 	"github.com/devasiajoseph/webapp/uauth"
 	"github.com/devasiajoseph/webapp/website"
@@ -22,6 +23,7 @@ func main() {
 	bitcoin.Start(r)
 	uauth.Start(r)
 	app.Start(r)
+	profile.Start(r)
 	website.Start(r)
 
 }

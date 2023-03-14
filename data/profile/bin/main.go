@@ -45,7 +45,7 @@ func main() {
 			log.Println(c.CountryName)
 		}
 
-		pro := profile.Profile{
+		pro := profile.Object{
 			FullName:  cleanName(each[0]),
 			About:     each[2] + "," + each[3],
 			CountryID: c.CountryID,

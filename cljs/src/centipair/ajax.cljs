@@ -173,8 +173,7 @@
       (notify 403))))
 
 
-(defn form-error-handler [form function-handler response]
-  
+(defn form-error-handler [form function-handler response] 
   (let [status (:status response)]
     (case status
       200 (success-handler function-handler response)

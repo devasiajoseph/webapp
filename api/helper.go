@@ -12,14 +12,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//ResponseObj has generic response structure
+// ResponseObj has generic response structure
 type ResponseObj struct {
-	Message string
-	Code    int
-	Valid   bool
+	Message string `json:"message"`
+	Code    int    `json:"code"`
+	Valid   bool   `json:"valid"`
 }
 
-//ObjID Fetches obj id from the request
+// ObjID Fetches obj id from the request
 func ObjID(r *http.Request, param string) int {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars[param])
@@ -29,7 +29,7 @@ func ObjID(r *http.Request, param string) int {
 	return id
 }
 
-//VarsInt fetches mux var value as integer from the request
+// VarsInt fetches mux var value as integer from the request
 func VarsInt(r *http.Request, param string) int {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars[param])
@@ -39,13 +39,13 @@ func VarsInt(r *http.Request, param string) int {
 	return id
 }
 
-//Vars fetches mux vars value from request
+// Vars fetches mux vars value from request
 func Vars(r *http.Request, param string) string {
 	vars := mux.Vars(r)
 	return vars[param]
 }
 
-//QueryInt fetches query parameter value as integer from the request
+// QueryInt fetches query parameter value as integer from the request
 func QueryInt(r *http.Request, param string) int {
 	id, err := strconv.Atoi(r.URL.Query().Get(param))
 	if err != nil {
@@ -55,7 +55,7 @@ func QueryInt(r *http.Request, param string) int {
 
 }
 
-//PostInt fetches post parameter value as integer from the request
+// PostInt fetches post parameter value as integer from the request
 func PostInt(r *http.Request, param string) int {
 	id, err := strconv.Atoi(r.FormValue(param))
 	if err != nil {
@@ -65,12 +65,12 @@ func PostInt(r *http.Request, param string) int {
 
 }
 
-//QueryParam fetches query parameter value from the request
+// QueryParam fetches query parameter value from the request
 func QueryParam(r *http.Request, param string) string {
 	return r.URL.Query().Get(param)
 }
 
-//ObjQueryID Fetches obj id from the request
+// ObjQueryID Fetches obj id from the request
 func ObjQueryID(r *http.Request, param string) int {
 	id, err := strconv.Atoi(r.URL.Query().Get(param))
 	if err != nil {
@@ -79,7 +79,7 @@ func ObjQueryID(r *http.Request, param string) int {
 	return id
 }
 
-//Error Generic error response
+// Error Generic error response
 func Error(w http.ResponseWriter, err error) {
 	aE := ResponseObj{
 		Message: err.Error(),
@@ -96,7 +96,7 @@ func Error(w http.ResponseWriter, err error) {
 	w.Write(rj)
 }
 
-//ResponseError generic response
+// ResponseError generic response
 func ResponseError(w http.ResponseWriter, resObj ResponseObj) {
 	rj, err := json.Marshal(resObj)
 	if err != nil {
@@ -109,7 +109,7 @@ func ResponseError(w http.ResponseWriter, resObj ResponseObj) {
 	w.Write(rj)
 }
 
-//GenericResponse returns a generic response json
+// GenericResponse returns a generic response json
 func GenericResponse(w http.ResponseWriter, resObj ResponseObj) {
 	rj, err := json.Marshal(resObj)
 	if err != nil {
@@ -122,7 +122,7 @@ func GenericResponse(w http.ResponseWriter, resObj ResponseObj) {
 	w.Write(rj)
 }
 
-//GenericError returns a generic Error response json
+// GenericError returns a generic Error response json
 func GenericError(w http.ResponseWriter) {
 	resObj := ResponseObj{Code: 400, Message: "Generic Error"}
 	rj, err := json.Marshal(resObj)
@@ -149,13 +149,13 @@ func ObjectNotFound(w http.ResponseWriter) {
 	w.Write(rj)
 }
 
-//ServerError 500
+// ServerError 500
 func ServerError(w http.ResponseWriter) {
 	http.Error(w, "Server Error", http.StatusInternalServerError)
 	return
 }
 
-//ObjectResponse generic response json object
+// ObjectResponse generic response json object
 func ObjectResponse(w http.ResponseWriter, resObj interface{}) {
 	rj, err := json.Marshal(resObj)
 	if err != nil {
@@ -168,7 +168,7 @@ func ObjectResponse(w http.ResponseWriter, resObj interface{}) {
 	w.Write(rj)
 }
 
-//ValidationError returns validation error response
+// ValidationError returns validation error response
 func ValidationError(w http.ResponseWriter, vRes validator.ValidatorResponse) {
 	w.Header().Set("Content-Type", "application/json")
 	responseJSON, _ := json.Marshal(vRes)
@@ -177,7 +177,7 @@ func ValidationError(w http.ResponseWriter, vRes validator.ValidatorResponse) {
 	return
 }
 
-//RequestComplete acknowledges a request
+// RequestComplete acknowledges a request
 func RequestComplete(w http.ResponseWriter, message string) {
 	aE := ResponseObj{
 		Message: message,
@@ -193,7 +193,7 @@ func RequestComplete(w http.ResponseWriter, message string) {
 	w.Write(rj)
 }
 
-//AuthError authentication response error
+// AuthError authentication response error
 func AuthError(w http.ResponseWriter) {
 	aE := ResponseObj{
 		Message: "Access denied",
@@ -211,7 +211,7 @@ func AuthError(w http.ResponseWriter) {
 	w.Write(rj)
 }
 
-//ObjIDError response if a bad object id is passed
+// ObjIDError response if a bad object id is passed
 func ObjIDError(w http.ResponseWriter) {
 	aE := ResponseObj{
 		Message: "Invalid ID",
@@ -229,7 +229,7 @@ func ObjIDError(w http.ResponseWriter) {
 	w.Write(rj)
 }
 
-//Response standard api response
+// Response standard api response
 func Response(rj []byte, err error, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 	if err == nil {
@@ -241,7 +241,7 @@ func Response(rj []byte, err error, w http.ResponseWriter) {
 
 var defaultLimit = 50
 
-//PageLimit gets page and limit from the request
+// PageLimit gets page and limit from the request
 func PageLimit(r *http.Request) (int, int) {
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil {
@@ -257,7 +257,7 @@ func PageLimit(r *http.Request) (int, int) {
 
 var myClient = &http.Client{Timeout: 5 * time.Second}
 
-//GetJson gets and parse json
+// GetJson gets and parse json
 func GetJson(url string, target interface{}) error {
 	r, err := myClient.Get(url)
 	if err != nil {
