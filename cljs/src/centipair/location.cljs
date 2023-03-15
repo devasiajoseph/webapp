@@ -1,6 +1,6 @@
 (ns centipair.location
   (:require [reagent.core :as reagent]
-            [centipair.location :as location]))
+            [centipair.ajax :as ajax]))
 
 
 
