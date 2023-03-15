@@ -35,3 +35,13 @@ func (c *Country) NamedQuery() error {
 	}
 	return err
 }
+
+func GetCountryList() ([]Country, error) {
+	db := postgres.Db
+	cl := []Country{}
+	err := db.Select(&cl, "select country_id,country_name,country_code from country;")
+	if err != nil {
+		log.Println("Error fetching country list")
+	}
+	return cl, err
+}
