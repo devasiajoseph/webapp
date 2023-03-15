@@ -65,6 +65,18 @@
                           (:placeholder @field))}])
 
 
+(defn select [field]
+  ^{:key (:id @field)}
+  [:select {:class "select select-bordered w-full max-w-xs"
+           :id (:id @field)
+           :value (:value @field)
+           :on-change #(update-value field (-> % .-target .-value)) 
+           :disabled (if (:disabled @field) "disabled" "")
+           :placeholder (if (nil? (:placeholder @field))
+                          ""
+                          (:placeholder @field))}])
+
+
 (defn text-area
   [field]
   ^{:key (:id @field)}

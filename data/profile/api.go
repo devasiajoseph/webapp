@@ -6,12 +6,16 @@ import (
 
 	"github.com/devasiajoseph/webapp/api"
 	"github.com/devasiajoseph/webapp/uauth"
+	"github.com/devasiajoseph/webapp/validator"
 	"github.com/gorilla/mux"
 )
 
 var apiObj = "profile"
 
 func (obj *Object) hasAuth(w http.ResponseWriter, r *http.Request) bool {
+	if obj.ProfileID == 0 {
+		return true
+	}
 	ua, err := uauth.GetAuthenticatedUser(r)
 	if err != nil {
 		log.Println(err)
@@ -40,12 +44,37 @@ func (obj *Object) hasAuth(w http.ResponseWriter, r *http.Request) bool {
 	return true
 }
 
+func ValidateSave(r *http.Request) validator.ValidatorResponse {
+	res := validator.InitResponse()
+	validator.RequiredStringValidation(r.FormValue("full_name"), "full_name", &res)
+	validator.RequiredStringValidation(r.FormValue("about"), "about", &res)
+	return res
+}
+
 func saveApi(w http.ResponseWriter, r *http.Request) {
+	vRes := ValidateSave(r)
+	if !vRes.Valid {
+		api.ValidationError(w, vRes)
+		return
+	}
 	obj := Object{}
 	if !obj.hasAuth(w, r) {
 		return
 	}
+	obj.FullName = r.FormValue("full_name")
+	obj.About = r.FormValue("about")
+	obj.Instagram = r.FormValue("instagram")
+	obj.Facebook = r.FormValue("facebook")
+	obj.Twitter = r.FormValue("twitter")
+	obj.Youtube = r.FormValue("youtube")
+	obj.Tiktok = r.FormValue("tiktok")
+	obj.CountryID = api.PostInt(r, "country_id")
+	err := obj.Save()
+	if err != nil {
+		api.ServerError(w)
+	}
 
+	api.ObjectResponse(w, obj)
 }
 
 func listApi(w http.ResponseWriter, r *http.Request) {

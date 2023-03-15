@@ -5,22 +5,35 @@
              [centipair.spa :as spa]
              [centipair.components.input :as input]
              [centipair.components.notifier :as notifier]
+             [centipair.location :as location]
              [aupro.form :as form]))
 
 
 (def profile-id (r/atom {:id "profile_id" :value 0}))
-(def full-name (r/atom {:id "full_name" :type "text" :class "cfi" :placeholder "Enter Full Name"}))
-(def about (r/atom {:id "about" :type "text-area" :class "textarea textarea-bordered textarea-lg w-full max-w-xs" :placeholder "About"}))
-(def instagram (r/atom {:id "instagram" :type "text" :class "cfi" :placeholder "Instagram link"}))
-(def facebook (r/atom {:id "facebook" :type "text" :class "cfi" :placeholder "Facebook link"}))
-(def twitter (r/atom {:id "twitter" :type "text" :class "cfi" :placeholder "Twitter link"}))
-(def youtube (r/atom {:id "youtube" :type "text" :class "cfi" :placeholder "Youtube link"}))
-(def tiktok (r/atom {:id "tiktok" :type "text" :class "cfi" :placeholder "Tiktok link"}))
+(def full-name (r/atom {:id "full_name" :type "text" :class "cfi" :placeholder "Enter Full Name" :label "Full name"}))
+(def about (r/atom {:id "about" :type "text-area" :class "textarea textarea-bordered textarea-lg w-full max-w-xs" :placeholder "About" :label "About profile"}))
+(def instagram (r/atom {:id "instagram" :type "text" :class "cfi" :placeholder "Instagram link" :label "Instagram link"}))
+(def facebook (r/atom {:id "facebook" :type "text" :class "cfi" :placeholder "Facebook link" :label "Facebook link"}))
+(def twitter (r/atom {:id "twitter" :type "text" :class "cfi" :placeholder "Twitter link" :label "Twitter link"}))
+(def youtube (r/atom {:id "youtube" :type "text" :class "cfi" :placeholder "Youtube link" :label "Youtube link"}))
+(def tiktok (r/atom {:id "tiktok" :type "text" :class "cfi" :placeholder "Tiktok link" :label "Tiktok link"}))
 (def profile-pic (r/atom {:id "profile-pic" :url ""}))
 
-(defn save-profile[])
+(defn save-profile
+  []
+  (ajax/form-post
+   "/api/profile" [profile-id
+                   full-name
+                   about
+                   instagram
+                   facebook
+                   twitter
+                   youtube
+                   tiktok]
+   (fn [response]
+     (spa/redirect (str "/profile/edit" (:profile_id response))))))
 
-(def save-profile-button (r/atom {:label "Save" :on-click save-profile}))
+(def save-profile-button (r/atom {:label "Save Profile" :on-click save-profile}))
 (defn profile-form 
   []
   [:div
@@ -29,7 +42,7 @@
     (form/file profile-pic)]
    (form/generate-form "Profile"
                        "Update profile details"
-                       [full-name about instagram facebook twitter youtube tiktok]
+                       [full-name about location/country instagram facebook twitter youtube tiktok]
                        save-profile-button
                        [])])
 

@@ -48,8 +48,8 @@ func Slugify(str string) string {
 	return str
 }
 
-var sqlCreate = "insert into profile (full_name,about,profile_pic,country_id) " +
-	"values (:full_name,:about,:profile_pic,:country_id);"
+var sqlCreate = "insert into profile (full_name,about,instagram,facebook,linkedin,twitter,youtube,tiktok,country_id) " +
+	"values (:full_name,:about,:instagram,:facebook,:linkedin,:twitter,:youtube,:tiktok,:country_id);"
 
 func (obj *Object) Create() error {
 	db := postgres.Db
@@ -59,6 +59,19 @@ func (obj *Object) Create() error {
 		log.Println("Error creating new profile")
 	}
 	return err
+}
+
+func (obj *Object) Update() error {
+	return nil
+}
+
+func (obj *Object) Save() error {
+	obj.Slug = Slugify(obj.FullName)
+	if obj.ProfileID == 0 {
+		return obj.Create()
+	}
+
+	return obj.Update()
 }
 
 var sqlManager = "select profile_id, user_account_id from profile_manager where profile_id=$1 and user_account_id=$2;"

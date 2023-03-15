@@ -1,5 +1,6 @@
 (ns aupro.form
-  (:require [centipair.components.input :as input]))
+  (:require [centipair.components.input :as input]
+            [centipair.ajax :as ajax]))
 
 
 
@@ -11,20 +12,29 @@
    [:p {:id (str (:id @field) "-message") :class "link-error"} (:message @field)]])
 
 
+
+
 (defn text [field]
   ^{:key (:id @field)}
-  [:div
-   [:label {:for (:id @field), :class "sr-only"} (:label @field)]
+  [:div {:class "form-control"}
+   [:label {:for (:id @field), :class "label"} (:label @field)]
    [:div {:class "relative"}
     (input/text field)
     [:span {:class "cfps"} (:icon @field)]]
+   [:p {:id (str (:id @field) "-message") :class "link-error"} (:message @field)]])
+
+(defn select [field]
+  ^{:key (:id @field)}
+  [:div {:class "form-control"}
+   [:label {:for (:id @field), :class "label"} (:label @field)]
+   (input/select field)
    [:p {:id (str (:id @field) "-message") :class "link-error"} (:message @field)]])
 
 
 (defn text-area [field]
   ^{:key (:id @field)}
   [:div
-   [:label {:for (:id @field), :class "sr-only"} (:label @field)]
+   [:label {:for (:id @field), :class "label"} (:label @field)]
    [:div {:class "relative"}
     (input/text-area field)
     [:span {:class "cfps"} (:icon @field)]]
@@ -35,7 +45,8 @@
   [field]
   (case (:type @field)
     "text" (text field)
-    "text-area" (text-area field)))
+    "text-area" (text-area field)
+    "select" (select field)))
 
 (defn footer-link
   [link]
