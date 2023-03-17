@@ -2,6 +2,7 @@ package profile
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 	"regexp"
 	"strings"
@@ -17,12 +18,14 @@ type Object struct {
 	About       string `json:"about" db:"about"`
 	ProfilePic  string `json:"profile_pic" db:"profile_pic"`
 	Instagram   string `json:"instagram" db:"instagram"`
+	Linkedin    string `json:"linkedin" db:"linkedin"`
 	Facebook    string `json:"facebook" db:"facebook"`
 	Twitter     string `json:"twitter" db:"twitter"`
 	Youtube     string `json:"youtube" db:"youtube"`
 	Tiktok      string `json:"tiktok" db:"tiktok"`
-	Slug        string `json:"slug" db:"slug"`
 	CountryID   int    `json:"country_id" db:"country_id"`
+	Slug        string `json:"slug" db:"slug"`
+	UserAccount uauth.AuthUser
 }
 
 type ProfileManager struct {
@@ -48,27 +51,63 @@ func Slugify(str string) string {
 	return str
 }
 
-var sqlCreate = "insert into profile (full_name,about,instagram,facebook,linkedin,twitter,youtube,tiktok,country_id) " +
-	"values (:full_name,:about,:instagram,:facebook,:linkedin,:twitter,:youtube,:tiktok,:country_id);"
+var sqlCreate = "insert into profile (full_name,about,instagram,linkedin,facebook,twitter,youtube,tiktok,country_id,slug) " +
+	"values (:full_name,:about,:instagram,:linkedin,:facebook,:twitter,:youtube,:tiktok,:country_id,:slug) returning profile_id;"
 
 func (obj *Object) Create() error {
 	db := postgres.Db
-	_, err := db.NamedExec(sqlCreate, obj)
+	rows, err := db.NamedQuery(sqlCreate, obj)
 	if err != nil {
 		log.Println(err)
 		log.Println("Error creating new profile")
 	}
+
+	if rows.Next() {
+		rows.Scan(&obj.ProfileID)
+	}
 	return err
 }
 
+var sqlGet = "select * from profile where profile_id = $1"
+
+func (obj *Object) Get() error {
+	db := postgres.Db
+	err := db.Get(obj, sqlGet, obj.ProfileID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			obj.ProfileID = 0
+			return nil
+		}
+		log.Println("Error getting profile")
+	}
+
+	return err
+}
+
+var sqlUpdate = "update profile set " +
+	" full_name=:full_name,about=:about,instagram=:instagram,linkedin=:linkedin," +
+	"facebook=:facebook,twitter=:twitter,youtube=:youtube,tiktok=:tiktok,country_id=:country_id," +
+	"slug=:slug where profile_id=:profile_id;"
+
 func (obj *Object) Update() error {
-	return nil
+	db := postgres.Db
+	_, err := db.NamedExec(sqlUpdate, obj)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error updating profile")
+	}
+	return err
 }
 
 func (obj *Object) Save() error {
 	obj.Slug = Slugify(obj.FullName)
 	if obj.ProfileID == 0 {
-		return obj.Create()
+		err := obj.Create()
+		if err != nil {
+			return err
+		}
+		obj.AddManager(obj.UserAccount)
+		return nil
 	}
 
 	return obj.Update()
@@ -91,4 +130,18 @@ func (obj *Object) IsManager(ua uauth.AuthUser) (bool, error) {
 		return false, err
 	}
 	return true, nil
+}
+
+func (obj *Object) AddManager(ua uauth.AuthUser) error {
+	if !ua.Active {
+		return errors.New("user not active")
+	}
+	db := postgres.Db
+	sqlInsertManager := "insert into profile_manager (profile_id,user_account_id) values ($1,$2);"
+	_, err := db.Exec(sqlInsertManager, obj.ProfileID, ua.UserAccountID)
+
+	if err != nil {
+		log.Println(err)
+	}
+	return err
 }

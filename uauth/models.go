@@ -333,6 +333,21 @@ func GetUserByAuth(uauth string) (AuthUser, error) {
 	return au, err
 }
 
+func GetAuthUser(userAccountID int) (AuthUser, error) {
+	db := postgres.Db
+	var au AuthUser
+	err := db.Get(&au, sqlFecthUser, userAccountID)
+	if err != nil {
+		log.Println(err)
+		return au, err
+	}
+	if !au.Active {
+		log.Println("Inactive user => " + au.Email + ":" + au.Phone)
+		return au, errors.New("inactive user")
+	}
+	return au, err
+}
+
 var sqlCreateUserKey = "insert into user_keys (user_account_id, key_name, key_value,otp) values($1,$2,$3,$4);"
 
 // Save saves userkeys

@@ -9,7 +9,8 @@
 ;; HTML Input components
 (ns centipair.components.input
   (:require [centipair.error :refer [append-field-error]]
-            [centipair.components.notifier :as notifier]))
+            [centipair.components.notifier :as notifier]
+            [centipair.ajax :as ajax]))
 
 
 (defn update-value
@@ -65,6 +66,27 @@
                           (:placeholder @field))}])
 
 
+(defn select-option [select-value field option]
+  ^{:key option} [:option {:key (str (:id @field) "-" (:value option))
+                           :value (:value option)} (:label option)])
+(defn to-select-option
+  [map-list label-key value-key]
+  (map (fn [each] {:label ((keyword label-key) each) :value ((keyword value-key) each)}) map-list))
+
+(defn remote-select-options
+  [field & [callback]]
+  (ajax/get-json (:remote @field)
+                 (:remote-params @field)
+                 (fn [response]
+                   (if (nil? (:value @field))
+                     (swap! field assoc :value ((:value-key @field) (first response))))
+                   (swap! field assoc :options
+                          (if (:has-all @field)
+                            (into [{:label "All" :value 0}] (to-select-option response (:label-key @field) (:value-key @field)))
+                            (to-select-option response (:label-key @field) (:value-key @field))))
+                   (if callback (callback)))
+                 (:remote-cache @field)))
+
 (defn select [field]
   ^{:key (:id @field)}
   [:select {:class "select select-bordered w-full max-w-xs"
@@ -74,7 +96,8 @@
            :disabled (if (:disabled @field) "disabled" "")
            :placeholder (if (nil? (:placeholder @field))
                           ""
-                          (:placeholder @field))}])
+                          (:placeholder @field))}
+    (doall (map (partial select-option (:value @field) field) (:options @field)))])
 
 
 (defn text-area

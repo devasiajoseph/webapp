@@ -149,6 +149,18 @@ func ObjectNotFound(w http.ResponseWriter) {
 	w.Write(rj)
 }
 
+func ObjectError(w http.ResponseWriter, message string) {
+	resObj := ResponseObj{Code: http.StatusInternalServerError, Message: message}
+	rj, err := json.Marshal(resObj)
+	if err != nil {
+		log.Println("Error while json conversion")
+		http.Error(w, "Server Error", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(resObj.Code)
+	w.Write(rj)
+}
+
 // ServerError 500
 func ServerError(w http.ResponseWriter) {
 	http.Error(w, "Server Error", http.StatusInternalServerError)

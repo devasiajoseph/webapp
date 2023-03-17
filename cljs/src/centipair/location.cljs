@@ -4,8 +4,6 @@
 
 
 
-(def country (reagent/atom {:id "country_id" :type "select" :value "IN" :label "Country"}))
-
-(defn get-country-list
-  []
-  )
+(def country (reagent/atom {:id "country_id" :type "select" :value "228" :label "Country"
+                            :label-key "country_name" :value-key "country_id" :remote "/api/location/countries"
+                            :remote-cache true}))

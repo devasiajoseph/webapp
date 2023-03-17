@@ -449,7 +449,7 @@ create table profile (
        profile_id serial primary key,
        full_name varchar(255),
        about text,
-       profile_pic varchar(255),
+       profile_pic varchar(255) not null default '',
        instagram varchar(255),
        linkedin varchar(255),
        facebook varchar(255),
@@ -472,7 +472,8 @@ create table profile_manager (
        ON DELETE CASCADE,
        CONSTRAINT company_manger_profile_id_fkey FOREIGN KEY (profile_id)
        REFERENCES profile (profile_id) MATCH SIMPLE 
-       ON DELETE CASCADE
+       ON DELETE CASCADE,
+       unique(profile_id,user_account_id)
 );
 
 

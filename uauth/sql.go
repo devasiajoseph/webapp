@@ -22,6 +22,9 @@ var sqlFetchAuthUser = "SELECT user_session.session_expiry, " +
 	"from user_session, user_account WHERE auth_token=$1 " +
 	"AND user_session.user_account_id=user_account.user_account_id;"
 
+var sqlFecthUser = "SELECT user_account.full_name,user_account.email,user_account.phone,user_account.user_account_id,user_account.active," +
+	"user_account.role from user_account where user_account_id=$1;"
+
 var sqlFetchUsers = "SELECT * FROM user_account LIMIT $1 OFFSET $2;"
 var sqlTotalUsers = "SELECT count(*) FROM user_account;"
 var sqlDeleteUser = "DELETE from user_account WHERE user_account_id=$1;"

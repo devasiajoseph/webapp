@@ -13,6 +13,7 @@
 (def full-name (r/atom {:id "full_name" :type "text" :class "cfi" :placeholder "Enter Full Name" :label "Full name"}))
 (def about (r/atom {:id "about" :type "text-area" :class "textarea textarea-bordered textarea-lg w-full max-w-xs" :placeholder "About" :label "About profile"}))
 (def instagram (r/atom {:id "instagram" :type "text" :class "cfi" :placeholder "Instagram link" :label "Instagram link"}))
+(def linkedin (r/atom {:id "linkedin" :type "text" :class "cfi" :placeholder "LinkedIn link" :label "LinkedIn link"}))
 (def facebook (r/atom {:id "facebook" :type "text" :class "cfi" :placeholder "Facebook link" :label "Facebook link"}))
 (def twitter (r/atom {:id "twitter" :type "text" :class "cfi" :placeholder "Twitter link" :label "Twitter link"}))
 (def youtube (r/atom {:id "youtube" :type "text" :class "cfi" :placeholder "Youtube link" :label "Youtube link"}))
@@ -26,12 +27,14 @@
                    full-name
                    about
                    instagram
+                   linkedin
                    facebook
                    twitter
                    youtube
-                   tiktok]
+                   tiktok
+                   location/country]
    (fn [response]
-     (spa/redirect (str "/profile/edit" (:profile_id response))))))
+     (spa/redirect (str "/profile/edit/" (:profile_id response))))))
 
 (def save-profile-button (r/atom {:label "Save Profile" :on-click save-profile}))
 (defn profile-form 
@@ -42,14 +45,15 @@
     (form/file profile-pic)]
    (form/generate-form "Profile"
                        "Update profile details"
-                       [full-name about location/country instagram facebook twitter youtube tiktok]
+                       [full-name about location/country instagram linkedin facebook twitter youtube tiktok]
                        save-profile-button
                        [])])
 
 
 
 (defn new-profile-form
-  [] 
+  []
+  (input/remote-select-options location/country)
   (ui/render profile-form "app"))
 
 
