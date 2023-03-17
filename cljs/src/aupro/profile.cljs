@@ -18,7 +18,7 @@
 (def twitter (r/atom {:id "twitter" :type "text" :class "cfi" :placeholder "Twitter link" :label "Twitter link"}))
 (def youtube (r/atom {:id "youtube" :type "text" :class "cfi" :placeholder "Youtube link" :label "Youtube link"}))
 (def tiktok (r/atom {:id "tiktok" :type "text" :class "cfi" :placeholder "Tiktok link" :label "Tiktok link"}))
-(def profile-pic (r/atom {:id "profile-pic" :url ""}))
+(def profile-pic (r/atom {:id "profile-pic" :value ""}))
 
 (defn save-profile
   []
@@ -59,8 +59,23 @@
 
 
 (defn get-profile
-  [id])
+  [id]
+(ajax/get-json
+ (str "/api/profile/" id) nil
+ (fn [response]
+   (input/update-value-map [profile-id
+                            full-name
+                            about
+                            instagram
+                            linkedin
+                            facebook
+                            twitter
+                            youtube
+                            tiktok
+                            location/country] response))))
 
 (defn edit-profile-form
   [id]
+  (get-profile id)
+  (input/remote-select-options location/country)
   (ui/render profile-form "app"))

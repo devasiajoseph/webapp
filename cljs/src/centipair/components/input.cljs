@@ -13,6 +13,8 @@
             [centipair.ajax :as ajax]))
 
 
+
+
 (defn update-value
   "Updates value of the input element atom"
   [field value]
@@ -20,6 +22,10 @@
   (if (:on-change @field)
     ((:on-change @field) field)))
 
+(defn update-value-map
+  [inputs response]
+  (doall (map (fn [each]
+                (update-value each ((keyword (:id @each)) response))) inputs)))
 
 (defn make-valid
   [field]

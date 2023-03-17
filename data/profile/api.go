@@ -72,6 +72,7 @@ func saveApi(w http.ResponseWriter, r *http.Request) {
 	obj.Youtube = r.FormValue("youtube")
 	obj.Tiktok = r.FormValue("tiktok")
 	obj.CountryID = api.PostInt(r, "country_id")
+	obj.ProfileID = api.PostInt(r, "profile_id")
 	err := obj.Save()
 	if err != nil {
 		api.ServerError(w)
