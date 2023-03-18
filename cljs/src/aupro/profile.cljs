@@ -19,7 +19,7 @@
 (def twitter (r/atom {:id "twitter" :type "text" :class "cfi" :placeholder "Twitter link" :label "Twitter link"}))
 (def youtube (r/atom {:id "youtube" :type "text" :class "cfi" :placeholder "Youtube link" :label "Youtube link"}))
 (def tiktok (r/atom {:id "tiktok" :type "text" :class "cfi" :placeholder "Tiktok link" :label "Tiktok link"}))
-(def profile-pic (r/atom {:id "profile-pic" :value ""}))
+(def profile-pic (r/atom {:id "profile_pic" :value "" :url "/api/profile/upload-dp" :progress 0}))
 
 (defn save-profile
   []

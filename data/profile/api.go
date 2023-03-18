@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -110,9 +111,17 @@ func getApi(w http.ResponseWriter, r *http.Request) {
 	api.ObjectResponse(w, obj)
 }
 
+func uploadDP(w http.ResponseWriter, r *http.Request) {
+	imgFile, info, err := r.FormFile("profile_pic")
+	fmt.Println(imgFile)
+	fmt.Println(info)
+	fmt.Println(err)
+}
+
 func AddRoutes(r *mux.Router) {
 	r.HandleFunc("/api/"+apiObj, saveApi).Methods("POST")
 	r.HandleFunc("/api/"+apiObj+"/{profile_id}", getApi).Methods("GET")
+	r.HandleFunc("/api/"+apiObj+"/upload-dp", uploadDP).Methods("POST")
 }
 
 // Start initializes bitcoin based functions
