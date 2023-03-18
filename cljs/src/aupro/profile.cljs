@@ -6,7 +6,8 @@
              [centipair.components.input :as input]
              [centipair.components.notifier :as notifier]
              [centipair.location :as location]
-             [aupro.form :as form]))
+             [aupro.form :as form]
+             [centipair.file :as file]))
 
 
 (def profile-id (r/atom {:id "profile_id" :value 0}))
@@ -42,7 +43,7 @@
   [:div
    [:div {:class (if (> (:value @profile-id) 0)  "" "hidden")}[:img {:src "http://t3.gstatic.com/licensed-image?q=tbn:ANd9GcQcKtPg4LQ1A7_j_7_ph7FfTTTjQrnqOdC2EPUHdeqAZ01JOImw19i9gvYHROXo0HahI13E_dZ1ZekfGEE"
                 :class "mx-auto shadow-xl border-solid border-2 border-gray-300 w-44 rounded-lg"}]
-    (form/file profile-pic)]
+    (file/file-input profile-pic)]
    (form/generate-form "Profile"
                        "Update profile details"
                        [full-name about location/country instagram linkedin facebook twitter youtube tiktok]
