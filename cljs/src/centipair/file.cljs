@@ -29,8 +29,10 @@
 
 (defn file-input [field]
   ^{:key (:id @field)}
-  [:div {:class "form-control"}
-   [:input {:type "file", :class "mx-auto file-input w-full max-w-xs" :id (:id @field)}]
-   [:button {:class "btn" :on-click (partial upload-file field)} "Upload"]
-   [:p (str "Progress " (:progress @field))]
-   [:p {:id (str (:id @field) "-message") :class "link-error"} (:message @field)]])
+  [:div {:class ""}[:div {:class "form-control"}
+                    [:input {:type "file", :class "mx-auto file-input w-full max-w-xs" :id (:id @field)}]
+                    [:button {:class "btn mx-auto" :on-click (partial upload-file field)} "Upload"]
+                    [:p {:id (str (:id @field) "-message") :class "link-error"} (:message @field)]
+                    [:progress {:class "progress progress-primary mt-5", :value (:progress @field), :max "100"}]]
+   
+   ])
