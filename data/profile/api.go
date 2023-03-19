@@ -1,7 +1,6 @@
 package profile
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -112,10 +111,13 @@ func getApi(w http.ResponseWriter, r *http.Request) {
 }
 
 func uploadDP(w http.ResponseWriter, r *http.Request) {
-	imgFile, info, err := r.FormFile("profile_pic")
-	fmt.Println(imgFile)
-	fmt.Println(info)
-	fmt.Println(err)
+	/*file, handler, err := r.FormFile("profile_pic")
+	if err != nil {
+		api.ServerObjectError(w, "Error uploading image")
+	}
+
+	defer file.Close()
+	*/
 }
 
 func AddRoutes(r *mux.Router) {

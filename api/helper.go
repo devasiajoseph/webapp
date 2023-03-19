@@ -149,7 +149,7 @@ func ObjectNotFound(w http.ResponseWriter) {
 	w.Write(rj)
 }
 
-func ObjectError(w http.ResponseWriter, message string) {
+func ServerObjectError(w http.ResponseWriter, message string) {
 	resObj := ResponseObj{Code: http.StatusInternalServerError, Message: message}
 	rj, err := json.Marshal(resObj)
 	if err != nil {
@@ -164,7 +164,6 @@ func ObjectError(w http.ResponseWriter, message string) {
 // ServerError 500
 func ServerError(w http.ResponseWriter) {
 	http.Error(w, "Server Error", http.StatusInternalServerError)
-	return
 }
 
 // ObjectResponse generic response json object
