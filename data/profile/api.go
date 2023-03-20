@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/devasiajoseph/webapp/api"
+	"github.com/devasiajoseph/webapp/file"
 	"github.com/devasiajoseph/webapp/uauth"
 	"github.com/devasiajoseph/webapp/validator"
 	"github.com/gorilla/mux"
@@ -111,13 +112,13 @@ func getApi(w http.ResponseWriter, r *http.Request) {
 }
 
 func uploadDP(w http.ResponseWriter, r *http.Request) {
-	/*file, handler, err := r.FormFile("profile_pic")
-	if err != nil {
-		api.ServerObjectError(w, "Error uploading image")
-	}
+	imgData := file.ImageData{MaxUploadSize: 4}
+	err := imgData.ProcessUpload(w, r, "profile_pic")
 
-	defer file.Close()
-	*/
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println("success")
 }
 
 func AddRoutes(r *mux.Router) {
