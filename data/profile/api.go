@@ -112,13 +112,13 @@ func getApi(w http.ResponseWriter, r *http.Request) {
 }
 
 func uploadDP(w http.ResponseWriter, r *http.Request) {
-	imgData := file.ImageData{MaxUploadSize: 15}
+	imgData := file.ImageData{MaxUploadSize: 15, Width: 200}
 	err := imgData.ProcessUpload(w, r, "profile_pic")
 
 	if err != nil {
 		log.Println(err)
 	}
-	log.Println("success")
+	log.Println("completed")
 }
 
 func AddRoutes(r *mux.Router) {

@@ -21,6 +21,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/kolesa-team/go-webp/encoder"
 	"github.com/kolesa-team/go-webp/webp"
+	"github.com/nfnt/resize"
 )
 
 const (
@@ -98,14 +99,14 @@ func ExtractExtension(contentType string) (string, error) {
 	}
 }
 
-func ToWebp(img image.Image) error {
-	output, err := os.Create("output_decode.webp")
+func ToWebp(img image.Image, filePath string) error {
+	output, err := os.Create(filePath)
 	if err != nil {
 		return err
 	}
 	defer output.Close()
 
-	options, err := encoder.NewLossyEncoderOptions(encoder.PresetDefault, 50)
+	options, err := encoder.NewLossyEncoderOptions(encoder.PresetDefault, 90)
 	if err != nil {
 		return err
 	}
@@ -115,6 +116,19 @@ func ToWebp(img image.Image) error {
 	}
 
 	return nil
+}
+
+func ResizeImage(img image.Image, width int, height int, filePath string) error {
+	rImg := resize.Resize(uint(width), uint(height), img, resize.Lanczos3)
+	err := ToWebp(rImg, filePath)
+	return err
+	/*out, err := os.Create(core.AbsolutePath(filePath))
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+	jpeg.Encode(out, m, nil)
+	return err*/
 }
 
 func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id string) error {
@@ -147,10 +161,11 @@ func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id 
 		return err
 	}
 
-	err = ToWebp(img)
+	err = ResizeImage(img, imgd.Width, 0, "tmp/"+imgd.Filename)
 	if err != nil {
-		fmt.Println("Error to webp")
 		log.Println(err)
+		return err
 	}
+
 	return err
 }
