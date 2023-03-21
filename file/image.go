@@ -126,14 +126,14 @@ func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id 
 	}
 	defer file.Close()
 	contentType := handler.Header.Get("Content-Type")
-	/*
-		if !ValidImageType(contentType) {
-			return errors.New("unknown image type")
-		}
-		if !ValidUploadSize(file, imgd.MaxUploadSize*MB) {
-			return errors.New("file too large")
-		}
-	*/
+
+	if !ValidImageType(contentType) {
+		return errors.New("unknown image type")
+	}
+	if !ValidUploadSize(file, imgd.MaxUploadSize*MB) {
+		return errors.New("file too large")
+	}
+
 	imgd.Filename = uuid.NewString() + ".webp"
 	ext, err := ExtractExtension(contentType)
 	if err != nil {
