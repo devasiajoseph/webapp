@@ -36,7 +36,7 @@ type ImageData struct {
 	Height        int       `db:"height" json:"height"`
 	Width         int       `db:"width" json:"width"`
 	OriginalImage string    `db:"original_image" json:"original_image"`
-	UploadedTime  time.Time `json:"UploadedTime"`
+	UploadedTime  time.Time `db:"uploaded_time" json:"uploaded_time"`
 	MaxUploadSize int64
 }
 
@@ -52,7 +52,7 @@ func SaveFile(file multipart.File, filePath string) error {
 	return nil
 }
 
-var ImageuploadPath = "static/uploads/images"
+var ImageuploadPath = "static/uploads/images/"
 
 func GetFileSize(file multipart.File) (int64, error) {
 	// Read the contents of the file into a buffer
@@ -161,9 +161,9 @@ func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id 
 		fmt.Println("Error decoding")
 		return err
 	}
+	imgd.Src = ImageuploadPath + imgd.Filename
+	err = ResizeImage(img, imgd.Width, 0, imgd.Src)
 
-	err = ResizeImage(img, imgd.Width, 0, "static/uploads/"+imgd.Filename)
-	imgd.Src = "/static/uploads/" + imgd.Filename
 	if err != nil {
 		log.Println(err)
 		return err
