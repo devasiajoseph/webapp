@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
 
