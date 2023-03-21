@@ -23,8 +23,10 @@
               (update-progress field progress))))
     (set! (.-onreadystatechange xhr)
           (fn []
-            (if (and (= (.-readyState xhr) 4) (= (.-status xhr) 200))
-              (if (:callback @field) ((:callback @field))))))
+            (if (and (= (.-readyState xhr) 4) (= (.-status xhr) 200)) 
+              (let [response (js->clj (.parse js/JSON (.-responseText xhr)) :keywordize-keys true)] 
+                (swap! field assoc :src (:src response))
+                (if (:callback @field) ((:callback @field)))))))
     (.send xhr form-data)))
 
 (defn file-input [field]

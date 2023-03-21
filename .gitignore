@@ -46,7 +46,6 @@ node_modules/
 test-config.yml
 *.code-workspace
 /deploy
-emart.zip
 authkey.go
 cleaned/
 .clj-kondo/
@@ -56,3 +55,4 @@ fcljs-out/
 .cpcache/
 .sass-cache/
 tmp/
+uploads

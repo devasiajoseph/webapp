@@ -41,8 +41,9 @@
 (defn profile-form 
   []
   [:div
-   [:div {:class (if (> (:value @profile-id) 0)  "" "hidden")}[:img {:src "http://t3.gstatic.com/licensed-image?q=tbn:ANd9GcQcKtPg4LQ1A7_j_7_ph7FfTTTjQrnqOdC2EPUHdeqAZ01JOImw19i9gvYHROXo0HahI13E_dZ1ZekfGEE"
-                :class "mx-auto shadow-xl border-solid border-2 border-gray-300 w-44 rounded-lg"}]
+   [:div {:class (if (> (:value @profile-id) 0)  "" "hidden")}
+    [:img {:src (:src @profile-pic)
+           :class "mx-auto shadow-xl border-solid border-2 border-gray-300 w-44 rounded-lg"}]
     (file/file-input profile-pic)]
    (form/generate-form "Profile"
                        "Update profile details"

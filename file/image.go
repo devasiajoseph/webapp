@@ -31,6 +31,7 @@ const (
 type ImageData struct {
 	ImageID       int       `db:"image_id" json:"image_id"`
 	Filename      string    `db:"file_name" json:"file_name"`
+	Src           string    `db:"src" json:"src"`
 	FileSize      int64     `db:"file_size" json:"file_size"`
 	Height        int       `db:"height" json:"height"`
 	Width         int       `db:"width" json:"width"`
@@ -161,7 +162,8 @@ func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id 
 		return err
 	}
 
-	err = ResizeImage(img, imgd.Width, 0, "tmp/"+imgd.Filename)
+	err = ResizeImage(img, imgd.Width, 0, "static/uploads/"+imgd.Filename)
+	imgd.Src = "/static/uploads/" + imgd.Filename
 	if err != nil {
 		log.Println(err)
 		return err

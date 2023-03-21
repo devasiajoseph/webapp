@@ -118,7 +118,9 @@ func uploadDP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
+
 	log.Println("completed")
+	api.ObjectResponse(w, imgData)
 }
 
 func AddRoutes(r *mux.Router) {

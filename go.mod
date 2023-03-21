@@ -11,8 +11,10 @@ require (
 	github.com/gorilla/csrf v1.7.1
 	github.com/gorilla/mux v1.8.0
 	github.com/jmoiron/sqlx v1.3.5
+	github.com/kolesa-team/go-webp v1.0.4
 	github.com/lib/pq v1.10.7
 	github.com/mailgun/mailgun-go v2.0.0+incompatible
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/spf13/viper v1.15.0
 	golang.org/x/crypto v0.6.0
 )
@@ -30,14 +32,10 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gobuffalo/envy v1.10.2 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
-	github.com/gosimple/slug v1.13.1 // indirect
-	github.com/gosimple/unidecode v1.0.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
-	github.com/kolesa-team/go-webp v1.0.4 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
-	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.26.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
