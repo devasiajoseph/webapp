@@ -112,7 +112,7 @@ func getApi(w http.ResponseWriter, r *http.Request) {
 }
 
 func uploadDP(w http.ResponseWriter, r *http.Request) {
-	imgData := file.ImageData{MaxUploadSize: 4}
+	imgData := file.ImageData{MaxUploadSize: 15}
 	err := imgData.ProcessUpload(w, r, "profile_pic")
 
 	if err != nil {

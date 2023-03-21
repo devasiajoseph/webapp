@@ -3,6 +3,8 @@ package file
 import (
 	"bytes"
 	"errors"
+	"fmt"
+	"image"
 	"io"
 	"log"
 	"mime/multipart"
@@ -11,8 +13,13 @@ import (
 	"strings"
 	"time"
 
+	_ "image/jpeg"
+	_ "image/png"
+
 	"github.com/devasiajoseph/webapp/core"
 	"github.com/google/uuid"
+	"github.com/kolesa-team/go-webp/encoder"
+	"github.com/kolesa-team/go-webp/webp"
 )
 
 const (
@@ -65,6 +72,8 @@ func ValidImageType(contentType string) bool {
 
 func ValidUploadSize(file multipart.File, fs int64) bool {
 	size, err := GetFileSize(file)
+	fmt.Println(size)
+	fmt.Println(fs)
 	if err != nil {
 		return false
 	}
@@ -88,37 +97,59 @@ func ExtractExtension(contentType string) (string, error) {
 	}
 }
 
-func ToWebp() {
+func ToWebp(img image.Image) error {
+	output, err := os.Create("output_decode.webp")
+	if err != nil {
+		return err
+	}
+	defer output.Close()
 
+	options, err := encoder.NewLossyEncoderOptions(encoder.PresetDefault, 50)
+	if err != nil {
+		return err
+	}
+
+	if err := webp.Encode(output, img, options); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id string) error {
 
-	file, info, err := r.FormFile(id)
+	file, handler, err := r.FormFile(id)
 	if err != nil {
 		log.Println("Error getting uploaded image")
 		return err
 	}
 	defer file.Close()
-	contentType := info.Header.Get("Content-Type")
-	if !ValidImageType(contentType) {
-		return errors.New("unknown image type")
-	}
-	if !ValidUploadSize(file, imgd.FileSize*MB) {
-		return errors.New("file too large")
-	}
-
+	contentType := handler.Header.Get("Content-Type")
+	/*
+		if !ValidImageType(contentType) {
+			return errors.New("unknown image type")
+		}
+		if !ValidUploadSize(file, imgd.MaxUploadSize*MB) {
+			return errors.New("file too large")
+		}
+	*/
 	imgd.Filename = uuid.NewString() + ".webp"
 	ext, err := ExtractExtension(contentType)
 	if err != nil {
 		return err
 	}
 	imgd.OriginalImage = uuid.NewString() + ext
-
-	/*img, _, err := image.Decode(file)
-
+	file.Seek(0, 0)
+	img, _, err := image.Decode(file)
 	if err != nil {
+		fmt.Println("Error decoding")
 		return err
-	}*/
+	}
+
+	err = ToWebp(img)
+	if err != nil {
+		fmt.Println("Error to webp")
+		log.Println(err)
+	}
 	return err
 }
