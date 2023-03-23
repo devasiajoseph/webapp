@@ -73,6 +73,15 @@ CREATE TABLE city(
 );
 
 
+create table image (
+       image_id serial PRIMARY KEY,
+       file_name varchar(128),
+       path varchar(255),
+       original_image varchar(128),
+       uploaded_time timestamp not null default now()
+);
+
+
 CREATE TABLE user_account(
        user_account_id serial PRIMARY KEY,
        phone VARCHAR(20) UNIQUE NOT NULL,

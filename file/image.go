@@ -31,13 +31,13 @@ const (
 type ImageData struct {
 	ImageID       int       `db:"image_id" json:"image_id"`
 	Filename      string    `db:"file_name" json:"file_name"`
-	Src           string    `db:"src" json:"src"`
-	FileSize      int64     `db:"file_size" json:"file_size"`
-	Height        int       `db:"height" json:"height"`
-	Width         int       `db:"width" json:"width"`
-	OriginalImage string    `db:"original_image" json:"original_image"`
+	Path          string    `db:"path" json:"path"`
+	Src           string    `json:"src"`
+	Height        int       `json:"-"`
+	Width         int       `json:"-"`
+	OriginalImage string    `db:"original_image" json:"-"`
 	UploadedTime  time.Time `db:"uploaded_time" json:"uploaded_time"`
-	MaxUploadSize int64
+	MaxUploadSize int64     `json:"-"`
 }
 
 func SaveFile(file multipart.File, filePath string) error {
