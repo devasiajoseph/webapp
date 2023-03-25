@@ -28,6 +28,8 @@ const (
 	MB = 1 << 20
 )
 
+var BlankImage = ""
+
 type ImageData struct {
 	ImageID       int       `db:"image_id" json:"image_id"`
 	Filename      string    `db:"file_name" json:"file_name"`
@@ -38,6 +40,8 @@ type ImageData struct {
 	OriginalImage string    `db:"original_image" json:"-"`
 	UploadedTime  time.Time `db:"uploaded_time" json:"uploaded_time"`
 	MaxUploadSize int64     `json:"-"`
+	Tag           string    `db:"tag" json:"-"`
+	ReverseID     int       `db:"reverse_id" json:"-"`
 }
 
 func SaveFile(file multipart.File, filePath string) error {
@@ -123,13 +127,6 @@ func ResizeImage(img image.Image, width int, height int, filePath string) error 
 	rImg := resize.Resize(uint(width), uint(height), img, resize.Lanczos3)
 	err := ToWebp(rImg, filePath)
 	return err
-	/*out, err := os.Create(core.AbsolutePath(filePath))
-	if err != nil {
-		return err
-	}
-	defer out.Close()
-	jpeg.Encode(out, m, nil)
-	return err*/
 }
 
 func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id string) error {

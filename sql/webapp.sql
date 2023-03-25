@@ -78,9 +78,12 @@ create table image (
        file_name varchar(128),
        path varchar(255),
        original_image varchar(128),
-       uploaded_time timestamp not null default now()
+       uploaded_time timestamp not null default now(),
+       tag varchar(10) not null default '',
+       reverse_id integer
 );
 
+/*reverse_id is used a a reference to where the image is used*/
 
 CREATE TABLE user_account(
        user_account_id serial PRIMARY KEY,
@@ -458,7 +461,7 @@ create table profile (
        profile_id serial primary key,
        full_name varchar(255),
        about text,
-       profile_pic varchar(255) not null default '',
+       profile_pic integer not null,
        instagram varchar(255),
        linkedin varchar(255),
        facebook varchar(255),

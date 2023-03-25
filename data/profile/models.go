@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/devasiajoseph/webapp/db/postgres"
+	"github.com/devasiajoseph/webapp/file"
 	"github.com/devasiajoseph/webapp/uauth"
 )
 
@@ -17,6 +18,7 @@ type Object struct {
 	Designation string `json:"designation" db:"designation"`
 	About       string `json:"about" db:"about"`
 	ProfilePic  string `json:"profile_pic" db:"profile_pic"`
+	ImageID     int    `json:"image_id" db:"image_id"`
 	Instagram   string `json:"instagram" db:"instagram"`
 	Linkedin    string `json:"linkedin" db:"linkedin"`
 	Facebook    string `json:"facebook" db:"facebook"`
@@ -144,4 +146,31 @@ func (obj *Object) AddManager(ua uauth.AuthUser) error {
 		log.Println(err)
 	}
 	return err
+}
+
+func (obj *Object) DeleteProfilePic() error {
+	imgData, err := file.GetBlankImage()
+	if err != nil {
+		return err
+	}
+	sqlDeleteImage := "update profile set profile_pic=$1 where profile_id=$2;"
+	db := postgres.Db
+	_, err = db.Exec(sqlDeleteImage, imgData.ImageID)
+	if err != nil {
+		log.Println("error adding profile pic")
+		return err
+	}
+	return nil
+
+}
+
+func (obj *Object) AddProfilePic(imgData file.ImageData) error {
+	sqlAddImage := "update profile set profile_pic=$1 where profile_id=$2;"
+	db := postgres.Db
+	_, err := db.Exec(sqlAddImage, imgData.ImageID)
+	if err != nil {
+		log.Println("error adding profile pic")
+		return err
+	}
+	return nil
 }
