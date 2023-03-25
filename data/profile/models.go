@@ -53,7 +53,7 @@ func Slugify(str string) string {
 	return str
 }
 
-var sqlCreate = "insert into profile (full_name,about,instagram,linkedin,facebook,twitter,youtube,tiktok,country_id,slug) " +
+var sqlCreate = "insert into profile (full_name,about,profile_pic, :image_id,instagram,linkedin,facebook,twitter,youtube,tiktok,country_id,slug) " +
 	"values (:full_name,:about,:instagram,:linkedin,:facebook,:twitter,:youtube,:tiktok,:country_id,:slug) returning profile_id;"
 
 func (obj *Object) Create() error {
@@ -148,26 +148,37 @@ func (obj *Object) AddManager(ua uauth.AuthUser) error {
 	return err
 }
 
-func (obj *Object) DeleteProfilePic() error {
-	imgData, err := file.GetBlankImage()
-	if err != nil {
-		return err
-	}
-	sqlDeleteImage := "update profile set profile_pic=$1 where profile_id=$2;"
+func (obj *Object) AddBlankProfilePic() error {
+	sqlAddImage := "update profile set profile_pic=$1,image_id=$2 where profile_id=$3;"
 	db := postgres.Db
-	_, err = db.Exec(sqlDeleteImage, imgData.ImageID)
+	_, err := db.Exec(sqlAddImage, file.BlankProfileImage, 0, obj.ProfileID)
 	if err != nil {
-		log.Println("error adding profile pic")
-		return err
-	}
-	return nil
+		log.Println("error adding blank profile pic")
 
+	}
+	return err
+}
+
+func (obj *Object) DeleteProfilePic() error {
+	if obj.ImageID == 0 {
+		return nil
+	}
+	err := file.DeleteImage(obj.ImageID)
+	if err != nil {
+		log.Println("error deleting profile pic")
+	}
+	return err
 }
 
 func (obj *Object) AddProfilePic(imgData file.ImageData) error {
-	sqlAddImage := "update profile set profile_pic=$1 where profile_id=$2;"
+	err := obj.DeleteProfilePic()
+	if err == nil {
+		log.Println("error while deleting profile pic for adding new profile pic")
+		return err
+	}
+	sqlAddImage := "update profile set profile_pic=$1,image_id=$2 where profile_id=$3;"
 	db := postgres.Db
-	_, err := db.Exec(sqlAddImage, imgData.ImageID)
+	_, err = db.Exec(sqlAddImage, imgData.Src, imgData.ImageID, obj.ProfileID)
 	if err != nil {
 		log.Println("error adding profile pic")
 		return err

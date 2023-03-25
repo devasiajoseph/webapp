@@ -1,19 +1,21 @@
 package file
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/devasiajoseph/webapp/db/postgres"
 )
 
-var sqlInsertImage = "insert into image (file_name,path,original_image,reverse_id) values (:file_name,:path,:original_image,:reverse_id) returning image_id;"
+var sqlInsertImage = "insert into image (file_name,path,original_image,reverse_id) " +
+	"values (:file_name,:path,:original_image,:reverse_id) returning image_id;"
 
 func (imgD *ImageData) Save() error {
 	db := postgres.Db
 	rows, err := db.NamedQuery(sqlInsertImage, imgD)
 	if err != nil {
 		log.Println(err)
-		log.Println("Error creating new profile")
+		log.Println("Error creating new image")
 	}
 
 	if rows.Next() {
@@ -22,26 +24,46 @@ func (imgD *ImageData) Save() error {
 	return err
 }
 
-func (imgD *ImageData) Delete() error {
+func (imgd *ImageData) Delete() error {
 	db := postgres.Db
-	_, err := db.Exec("delete from image where image_id=$1", imgD.ImageID)
+	sqlDeleteImage := "delete from image where image_id=$1;"
+	_, err := db.Exec(sqlDeleteImage, imgd.ImageID)
+
 	if err != nil {
 		log.Println("error deleting image")
+		return err
 	}
+
+	err = DeleteFile(imgd.Filepath)
+	if err != nil {
+		log.Println("error deleting file from path")
+	}
+
 	return err
 }
 
-func GetBlankImage() (ImageData, error) {
+func GetImage(imageID int) (ImageData, error) {
 	db := postgres.Db
-	sqlGetBlank := "select image_id from image where tag='_blank';"
-	var imgs []ImageData
-	var imgData ImageData
-	err := db.Select(&imgs, sqlGetBlank)
+	var img ImageData
+	err := db.Get(&img, "select * from image where image_id=$1")
 	if err != nil {
-		log.Println("error getting blank image")
+		log.Println("error getiing image with image id")
 	}
-	if len(imgs) > 0 {
-		imgData = imgs[0]
+
+	return img, err
+}
+
+func DeleteImage(imageID int) error {
+	if imageID == 0 {
+		return nil
 	}
-	return imgData, err
+	img, err := GetImage(imageID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil
+		}
+		log.Println("error getting image to delete")
+		return err
+	}
+	return img.Delete()
 }

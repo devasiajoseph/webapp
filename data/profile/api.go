@@ -78,7 +78,6 @@ func saveApi(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		api.ServerError(w)
 	}
-
 	api.ObjectResponse(w, obj)
 }
 

@@ -28,11 +28,12 @@ const (
 	MB = 1 << 20
 )
 
-var BlankImage = ""
+var BlankProfileImage = "/static/images/np.webp"
 
 type ImageData struct {
 	ImageID       int       `db:"image_id" json:"image_id"`
 	Filename      string    `db:"file_name" json:"file_name"`
+	Filepath      string    `db:"file_path" json:"-"`
 	Path          string    `db:"path" json:"path"`
 	Src           string    `json:"src"`
 	Height        int       `json:"-"`
@@ -42,6 +43,10 @@ type ImageData struct {
 	MaxUploadSize int64     `json:"-"`
 	Tag           string    `db:"tag" json:"-"`
 	ReverseID     int       `db:"reverse_id" json:"-"`
+}
+
+func (imgd *ImageData) GetSrc() {
+	imgd.Src = imgd.Path + imgd.Filename
 }
 
 func SaveFile(file multipart.File, filePath string) error {
@@ -167,4 +172,9 @@ func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id 
 	}
 
 	return err
+}
+
+func GetBlankImage() ImageData {
+	return ImageData{ImageID: 0, Src: "/static/images/np.webp"}
+
 }

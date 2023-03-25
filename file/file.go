@@ -130,10 +130,7 @@ func FileSize(fp string) (int64, error) {
 }
 
 func ValidFileExtension(fp string, ext string) bool {
-	if filepath.Ext(fp) != ext {
-		return false
-	}
-	return true
+	return filepath.Ext(fp) == ext
 }
 
 func TimeFile() string {

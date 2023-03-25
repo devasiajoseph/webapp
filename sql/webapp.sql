@@ -76,11 +76,12 @@ CREATE TABLE city(
 create table image (
        image_id serial PRIMARY KEY,
        file_name varchar(128),
-       path varchar(255),
+       file_path varchar(255),
+       url_path varchar(255),
        original_image varchar(128),
        uploaded_time timestamp not null default now(),
        tag varchar(10) not null default '',
-       reverse_id integer
+       reverse_id integer,
 );
 
 /*reverse_id is used a a reference to where the image is used*/
@@ -461,7 +462,8 @@ create table profile (
        profile_id serial primary key,
        full_name varchar(255),
        about text,
-       profile_pic integer not null,
+       profile_pic varchar(255) not null default '/static/images/np.webp',
+       image_id integer not null default 0,
        instagram varchar(255),
        linkedin varchar(255),
        facebook varchar(255),
