@@ -188,7 +188,7 @@ func LoginAPI(w http.ResponseWriter, r *http.Request) {
 	err := ua.Account(r.FormValue("email"))
 
 	if err != nil {
-		userStatus.Message = "Invalid Login"
+		userStatus.Message = "Invalid Account"
 		api.ObjectResponse(w, userStatus)
 		return
 	}

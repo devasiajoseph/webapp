@@ -218,7 +218,7 @@ func (ua *UserAccount) Save() error {
 // Data fetches user account data based on id or phone or email
 func (ua *UserAccount) Data() error {
 	db := postgres.Db
-	bsql := "select * from user_account where "
+	bsql := "select user_account_id,full_name,email,password,phone,active from user_account where "
 	var err error
 	if ua.UserAccountID > 0 {
 		bsql += " user_account_id=$1;"
@@ -239,15 +239,16 @@ func (ua *UserAccount) Data() error {
 		return err
 	}
 
-	return errors.New("No fetch parameter provided")
+	return errors.New("no fetch parameter provided")
 }
 
 // Account gets account data with phone or email
 func (ua *UserAccount) Account(pe string) error {
 	db := postgres.Db
-	bsql := "select * from user_account where email=$1;"
+	bsql := "select user_account_id,full_name,email,password,phone,active from user_account where email=$1;"
 	err := db.Get(ua, bsql, pe)
 	if err != nil {
+		log.Println(err)
 		log.Println("Unable to fetch user data with id")
 	}
 	return err
@@ -274,6 +275,7 @@ func (ua *UserAccount) Login(password string) (UserSession, error) {
 		ua.SetLoginTime()
 		return us, err
 	}
+
 	return us, errors.New("invalid password")
 }
 
