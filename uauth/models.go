@@ -125,21 +125,20 @@ func (ua *UserAccount) Create() error {
 
 func (ua *UserAccount) CreateRaw() error {
 	db := postgres.Db
+	ua.Password = crypt.HashPassword(ua.Password)
 	var sqlInsertUser = "INSERT INTO user_account" +
-		"(phone,email, password, full_name, active, created_on, last_login)" +
-		"VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING user_account_id;"
-	err := db.QueryRow(sqlInsertUser,
-		ua.Phone,
-		ua.Email,
-		ua.Password,
-		ua.FullName,
-		ua.Active,
-		time.Now(),
-		time.Now()).Scan(&ua.UserAccountID)
+		"(phone,email, password, full_name, active)" +
+		"VALUES (:phone,:email, :password, :full_name, :active) RETURNING user_account_id;"
+	rows, err := db.NamedQuery(sqlInsertUser, ua)
 	if err != nil {
-		log.Println("Error creating user")
+		log.Println("Error creating raw user")
 		//log.Println(err)
 		return err
+	}
+
+	defer rows.Close()
+	if rows.Next() {
+		rows.Scan(ua.UserAccountID)
 	}
 
 	return err
@@ -337,6 +336,22 @@ func GetAuthUser(userAccountID int) (AuthUser, error) {
 	db := postgres.Db
 	var au AuthUser
 	err := db.Get(&au, sqlFecthUser, userAccountID)
+	if err != nil {
+		log.Println(err)
+		return au, err
+	}
+	if !au.Active {
+		log.Println("Inactive user => " + au.Email + ":" + au.Phone)
+		return au, errors.New("inactive user")
+	}
+	return au, err
+}
+
+func QueryUser(query string) (AuthUser, error) {
+	db := postgres.Db
+	var au AuthUser
+
+	err := db.Get(&au, sqlQueryUser, query)
 	if err != nil {
 		log.Println(err)
 		return au, err

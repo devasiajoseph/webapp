@@ -3,6 +3,7 @@ package profile
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 	"regexp"
 	"strings"
@@ -53,21 +54,44 @@ func Slugify(str string) string {
 	return str
 }
 
-var sqlCreate = "insert into profile (full_name,about,profile_pic, :image_id,instagram,linkedin,facebook,twitter,youtube,tiktok,country_id,slug) " +
-	"values (:full_name,:about,:instagram,:linkedin,:facebook,:twitter,:youtube,:tiktok,:country_id,:slug) returning profile_id;"
+var sqlCreate = "insert into profile (full_name,about,profile_pic,image_id,instagram,linkedin,facebook,twitter,youtube,tiktok,country_id,slug) " +
+	"values (:full_name,:about,:profile_pic,:image_id,:instagram,:linkedin,:facebook,:twitter,:youtube,:tiktok,:country_id,:slug) returning profile_id;"
 
 func (obj *Object) Create() error {
 	db := postgres.Db
 	rows, err := db.NamedQuery(sqlCreate, obj)
+
 	if err != nil {
 		log.Println(err)
+		fmt.Println(obj)
 		log.Println("Error creating new profile")
 	}
+	defer rows.Close()
 
 	if rows.Next() {
 		rows.Scan(&obj.ProfileID)
 	}
+
 	return err
+}
+
+func (obj *Object) Save() error {
+	obj.Slug = Slugify(obj.FullName)
+	if obj.ProfileID == 0 {
+		dp := file.GetBlankImage()
+		obj.ImageID = dp.ImageID
+		obj.ProfilePic = dp.Src
+		err := obj.Create()
+		if err != nil {
+			return err
+		}
+		err = obj.AddManager(obj.UserAccount)
+		if err != nil {
+			return err
+		}
+	}
+
+	return obj.Update()
 }
 
 var sqlGet = "select * from profile where profile_id = $1"
@@ -99,20 +123,6 @@ func (obj *Object) Update() error {
 		log.Println("Error updating profile")
 	}
 	return err
-}
-
-func (obj *Object) Save() error {
-	obj.Slug = Slugify(obj.FullName)
-	if obj.ProfileID == 0 {
-		err := obj.Create()
-		if err != nil {
-			return err
-		}
-		obj.AddManager(obj.UserAccount)
-		return nil
-	}
-
-	return obj.Update()
 }
 
 var sqlManager = "select profile_id, user_account_id from profile_manager where profile_id=$1 and user_account_id=$2;"
