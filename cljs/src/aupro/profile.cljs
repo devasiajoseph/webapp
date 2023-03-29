@@ -42,7 +42,7 @@
   []
   [:div
    [:div {:class (if (> (:value @profile-id) 0)  "" "hidden")}
-    [:img {:src (:src @profile-pic)
+    [:img {:src (:value @profile-pic)
            :class "mx-auto shadow-xl border-solid border-2 border-gray-300 w-44 rounded-lg"}]
     (file/file-input profile-pic)]
    (form/generate-form "Profile"
@@ -74,10 +74,12 @@
                             twitter
                             youtube
                             tiktok
-                            location/country] response))))
+                            location/country
+                            profile-pic] response))))
 
 (defn edit-profile-form
   [id]
   (get-profile id)
+  (swap! profile-pic assoc :url (str "/api/profile/upload-dp/" id))
   (input/remote-select-options location/country)
   (ui/render profile-form "app"))

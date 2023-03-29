@@ -22,12 +22,9 @@ CREATE TABLE city(
 create table image (
        image_id serial PRIMARY KEY,
        file_name varchar(128),
-       file_path varchar(255),
-       url_path varchar(255),
+       src varchar(255),
        original_image varchar(128),
-       uploaded_time timestamp not null default now(),
-       tag varchar(10) not null default '',
-       reverse_id integer
+       uploaded_time timestamp not null default now()
 );
 
 /*reverse_id is used a a reference to where the image is used*/

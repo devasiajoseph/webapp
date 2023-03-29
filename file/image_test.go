@@ -12,7 +12,5 @@ func TestBlankImage(t *testing.T) {
 	core.Start()
 	postgres.InitDb()
 	img := GetBlankImage()
-
-	img.GetSrc()
 	fmt.Println(img.Src)
 }

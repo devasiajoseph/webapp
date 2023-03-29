@@ -29,24 +29,18 @@ const (
 )
 
 var BlankProfileImage = "/static/images/np.webp"
+var ImageuploadPath = "static/uploads/images/"
+var SrcPath = "/static/uploads/images/"
 
 type ImageData struct {
 	ImageID       int       `db:"image_id" json:"image_id"`
-	Filename      string    `db:"file_name" json:"file_name"`
-	Filepath      string    `db:"file_path" json:"-"`
-	Path          string    `db:"path" json:"path"`
-	Src           string    `json:"src"`
+	Filename      string    `db:"file_name" json:"-"`
+	Src           string    `db:"src" json:"src"`
 	Height        int       `json:"-"`
 	Width         int       `json:"-"`
 	OriginalImage string    `db:"original_image" json:"-"`
 	UploadedTime  time.Time `db:"uploaded_time" json:"uploaded_time"`
 	MaxUploadSize int64     `json:"-"`
-	Tag           string    `db:"tag" json:"-"`
-	ReverseID     int       `db:"reverse_id" json:"-"`
-}
-
-func (imgd *ImageData) GetSrc() {
-	imgd.Src = imgd.Path + imgd.Filename
 }
 
 func SaveFile(file multipart.File, filePath string) error {
@@ -60,8 +54,6 @@ func SaveFile(file multipart.File, filePath string) error {
 
 	return nil
 }
-
-var ImageuploadPath = "static/uploads/images/"
 
 func GetFileSize(file multipart.File) (int64, error) {
 	// Read the contents of the file into a buffer
@@ -84,8 +76,6 @@ func ValidImageType(contentType string) bool {
 
 func ValidUploadSize(file multipart.File, fs int64) bool {
 	size, err := GetFileSize(file)
-	fmt.Println(size)
-	fmt.Println(fs)
 	if err != nil {
 		return false
 	}
@@ -135,7 +125,6 @@ func ResizeImage(img image.Image, width int, height int, filePath string) error 
 }
 
 func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id string) error {
-
 	file, handler, err := r.FormFile(id)
 	if err != nil {
 		log.Println("Error getting uploaded image")
@@ -163,10 +152,16 @@ func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id 
 		fmt.Println("Error decoding")
 		return err
 	}
-	imgd.Src = ImageuploadPath + imgd.Filename
-	err = ResizeImage(img, imgd.Width, 0, imgd.Src)
+	imgd.Src = SrcPath + imgd.Filename
+	err = imgd.Save()
+	if err != nil {
+		log.Println(err)
+		log.Println("error while saving image in image upload")
+	}
+	err = ResizeImage(img, imgd.Width, 0, ImageuploadPath+imgd.Filename)
 
 	if err != nil {
+		log.Println("error resizing while uploading")
 		log.Println(err)
 		return err
 	}
@@ -175,6 +170,5 @@ func (imgd *ImageData) ProcessUpload(w http.ResponseWriter, r *http.Request, id 
 }
 
 func GetBlankImage() ImageData {
-	return ImageData{ImageID: 0, Src: "/static/images/np.webp"}
-
+	return ImageData{ImageID: 0, Src: BlankProfileImage}
 }

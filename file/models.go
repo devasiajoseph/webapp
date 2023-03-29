@@ -7,8 +7,8 @@ import (
 	"github.com/devasiajoseph/webapp/db/postgres"
 )
 
-var sqlInsertImage = "insert into image (file_name,path,original_image,reverse_id) " +
-	"values (:file_name,:path,:original_image,:reverse_id) returning image_id;"
+var sqlInsertImage = "insert into image (file_name,src,original_image) " +
+	"values (:file_name,:src,:original_image) returning image_id;"
 
 func (imgD *ImageData) Save() error {
 	db := postgres.Db
@@ -17,7 +17,7 @@ func (imgD *ImageData) Save() error {
 		log.Println(err)
 		log.Println("Error creating new image")
 	}
-
+	defer rows.Close()
 	if rows.Next() {
 		rows.Scan(&imgD.ImageID)
 	}
@@ -33,8 +33,7 @@ func (imgd *ImageData) Delete() error {
 		log.Println("error deleting image")
 		return err
 	}
-
-	err = DeleteFile(imgd.Filepath)
+	err = DeleteFile(ImageuploadPath + imgd.Filename)
 	if err != nil {
 		log.Println("error deleting file from path")
 	}

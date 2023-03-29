@@ -14,21 +14,21 @@ import (
 )
 
 type Object struct {
-	ProfileID   int    `json:"profile_id" db:"profile_id"`
-	FullName    string `json:"full_name" db:"full_name"`
-	Designation string `json:"designation" db:"designation"`
-	About       string `json:"about" db:"about"`
-	ProfilePic  string `json:"profile_pic" db:"profile_pic"`
-	ImageID     int    `json:"image_id" db:"image_id"`
-	Instagram   string `json:"instagram" db:"instagram"`
-	Linkedin    string `json:"linkedin" db:"linkedin"`
-	Facebook    string `json:"facebook" db:"facebook"`
-	Twitter     string `json:"twitter" db:"twitter"`
-	Youtube     string `json:"youtube" db:"youtube"`
-	Tiktok      string `json:"tiktok" db:"tiktok"`
-	CountryID   int    `json:"country_id" db:"country_id"`
-	Slug        string `json:"slug" db:"slug"`
-	UserAccount uauth.AuthUser
+	ProfileID   int            `json:"profile_id" db:"profile_id"`
+	FullName    string         `json:"full_name" db:"full_name"`
+	Designation string         `json:"designation" db:"designation"`
+	About       string         `json:"about" db:"about"`
+	ProfilePic  string         `json:"profile_pic" db:"profile_pic"`
+	ImageID     int            `json:"image_id" db:"image_id"`
+	Instagram   string         `json:"instagram" db:"instagram"`
+	Linkedin    string         `json:"linkedin" db:"linkedin"`
+	Facebook    string         `json:"facebook" db:"facebook"`
+	Twitter     string         `json:"twitter" db:"twitter"`
+	Youtube     string         `json:"youtube" db:"youtube"`
+	Tiktok      string         `json:"tiktok" db:"tiktok"`
+	CountryID   int            `json:"country_id" db:"country_id"`
+	Slug        string         `json:"slug" db:"slug"`
+	UserAccount uauth.AuthUser `json:"-"`
 }
 
 type ProfileManager struct {
@@ -182,11 +182,12 @@ func (obj *Object) DeleteProfilePic() error {
 
 func (obj *Object) AddProfilePic(imgData file.ImageData) error {
 	err := obj.DeleteProfilePic()
-	if err == nil {
+	if err != nil {
+		log.Println(err)
 		log.Println("error while deleting profile pic for adding new profile pic")
-		return err
 	}
 	sqlAddImage := "update profile set profile_pic=$1,image_id=$2 where profile_id=$3;"
+
 	db := postgres.Db
 	_, err = db.Exec(sqlAddImage, imgData.Src, imgData.ImageID, obj.ProfileID)
 	if err != nil {

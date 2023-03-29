@@ -25,7 +25,7 @@
           (fn []
             (if (and (= (.-readyState xhr) 4) (= (.-status xhr) 200)) 
               (let [response (js->clj (.parse js/JSON (.-responseText xhr)) :keywordize-keys true)] 
-                (swap! field assoc :src (:src response))
+                (swap! field assoc :value (:src response))
                 (if (:callback @field) ((:callback @field)))))))
     (.send xhr form-data)))
 
@@ -35,6 +35,4 @@
                     [:input {:type "file", :class "mx-auto file-input w-full max-w-xs" :id (:id @field)}]
                     [:button {:class "btn mx-auto" :on-click (partial upload-file field)} "Upload"]
                     [:p {:id (str (:id @field) "-message") :class "link-error"} (:message @field)]
-                    [:progress {:class "progress progress-primary mt-5", :value (:progress @field), :max "100"}]]
-   
-   ])
+                    [:progress {:class "progress progress-primary mt-5", :value (:progress @field), :max "100"}]]])

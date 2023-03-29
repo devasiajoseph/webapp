@@ -14,23 +14,18 @@ import (
 var apiObj = "profile"
 
 func (obj *Object) hasAuth(w http.ResponseWriter, r *http.Request) bool {
-	ua, err := uauth.GetAuthenticatedUser(r)
-	obj.UserAccount = ua
+	obj.ProfileID = api.ObjID(r, "profile_id")
 	if obj.ProfileID == 0 {
 		return true
 	}
+
+	ua, err := uauth.GetAuthenticatedUser(r)
+	obj.UserAccount = ua
 
 	if err != nil {
 		log.Println(err)
 		api.ServerError(w)
 		return false
-	}
-
-	switch r.Method {
-	case http.MethodPost:
-		obj.ProfileID = api.PostInt(r, "profile_id")
-	case http.MethodGet:
-		obj.ProfileID = api.ObjID(r, "profile_id")
 	}
 
 	auth, err := obj.IsManager(ua)
@@ -113,23 +108,25 @@ func getApi(w http.ResponseWriter, r *http.Request) {
 func uploadDP(w http.ResponseWriter, r *http.Request) {
 	obj := Object{}
 	if !obj.hasAuth(w, r) {
+		api.AuthError(w)
 		return
 	}
-
-	imgData := file.ImageData{ReverseID: obj.ProfileID, MaxUploadSize: 15, Width: 200}
+	imgData := file.ImageData{MaxUploadSize: 15, Width: 200}
 	err := imgData.ProcessUpload(w, r, "profile_pic")
-
 	if err != nil {
-		log.Println(err)
+		api.ServerError(w)
 	}
-
+	err = obj.AddProfilePic(imgData)
+	if err != nil {
+		api.ServerError(w)
+	}
 	api.ObjectResponse(w, imgData)
 }
 
 func AddRoutes(r *mux.Router) {
 	r.HandleFunc("/api/"+apiObj, saveApi).Methods("POST")
 	r.HandleFunc("/api/"+apiObj+"/{profile_id}", getApi).Methods("GET")
-	r.HandleFunc("/api/"+apiObj+"/upload-dp", uploadDP).Methods("POST")
+	r.HandleFunc("/api/"+apiObj+"/upload-dp/{profile_id}", uploadDP).Methods("POST")
 }
 
 // Start initializes bitcoin based functions
