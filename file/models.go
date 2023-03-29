@@ -44,7 +44,7 @@ func (imgd *ImageData) Delete() error {
 func GetImage(imageID int) (ImageData, error) {
 	db := postgres.Db
 	var img ImageData
-	err := db.Get(&img, "select * from image where image_id=$1")
+	err := db.Get(&img, "select * from image where image_id=$1", imageID)
 	if err != nil {
 		log.Println("error getiing image with image id")
 	}

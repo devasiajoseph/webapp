@@ -32,13 +32,20 @@ func (obj *Object) hasAuth(w http.ResponseWriter, r *http.Request) bool {
 
 	if err != nil {
 		log.Println(err)
-		api.ServerError(w)
 		return false
 	}
+
 	if !auth {
 		api.AuthError(w)
 		return false
 	}
+
+	err = obj.Get()
+	if err != nil {
+		log.Println("error while getting object in hasAuth")
+		return false
+	}
+
 	return true
 }
 
