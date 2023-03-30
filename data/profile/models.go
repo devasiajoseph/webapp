@@ -8,10 +8,21 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/devasiajoseph/webapp/cpmath"
 	"github.com/devasiajoseph/webapp/db/postgres"
 	"github.com/devasiajoseph/webapp/file"
 	"github.com/devasiajoseph/webapp/uauth"
 )
+
+// ObjectList has list of companies
+type ObjectList struct {
+	Data          []Object `json:"data"`
+	Total         int      `json:"total"`
+	Page          int      `json:"page"`
+	Limit         int      `json:"limit"`
+	Offset        int      `json:"offset"`
+	UserAccountID int      `json:"-"`
+}
 
 type Object struct {
 	ProfileID   int            `json:"profile_id" db:"profile_id"`
@@ -195,4 +206,18 @@ func (obj *Object) AddProfilePic(imgData file.ImageData) error {
 		return err
 	}
 	return nil
+}
+
+func (ol *ObjectList) Fetch() error {
+
+	ol.Offset = cpmath.Offset(ol.Page, ol.Limit)
+	sqlList := ""
+	db := postgres.Db
+	err := db.Select(&ol.Data, sqlList, ol.UserAccountID, ol.Limit, ol.Offset)
+
+	if err != nil {
+		log.Println("error fecthing object list")
+		log.Println(err)
+	}
+	return err
 }

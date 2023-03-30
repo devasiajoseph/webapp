@@ -1,0 +1,2 @@
+(ns centipair.components.table)
+
