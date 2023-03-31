@@ -20,13 +20,13 @@ func (obj *Object) hasAuth(w http.ResponseWriter, r *http.Request) bool {
 	}
 
 	ua, err := uauth.GetAuthenticatedUser(r)
-	obj.UserAccount = ua
-
 	if err != nil {
 		log.Println(err)
 		api.ServerError(w)
 		return false
 	}
+
+	obj.UserAccount = ua
 
 	auth, err := obj.IsManager(ua)
 
@@ -84,7 +84,23 @@ func saveApi(w http.ResponseWriter, r *http.Request) {
 }
 
 func listApi(w http.ResponseWriter, r *http.Request) {
+	ua, err := uauth.GetAuthenticatedUser(r)
+	if err != nil {
+		log.Println(err)
+		api.ServerError(w)
+		return
+	}
+	ol := ObjectList{Page: api.QueryInt(r, "page"),
+		Limit:         50,
+		UserAccountID: ua.UserAccountID}
+	err = ol.Fetch()
 
+	if err != nil {
+		api.ServerError(w)
+		return
+	}
+
+	api.ObjectResponse(w, ol)
 }
 
 func deleteApi(w http.ResponseWriter, r *http.Request) {
@@ -132,8 +148,10 @@ func uploadDP(w http.ResponseWriter, r *http.Request) {
 
 func AddRoutes(r *mux.Router) {
 	r.HandleFunc("/api/"+apiObj, saveApi).Methods("POST")
+	r.HandleFunc("/api/"+apiObj, listApi).Methods("GET")
 	r.HandleFunc("/api/"+apiObj+"/{profile_id}", getApi).Methods("GET")
 	r.HandleFunc("/api/"+apiObj+"/upload-dp/{profile_id}", uploadDP).Methods("POST")
+
 }
 
 // Start initializes bitcoin based functions

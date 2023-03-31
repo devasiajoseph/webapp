@@ -16,12 +16,17 @@ import (
 
 // ObjectList has list of companies
 type ObjectList struct {
-	Data          []Object `json:"data"`
-	Total         int      `json:"total"`
-	Page          int      `json:"page"`
-	Limit         int      `json:"limit"`
-	Offset        int      `json:"offset"`
-	UserAccountID int      `json:"-"`
+	Data          []ObjectListData `json:"data"`
+	Total         int              `json:"total"`
+	Page          int              `json:"page"`
+	Limit         int              `json:"limit"`
+	Offset        int              `json:"offset"`
+	UserAccountID int              `json:"-"`
+}
+
+type ObjectListData struct {
+	ProfileID int    `json:"profile_id" db:"profile_id"`
+	FullName  string `json:"full_name" db:"full_name"`
 }
 
 type Object struct {
@@ -209,14 +214,25 @@ func (obj *Object) AddProfilePic(imgData file.ImageData) error {
 }
 
 func (ol *ObjectList) Fetch() error {
-
 	ol.Offset = cpmath.Offset(ol.Page, ol.Limit)
-	sqlList := ""
+	sqlList := "select profile.profile_id,profile.full_name from profile left join profile_manager " +
+		"on profile.profile_id=profile_manager.profile_id where " +
+		"profile_manager.user_account_id=$1 limit $2 offset $3;"
+	sqlTotal := "select count(*) from profile left join profile_manager " +
+		"on profile.profile_id=profile_manager.profile_id where " +
+		"profile_manager.user_account_id=$1;"
 	db := postgres.Db
-	err := db.Select(&ol.Data, sqlList, ol.UserAccountID, ol.Limit, ol.Offset)
+
+	err := db.Get(&ol.Total, sqlTotal, ol.UserAccountID)
+	if err != nil {
+		log.Println("error getting total in profile list")
+		log.Println(err)
+		return err
+	}
+	err = db.Select(&ol.Data, sqlList, ol.UserAccountID, ol.Limit, ol.Offset)
 
 	if err != nil {
-		log.Println("error fecthing object list")
+		log.Println("error fecthing profile list")
 		log.Println(err)
 	}
 	return err
