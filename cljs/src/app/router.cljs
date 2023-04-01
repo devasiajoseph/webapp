@@ -23,6 +23,7 @@
 (defroute dashboard "/dashboard" [] (dash/render-dashboard))
 (defroute profile-new "/profile/new" [] (profile/new-profile-form))
 (defroute profile-edit "/profile/edit/:id" [id] (profile/edit-profile-form id))
+(defroute profile-list "/profile/list/:page" [page] (profile/render-profile-list page))
 (defroute "*" [] (ui/render-ui (fn [] [:h2 "404 Not Found"]) "app"))
 
 (defn hook-browser-navigation! []

@@ -22,9 +22,9 @@
     [:a {:href (:profile-link feed-post) :class "flex-shrink-0 group block"}
      [:div {:class "flex items-top"}
       [:div
-       [:img {:class "inline-block h-9 w-9 rounded-full", :src "https://pbs.twimg.com/profile_images/1308769664240160770/AfgzWVE7_normal.jpg"}]]
+       [:img {:class "inline-block h-10 w-10 rounded-full", :src "https://pbs.twimg.com/profile_images/1308769664240160770/AfgzWVE7_normal.jpg"}]]
       [:div {:class "ml-3"}
-       [:p {:class "flex items-center text-base leading-6 font-medium text-gray-800"} "Joe Biden\n                "
+       [:p {:class "flex items-center text-base leading-6 font-medium text-gray-800 mt-2"} "Joe Biden\n                "
         [:span {:class "ml-1 text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150"} "@JoeBiden . Nov 7 2022"]]]]]]
    [:div {:class "pl-5"}
     [:p {:class "text-base width-auto font-medium text-gray-800 flex-shrink"} "America, I’m honored that you have chosen me to lead our great\n            country.\n            The work ahead of us will be hard, but I promise you this: I\n            will be a"

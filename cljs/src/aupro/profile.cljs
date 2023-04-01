@@ -83,3 +83,25 @@
   (swap! profile-pic assoc :url (str "/api/profile/upload-dp/" id))
   (input/remote-select-options location/country)
   (ui/render profile-form "app"))
+
+
+
+(defn profile-table 
+  []
+  [:div {:class "overflow-x-auto w-full"}
+   [:table {:class "table w-full"}
+    [:thead [:tr [:th ""] [:th "Name"] [:th "Action"]]]
+    [:tbody [:tr 
+             [:td [:div {:class "flex items-center space-x-3"}
+                       [:div {:class "avatar"}
+                        [:div {:class "mask mask-squircle w-12 h-12"}
+                         [:img {:src "http://localhost:8081/static/uploads/images/c39b674f-72e4-4c71-b974-3f0e5bcb9376.webp", :alt "Avatar Tailwind CSS Component"}]]]]]
+             [:td "Elon musk"]
+             [:td [:button {:class "btn btn-ghost btn-xs"} "Edit"]]]]]]
+  )
+
+
+(defn render-profile-list
+  [page]
+  (ui/render profile-table "app")
+  )

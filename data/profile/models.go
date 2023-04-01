@@ -25,8 +25,9 @@ type ObjectList struct {
 }
 
 type ObjectListData struct {
-	ProfileID int    `json:"profile_id" db:"profile_id"`
-	FullName  string `json:"full_name" db:"full_name"`
+	ProfileID  int    `json:"profile_id" db:"profile_id"`
+	FullName   string `json:"full_name" db:"full_name"`
+	ProfilePic string `json:"profile_pic" db:"profile_pic"`
 }
 
 type Object struct {
@@ -215,7 +216,7 @@ func (obj *Object) AddProfilePic(imgData file.ImageData) error {
 
 func (ol *ObjectList) Fetch() error {
 	ol.Offset = cpmath.Offset(ol.Page, ol.Limit)
-	sqlList := "select profile.profile_id,profile.full_name from profile left join profile_manager " +
+	sqlList := "select profile.profile_id,profile.full_name,profile.profile_pic from profile left join profile_manager " +
 		"on profile.profile_id=profile_manager.profile_id where " +
 		"profile_manager.user_account_id=$1 limit $2 offset $3;"
 	sqlTotal := "select count(*) from profile left join profile_manager " +
