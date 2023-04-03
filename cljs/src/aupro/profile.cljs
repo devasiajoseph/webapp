@@ -6,6 +6,7 @@
              [centipair.components.input :as input]
              [centipair.components.search :as search]
              [centipair.components.notifier :as notifier]
+             [centipair.components.pagination :as p]
              [centipair.location :as location]
              [aupro.form :as form]
              [centipair.file :as file]))
@@ -86,14 +87,15 @@
   (ui/render profile-form "app"))
 
 
-(def profile-list (r/atom {}))
+(def profile-list (r/atom {:url "#/profile/list/" :limit 50}))
 (def profile-search (r/atom {}))
 
 (defn profile-table 
   []
-  [:div {:class "overflow-x-auto w-full"}
-   [:div {:class "mx-auto max-w-2xl"}
+  [:div {:class "overflow-x-auto w-full mb-10"}
+   [:div {:class "max-w-2xl"}
     (search/search-box profile-search)
+     (p/view profile-list)
     [:table {:class "table w-full"}
      [:thead [:tr [:th ""] [:th "Name"]]]
      [:tbody
@@ -103,8 +105,8 @@
                            [:div {:class "avatar"}
                             [:div {:class "mask mask-squircle w-12 h-12"}
                              [:img {:src (:profile_pic each), :alt "Avatar Tailwind CSS Component"}]]]]]
-                     [:td [:a {:href (str "#/profile/edit/" (:profile_id each)) :class "btn btn-ghost btn-xs"} (:full_name each)]]]) (:data @profile-list)))]]]
-   ])
+                     [:td [:a {:href (str "#/profile/edit/" (:profile_id each)) :class "btn btn-ghost btn-xs"} (:full_name each)]]]) (:data @profile-list)))]]
+    (p/view profile-list)]])
 
 
 
@@ -112,5 +114,5 @@
 (defn render-profile-list
   [page] 
   (ajax/get-json (str "/api/profile?page=" page) nil 
-                 (fn[response] (reset! profile-list response)))
+                 (fn[response] (reset! profile-list (merge @profile-list response))))
   (ui/render profile-table "app"))
