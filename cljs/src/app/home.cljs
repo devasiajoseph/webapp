@@ -24,7 +24,6 @@
                      (swap! search-box assoc :show-results true)))))
 
 (defn home-page [p]
-  (println p)
   [:div {:class "mx-auto content-center max-w-2xl"}
    [:div {:id "home-search-box" } 
     [:label {:for "default-search", :class "mb-2 text-sm font-medium text-gray-900 sr-only"} "Search"]
