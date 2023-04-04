@@ -103,6 +103,26 @@ func listApi(w http.ResponseWriter, r *http.Request) {
 	api.ObjectResponse(w, ol)
 }
 
+func searchApi(w http.ResponseWriter, r *http.Request) {
+	ua, err := uauth.GetAuthenticatedUser(r)
+	if err != nil {
+		log.Println(err)
+		api.ServerError(w)
+		return
+	}
+	ol := ObjectList{Page: api.QueryInt(r, "page"),
+		Limit:         50,
+		UserAccountID: ua.UserAccountID}
+	err = ol.Search(api.QueryParam(r, "q"))
+
+	if err != nil {
+		api.ServerError(w)
+		return
+	}
+
+	api.ObjectResponse(w, ol)
+}
+
 func deleteApi(w http.ResponseWriter, r *http.Request) {
 
 }
@@ -148,6 +168,7 @@ func uploadDP(w http.ResponseWriter, r *http.Request) {
 
 func AddRoutes(r *mux.Router) {
 	r.HandleFunc("/api/"+apiObj, saveApi).Methods("POST")
+	r.HandleFunc("/api/"+apiObj+"/search", searchApi).Methods("GET")
 	r.HandleFunc("/api/"+apiObj, listApi).Methods("GET")
 	r.HandleFunc("/api/"+apiObj+"/{profile_id}", getApi).Methods("GET")
 	r.HandleFunc("/api/"+apiObj+"/upload-dp/{profile_id}", uploadDP).Methods("POST")

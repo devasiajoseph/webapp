@@ -238,3 +238,31 @@ func (ol *ObjectList) Fetch() error {
 	}
 	return err
 }
+
+func (ol *ObjectList) Search(q string) error {
+	ol.Offset = cpmath.Offset(ol.Page, ol.Limit)
+	sq := "%" + q + "%"
+	sqlList := "select profile.profile_id,profile.full_name,profile.profile_pic from profile left join profile_manager " +
+		"on profile.profile_id=profile_manager.profile_id where " +
+		" profile.full_name ilike $1 and " +
+		"profile_manager.user_account_id=$2 limit $3 offset $4;"
+	sqlTotal := "select count(*) from profile left join profile_manager " +
+		"on profile.profile_id=profile_manager.profile_id where " +
+		" profile.full_name ilike $1 and " +
+		"profile_manager.user_account_id=$2;"
+	db := postgres.Db
+
+	err := db.Get(&ol.Total, sqlTotal, sq, ol.UserAccountID)
+	if err != nil {
+		log.Println("error getting total in profile list")
+		log.Println(err)
+		return err
+	}
+	err = db.Select(&ol.Data, sqlList, sq, ol.UserAccountID, ol.Limit, ol.Offset)
+
+	if err != nil {
+		log.Println("error fecthing profile list")
+		log.Println(err)
+	}
+	return err
+}

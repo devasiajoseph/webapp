@@ -4,7 +4,7 @@
 
 
 (defn search-box 
-  [field]
+  [field search-fn]
    [:div {:id "home-search-box"}
     [:label {:for "default-search", :class "mb-2 text-sm font-medium text-gray-900 sr-only"} "Search"]
     [:div {:class "relative"}
@@ -14,4 +14,4 @@
      [:input {:type "text", :id (:id @field), :placeholder (:placeholder @field) :value (:value @field)
               :on-change #(input/update-value field (-> % .-target .-value))
               :class "search-box"}]
-     [:button {:type "submit", :class "search-btn" :on-click (:on-click @field)} "Search"]]])
+     [:button {:type "submit", :class "search-btn" :on-click search-fn} "Search"]]])

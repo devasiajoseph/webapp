@@ -5,7 +5,6 @@
              [centipair.spa :as spa]
              [centipair.components.input :as input]
              [centipair.components.search :as search]
-             [centipair.components.notifier :as notifier]
              [centipair.components.pagination :as p]
              [centipair.location :as location]
              [aupro.form :as form]
@@ -88,13 +87,19 @@
 
 
 (def profile-list (r/atom {:url "#/profile/list/" :limit 50}))
+
 (def profile-search (r/atom {}))
+
+
+(defn search
+  []
+  (spa/redirect (str "#/profile/search/" (:value @profile-search) "/1")))
 
 (defn profile-table 
   []
   [:div {:class "overflow-x-auto w-full mb-10"}
    [:div {:class "max-w-2xl"}
-    (search/search-box profile-search)
+    (search/search-box profile-search search)
      (p/view profile-list)
     [:table {:class "table w-full"}
      [:thead [:tr [:th ""] [:th "Name"]]]
@@ -115,4 +120,13 @@
   [page] 
   (ajax/get-json (str "/api/profile?page=" page) nil 
                  (fn[response] (reset! profile-list (merge @profile-list response))))
+  (ui/render profile-table "app"))
+
+
+(defn render-profile-search
+  [query page]
+  (swap! profile-list assoc :url (str "#/profile/search/" query "/"))
+  (swap! profile-search assoc :value query)
+  (ajax/get-json (str "/api/profile/search?q=" query "&page=" page) nil
+                 (fn [response] (reset! profile-list (merge @profile-list response))))
   (ui/render profile-table "app"))
