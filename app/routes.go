@@ -19,7 +19,7 @@ type AppPageData struct {
 	PageSlug       string `db:"page_slug" json:"page_slug"`
 	Title          string `json:"title"`
 	PageFile       string `db:"page_file" json:"page_file"`
-	BasePageFile   string `db:"base_page_file" json:"page_file"`
+	BasePageFile   string `db:"base_page_file" json:"base_page_file"`
 	HtmlContent    template.HTML
 	Markdown       string
 	PageType       string

@@ -180,4 +180,5 @@ func AddRoutes(r *mux.Router) {
 func Start(r *mux.Router) {
 	log.Println("Starting " + apiObj + " api")
 	AddRoutes(r)
+	AddPageRoutes(r)
 }
