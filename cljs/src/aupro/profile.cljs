@@ -98,7 +98,7 @@
 (defn profile-table 
   []
   [:div {:class "overflow-x-auto w-full mb-10"}
-   [:div {:class "max-w-2xl"}
+   [:div {:class "max-w-2xl mx-auto"}
     (search/search-box profile-search search)
      (p/view profile-list)
     [:table {:class "table w-full"}
