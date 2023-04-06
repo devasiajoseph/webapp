@@ -68,6 +68,7 @@ func saveApi(w http.ResponseWriter, r *http.Request) {
 	}
 	obj.FullName = r.FormValue("full_name")
 	obj.About = r.FormValue("about")
+	obj.Description = r.FormValue("description")
 	obj.Instagram = r.FormValue("instagram")
 	obj.Linkedin = r.FormValue("linkedin")
 	obj.Facebook = r.FormValue("facebook")

@@ -405,6 +405,7 @@ create table profile (
        profile_id serial primary key,
        full_name varchar(255),
        about text,
+       description text,
        profile_pic varchar(255) not null default '/static/images/np.webp',
        image_id integer not null default 0,
        instagram varchar(255),

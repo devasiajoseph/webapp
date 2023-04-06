@@ -13,7 +13,8 @@
 
 (def profile-id (r/atom {:id "profile_id" :value 0}))
 (def full-name (r/atom {:id "full_name" :type "text" :class "cfi" :placeholder "Enter Full Name" :label "Full name"}))
-(def about (r/atom {:id "about" :type "text-area" :class "textarea textarea-bordered textarea-lg w-full max-w-xs" :placeholder "About" :label "About profile"}))
+(def about (r/atom {:id "about" :type "text-area" :class "textarea textarea-bordered textarea-lg w-full" :placeholder "About" :label "About profile"}))
+(def description (r/atom {:id "description" :type "text-area" :class "textarea textarea-bordered textarea-lg w-full" :placeholder "Description" :label "Description"}))
 (def instagram (r/atom {:id "instagram" :type "text" :class "cfi" :placeholder "Instagram link" :label "Instagram link"}))
 (def linkedin (r/atom {:id "linkedin" :type "text" :class "cfi" :placeholder "LinkedIn link" :label "LinkedIn link"}))
 (def facebook (r/atom {:id "facebook" :type "text" :class "cfi" :placeholder "Facebook link" :label "Facebook link"}))
@@ -28,6 +29,7 @@
    "/api/profile" [profile-id
                    full-name
                    about
+                   description
                    instagram
                    linkedin
                    facebook
@@ -48,7 +50,7 @@
     (file/file-input profile-pic)]
    (form/generate-form "Profile"
                        "Update profile details"
-                       [full-name about location/country instagram linkedin facebook twitter youtube tiktok]
+                       [full-name about description location/country instagram linkedin facebook twitter youtube tiktok]
                        save-profile-button
                        [])])
 
@@ -69,6 +71,7 @@
    (input/update-value-map [profile-id
                             full-name
                             about
+                            description
                             instagram
                             linkedin
                             facebook

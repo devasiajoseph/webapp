@@ -35,6 +35,7 @@ type Object struct {
 	FullName    string         `json:"full_name" db:"full_name"`
 	Designation string         `json:"designation" db:"designation"`
 	About       string         `json:"about" db:"about"`
+	Description string         `json:"description" db:"description"`
 	ProfilePic  string         `json:"profile_pic" db:"profile_pic"`
 	ImageID     int            `json:"image_id" db:"image_id"`
 	Instagram   string         `json:"instagram" db:"instagram"`
@@ -71,8 +72,8 @@ func Slugify(str string) string {
 	return str
 }
 
-var sqlCreate = "insert into profile (full_name,about,profile_pic,image_id,instagram,linkedin,facebook,twitter,youtube,tiktok,country_id,slug) " +
-	"values (:full_name,:about,:profile_pic,:image_id,:instagram,:linkedin,:facebook,:twitter,:youtube,:tiktok,:country_id,:slug) returning profile_id;"
+var sqlCreate = "insert into profile (full_name,about,description,profile_pic,image_id,instagram,linkedin,facebook,twitter,youtube,tiktok,country_id,slug) " +
+	"values (:full_name,:about,:description,:profile_pic,:image_id,:instagram,:linkedin,:facebook,:twitter,:youtube,:tiktok,:country_id,:slug) returning profile_id;"
 
 func (obj *Object) Create() error {
 	db := postgres.Db
@@ -128,7 +129,7 @@ func (obj *Object) Get() error {
 }
 
 var sqlUpdate = "update profile set " +
-	" full_name=:full_name,about=:about,instagram=:instagram,linkedin=:linkedin," +
+	" full_name=:full_name,about=:about,description=:description,instagram=:instagram,linkedin=:linkedin," +
 	"facebook=:facebook,twitter=:twitter,youtube=:youtube,tiktok=:tiktok,country_id=:country_id," +
 	"slug=:slug where profile_id=:profile_id;"
 
