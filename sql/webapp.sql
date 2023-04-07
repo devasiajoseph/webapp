@@ -404,8 +404,8 @@ insert into page (page_slug,page_file,base_page_file) values ('profile','profile
 create table profile (
        profile_id serial primary key,
        full_name varchar(255),
-       about text,
-       description text,
+       about text not null default '',
+       description text not null default '',
        profile_pic varchar(255) not null default '/static/images/np.webp',
        image_id integer not null default 0,
        instagram varchar(255),
