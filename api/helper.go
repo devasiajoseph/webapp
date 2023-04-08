@@ -278,3 +278,10 @@ func GetJson(url string, target interface{}) error {
 
 	return json.NewDecoder(r.Body).Decode(target)
 }
+
+func CleanStringForm(v string) string {
+	if v == "null" {
+		return ""
+	}
+	return v
+}
