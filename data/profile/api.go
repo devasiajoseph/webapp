@@ -14,11 +14,6 @@ import (
 var apiObj = "profile"
 
 func (obj *Object) hasAuth(w http.ResponseWriter, r *http.Request) bool {
-	obj.ProfileID = api.ObjID(r, "profile_id")
-	if obj.ProfileID == 0 {
-		return true
-	}
-
 	ua, err := uauth.GetAuthenticatedUser(r)
 	if err != nil {
 		log.Println(err)
@@ -27,6 +22,10 @@ func (obj *Object) hasAuth(w http.ResponseWriter, r *http.Request) bool {
 	}
 
 	obj.UserAccount = ua
+	obj.ProfileID = api.ObjID(r, "profile_id")
+	if obj.ProfileID == 0 {
+		return true
+	}
 
 	auth, err := obj.IsManager(ua)
 
@@ -49,6 +48,18 @@ func (obj *Object) hasAuth(w http.ResponseWriter, r *http.Request) bool {
 	return true
 }
 
+func UniqueSlugValidation(v string, id string, r *validator.ValidatorResponse) {
+	us, err := UniqueSlug(v)
+	if err != nil {
+		return
+	}
+	if us {
+		return
+	} else {
+		validator.AppendError("This slug exists", id, r)
+	}
+}
+
 func ValidateSave(r *http.Request) validator.ValidatorResponse {
 	res := validator.InitResponse()
 	validator.RequiredStringValidation(r.FormValue("full_name"), "full_name", &res)
@@ -67,6 +78,7 @@ func saveApi(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	obj.FullName = r.FormValue("full_name")
+	UniqueSlugValidation(Slugify(obj.FullName), "slug", &vRes)
 	obj.About = r.FormValue("about")
 	obj.Description = r.FormValue("description")
 	obj.Instagram = r.FormValue("instagram")
@@ -77,6 +89,7 @@ func saveApi(w http.ResponseWriter, r *http.Request) {
 	obj.Tiktok = r.FormValue("tiktok")
 	obj.CountryID = api.PostInt(r, "country_id")
 	obj.ProfileID = api.PostInt(r, "profile_id")
+
 	err := obj.Save()
 	if err != nil {
 		api.ServerError(w)

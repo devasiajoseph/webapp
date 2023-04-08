@@ -408,18 +408,19 @@ create table profile (
        description text not null default '',
        profile_pic varchar(255) not null default '/static/images/np.webp',
        image_id integer not null default 0,
-       instagram varchar(255),
-       linkedin varchar(255),
-       facebook varchar(255),
-       twitter varchar(255),
-       youtube varchar(255),
-       tiktok varchar (255),
+       instagram varchar(255) null default '',
+       linkedin varchar(255) null default '',
+       facebook varchar(255) null default '',
+       twitter varchar(255) null default '',
+       youtube varchar(255) null default '',
+       tiktok varchar (255) null default '',
        slug varchar(255) unique not null,
        country_id integer,
        CONSTRAINT profile_country_id_fkey FOREIGN KEY (country_id)
        REFERENCES country (country_id) MATCH SIMPLE 
        ON DELETE CASCADE
 );
+create index profile_slug on profile(slug);
 
 create table profile_manager (
        profile_manager_id serial primary key,

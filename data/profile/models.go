@@ -267,3 +267,15 @@ func (ol *ObjectList) Search(q string) error {
 	}
 	return err
 }
+
+func UniqueSlug(slug string) (bool, error) {
+	db := postgres.Db
+	var c int
+	err := db.Get(&c, "select count(*) from profile where slug=$1;", slug)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return true, nil
+		}
+	}
+	return false, err
+}

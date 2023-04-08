@@ -56,6 +56,7 @@
     200 (hide-notifier)
     102 (reset! notifier-state {:text (or message "Loading ...")})
     401 (reset! notifier-state {:text (or message "Access denied")})
+    500 (reset! notifier-state {:text "Server Error!"})
     (do
       (reset! notifier-state {:text message})
       (error-notifier))))

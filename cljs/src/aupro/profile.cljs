@@ -103,7 +103,7 @@
   [:div {:class "overflow-x-auto w-full mb-10"}
    [:div {:class "max-w-2xl mx-auto"}
     (search/search-box profile-search search)
-     (p/view profile-list)
+     [:div (p/view profile-list) [:a {:class "btn btn-primary" :href "#/profile/new"} "New +"]] 
     [:table {:class "table w-full"}
      [:thead [:tr [:th ""] [:th "Name"]]]
      [:tbody
