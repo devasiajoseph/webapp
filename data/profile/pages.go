@@ -74,7 +74,5 @@ func ProfilePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func AddPageRoutes(r *mux.Router) {
-	fmt.Println("adding page routes")
 	r.HandleFunc("/"+apiObj+"/{slug}", ProfilePage).Methods("GET")
-
 }
