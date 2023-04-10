@@ -7,7 +7,8 @@
             [app.home :as home]
             [aupro.user :as user]
             [aupro.feed :as feed]
-            [aupro.profile :as profile])
+            [aupro.profile :as profile]
+            [aupro.manager :as manager])
   
   (:import goog.History))
 
@@ -25,6 +26,7 @@
 (defroute profile-edit "/profile/edit/:id" [id] (profile/edit-profile-form id))
 (defroute profile-list "/profile/list/:page" [page] (profile/render-profile-list page))
 (defroute profile-search "/profile/search/:query/:page" [query page] (profile/render-profile-search query page))
+(defroute manager-list "/manager/list/:page" [page] (manager/render-manager-list page))
 (defroute "*" [] (ui/render-ui (fn [] [:h2 "404 Not Found"]) "app"))
 
 (defn hook-browser-navigation! []
