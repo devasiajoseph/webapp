@@ -1,54 +1,22 @@
-{{define "title"}}Dashboard{{end}}
+{{define "title"}}Dashboard here{{end}}
 
-
+{{define "javascript-head"}}
+ <script src="https://www.google.com/recaptcha/api.js?render={{.RecapSiteKey}}"></script>
+ <script defer src="{{.StaticUrl}}/fa/js/brands.js"></script>
+ <script defer src="{{.StaticUrl}}/fa/js/solid.js"></script>
+ <script defer src="{{.StaticUrl}}/fa/js/fontawesome.js"></script>
+{{end}}
 
 
 {{define "content"}}
-<div id="dashboard-container">
-  <div class="flex flex-col md:flex-row">
-    <div class="card bg-base-100 shadow-xl flex-1 mx-2 my-5">
-      <div class="card-body justify-center">
-        <h2 class="card-title justify-center">My profile</h2>
-        <div class="card-actions justify-center">If a dog chews shoes whose shoes does he choose?</div>
-        <div class="card-actions justify-center">
-          <button class="btn btn-primary">Buy Now</button>
-        </div>
-      </div>
-    </div>
-    <div class="card bg-base-100 shadow-xl flex-1 mx-2 my-5">
-      <div class="card-body justify-center">
-        <h2 class="card-title justify-center">My profile</h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div class="card-actions justify-center">
-          <button class="btn btn-primary">Buy Now</button>
-        </div>
-      </div>
-    </div>
-    <div class="card bg-base-100 shadow-xl flex-1 mx-2 my-5">
-      <div class="card-body justify-center">
-        <h2 class="card-title justify-center">My profile</h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div class="card-actions justify-center">
-          <button class="btn btn-primary">Buy Now</button>
-        </div>
-      </div>
-    </div>
-    <div class="card bg-base-100 shadow-xl flex-1 mx-2 my-5">
-      <div class="card-body">
-        <h2 class="card-title">My profile</h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div class="card-actions justify-end">
-          <button class="btn btn-primary">Buy Now</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
+<div id="app" class="mt-5">
+  Loading...
 </div>
+
 
 {{end}}
 
 {{define "javascript"}}
-
+ <script src="/cljs-out/centipair-main.js"></script>
 
 {{end}}

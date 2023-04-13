@@ -9,14 +9,12 @@
     <link rel="icon" type="img/ico" href="{{.StaticUrl}}/logo/favicon.ico">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{.StaticUrl}}/tailwind/dist/output.css">
-    <script src="https://www.google.com/recaptcha/api.js?render={{.RecapSiteKey}}"></script>
+    
     {{block "css".}}{{end}}
     <title> Auth Profile | {{block "title" .}}{{end}}</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script defer src="{{.StaticUrl}}/fa/js/brands.js"></script>
-    <script defer src="{{.StaticUrl}}/fa/js/solid.js"></script>
-    <script defer src="{{.StaticUrl}}/fa/js/fontawesome.js"></script>
-
+    
+    {{block "javascript-head".}}
+    {{end}}
   </head>
 
   <body class="bg-gray-100">
@@ -46,7 +44,7 @@
     </div>
     {{block "javascript".}}
     {{end}}
-    <script src="/cljs-out/centipair-main.js"></script>
+   
   </body>
 
 </html>

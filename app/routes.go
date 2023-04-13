@@ -124,9 +124,15 @@ func GetHtmlPage(w http.ResponseWriter, r *http.Request) {
 	RenderHtmlPage(w, r, apd)
 }
 
+func Dashboard(w http.ResponseWriter, r *http.Request) {
+	apd := AppPageData{BasePageFile: "base.html", PageFile: "dashboard.html"}
+	RenderHtmlPage(w, r, apd)
+}
+
 func AddRoutes(r *mux.Router) {
 	r.HandleFunc("/", home).Methods("GET")
 	r.HandleFunc("/p/{slug}", GetHtmlPage)
+	r.HandleFunc("/dashboard", Dashboard).Methods("GET")
 }
 
 func Start(r *mux.Router) {

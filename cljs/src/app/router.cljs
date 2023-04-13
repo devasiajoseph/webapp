@@ -15,13 +15,13 @@
 
 
 
-(defroute home "/" [] (home/render-home))
+(defroute home "/" [] (dash/render-dashboard))
 (defroute login "/login" [] (user/render-login))
 (defroute register "/register" [] (user/render-register))
 (defroute activate "/activate/:key" [key] (user/render-activate key))
 (defroute reset-password "/reset-password" [] (user/render-reset-password))
 (defroute post "/post/:id" [id] (feed/render-post id))
-(defroute dashboard "/dashboard" [] (dash/render-dashboard))
+;;(defroute dashboard "/dashboard" [] (dash/render-dashboard))
 (defroute profile-new "/profile/new" [] (profile/new-profile-form))
 (defroute profile-edit "/profile/edit/:id" [id] (profile/edit-profile-form id))
 (defroute profile-list "/profile/list/:page" [page] (profile/render-profile-list page))
