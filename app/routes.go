@@ -125,7 +125,7 @@ func GetHtmlPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func Dashboard(w http.ResponseWriter, r *http.Request) {
-	apd := AppPageData{BasePageFile: "base.html", PageFile: "dashboard.html"}
+	apd := AppPageData{BasePageFile: "dashboard-base.html", PageFile: "dashboard.html"}
 	RenderHtmlPage(w, r, apd)
 }
 

@@ -26,11 +26,11 @@
       <div class="flex-none" id="nav-menu">
         <ul class="menu menu-horizontal px-1">
           {{if .UAuthLoggedIn}}
-          <li><a href="/dashboard">DASHBOARD</a></li>
+          <li><a href="#/">DASHBOARD</a></li>
           <li><a href="/app/uauth-logout">LOGOUT</a></li>
           {{else}}
-          <li><a href="/dashboard#/register">REGISTER</a></li>
-          <li><a href="/dashboard#/login">LOGIN</a></li>
+          <li><a href="#/register">REGISTER</a></li>
+          <li><a href="#/login">LOGIN</a></li>
           {{end}}
         </ul>
       </div>

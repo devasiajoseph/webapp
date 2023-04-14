@@ -24,5 +24,5 @@
 
 (defn render-dashboard
   []
-  (ui/render-ui dashboard-view "app"))
+  (ui/render dashboard-view "app"))
 

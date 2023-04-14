@@ -837,7 +837,7 @@ func AddRoutes(r *mux.Router) {
 	r.HandleFunc("/app/uauth/password-reset-confirm/{key}", passwordResetConfirm).Methods("GET")
 	r.HandleFunc("/app/uauth/password-reset-start", passwordResetStart).Methods("GET")
 	r.HandleFunc("/app/uauth-login", loginPage).Methods("GET")
-	//r.HandleFunc("/app/uauth-logout", logout).Methods("GET")
+	r.HandleFunc("/app/uauth-logout", logout).Methods("GET")
 	r.HandleFunc("/app/uauth-register", registerPage).Methods("GET")
 	r.HandleFunc("/app/uauth-otp", otpActivationPage).Methods("GET")
 	r.HandleFunc("/api/uauth/otp-activate", otpActivationAPI).Methods("POST")
