@@ -463,3 +463,13 @@ create table post (
        REFERENCES profile (profile_id) MATCH SIMPLE 
        ON DELETE CASCADE
 );
+
+
+create table news (
+       news_id serial primary key,
+       title varchar(1024),
+       short_description varchar(1024),
+       content text,
+       cover_photo varchar(256),
+       thumbnail varchar(256)
+);
