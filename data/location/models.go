@@ -14,6 +14,16 @@ type Country struct {
 	CountryCode string `db:"country_code" json:"country_code"`
 }
 
+type City struct {
+	CityID         int    `db:"city_id" json:"city_id"`
+	CityName       string `db:"city_name" json:"city_name"`
+	CityType       string `db:"city_type" json:"city_type"`
+	DistrictID     int    `db:"district_id" json:"district_id"`
+	Latitude       string `db:"latitude" json:"latitude"`
+	Longitude      string `db:"longitude" json:"longitude"`
+	DistrictCentre bool   `db:"district_centre" json:"district_centre"`
+}
+
 func (c *Country) Create() error {
 	db := postgres.Db
 	_, err := db.NamedExec("insert into country (country_name,country_code) values (:country_name,:country_code)", c)

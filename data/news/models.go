@@ -2,6 +2,7 @@ package news
 
 type Object struct {
 	NewsID     int    `json:"news_id" db:"news_id"`
+	DomainID   int    `json:"domain_id" db:"domain_id"`
 	Title      string `json:"title" db:"title"`
 	MinContent string `json:"min_content" db:"min_content"`
 	Content    string `json:"content" db:"content"`
