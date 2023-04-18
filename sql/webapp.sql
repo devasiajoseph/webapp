@@ -511,7 +511,6 @@ create table post (
        ON DELETE CASCADE
 );
 
-
 create table news (
        news_id serial primary key,
        title varchar(1024),
