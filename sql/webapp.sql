@@ -447,7 +447,6 @@ insert into page (page_slug,page_file,base_page_file) values ('profile','profile
 
 
 
-
 create table profile (
        profile_id serial primary key,
        full_name varchar(255),
