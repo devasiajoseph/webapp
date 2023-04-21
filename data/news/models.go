@@ -1,5 +1,15 @@
 package news
 
+import (
+	"errors"
+	"fmt"
+	"log"
+	"strconv"
+
+	"github.com/devasiajoseph/webapp/db/postgres"
+	"github.com/devasiajoseph/webapp/libs/format"
+)
+
 type Object struct {
 	NewsID     int    `json:"news_id" db:"news_id"`
 	DomainID   int    `json:"domain_id" db:"domain_id"`
@@ -10,16 +20,53 @@ type Object struct {
 	Thumbnail  string `json:"thumbnail" db:"thumbnail"`
 }
 
-var sqlInsert = ""
-var sqlDelete = ""
-var sqlUpdate = ""
+var sqlCreate = "insert into news (domain_id,title,min_content,content) values (domain_id,title,min_content,content) returning news_id;"
+var sqlDelete = "delete from news where news_id=$1;"
+var sqlUpdate = "update news set domain_id=:domain_id,title=:title,min_content=:min_content,content=:content where news_id=:news_id;"
+var sqlSlug = "update news set slug=$1 where news_id=$2;"
+var sqlPublish = "update news set published=$1 where news_id=$2;"
+
+func (obj *Object) UpdateSlug() error {
+	if obj.NewsID == 0 {
+		return errors.New("news does not exist to add slug")
+	}
+	slug := format.Slugify(obj.Title + strconv.Itoa(obj.NewsID))
+	db := postgres.Db
+	_, err := db.Exec(sqlSlug, slug, obj.NewsID)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error updating news slug")
+	}
+	return err
+}
 
 func (obj *Object) Create() error {
-	return nil
+	db := postgres.Db
+	rows, err := db.NamedQuery(sqlCreate, obj)
+
+	if err != nil {
+		log.Println(err)
+		fmt.Println(obj)
+		log.Println("Error creating news")
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		rows.Scan(&obj.NewsID)
+	}
+	err = obj.UpdateSlug()
+
+	return err
 }
 
 func (obj *Object) Update() error {
-	return nil
+	db := postgres.Db
+	_, err := db.NamedExec(sqlUpdate, obj)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error updating news")
+	}
+	return err
 }
 
 func (obj *Object) Save() error {

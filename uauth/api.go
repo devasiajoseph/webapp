@@ -10,9 +10,9 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/devasiajoseph/webapp/api"
 	"github.com/devasiajoseph/webapp/core"
 	"github.com/devasiajoseph/webapp/crypt"
+	"github.com/devasiajoseph/webapp/libs/api"
 	"github.com/devasiajoseph/webapp/website"
 
 	"log"

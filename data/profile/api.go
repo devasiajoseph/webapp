@@ -4,8 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/devasiajoseph/webapp/api"
 	"github.com/devasiajoseph/webapp/file"
+	"github.com/devasiajoseph/webapp/libs/api"
+	"github.com/devasiajoseph/webapp/libs/format"
 	"github.com/devasiajoseph/webapp/uauth"
 	"github.com/devasiajoseph/webapp/validator"
 	"github.com/gorilla/mux"
@@ -78,7 +79,7 @@ func saveApi(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	obj.FullName = r.FormValue("full_name")
-	UniqueSlugValidation(Slugify(obj.FullName), "slug", &vRes)
+	UniqueSlugValidation(format.Slugify(obj.FullName), "slug", &vRes)
 	obj.About = r.FormValue("about")
 	obj.Description = api.CleanStringForm(r.FormValue("description"))
 	obj.Instagram = api.CleanStringForm(r.FormValue("instagram"))

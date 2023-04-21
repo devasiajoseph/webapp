@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"regexp"
-	"strings"
+
+	"github.com/devasiajoseph/webapp/libs/format"
 
 	"github.com/devasiajoseph/webapp/cpmath"
 	"github.com/devasiajoseph/webapp/db/postgres"
@@ -55,23 +55,6 @@ type ProfileManager struct {
 	ProfileID        int `json:"profile_id" db:"profile_id"`
 }
 
-func Slugify(str string) string {
-	// Convert to lowercase
-	str = strings.ToLower(str)
-
-	// Remove all non-word characters and replace with "-"
-	reg, err := regexp.Compile(`[\W]+`)
-	if err != nil {
-		panic(err)
-	}
-	str = reg.ReplaceAllString(str, "-")
-
-	// Remove any leading or trailing "-"
-	str = strings.Trim(str, "-")
-
-	return str
-}
-
 var sqlCreate = "insert into profile (full_name,about,description,profile_pic,image_id,instagram,linkedin,facebook,twitter,youtube,tiktok,country_id,slug) " +
 	"values (:full_name,:about,:description,:profile_pic,:image_id,:instagram,:linkedin,:facebook,:twitter,:youtube,:tiktok,:country_id,:slug) returning profile_id;"
 
@@ -93,8 +76,23 @@ func (obj *Object) Create() error {
 	return err
 }
 
+var sqlUpdate = "update profile set " +
+	" full_name=:full_name,about=:about,description=:description,instagram=:instagram,linkedin=:linkedin," +
+	"facebook=:facebook,twitter=:twitter,youtube=:youtube,tiktok=:tiktok,country_id=:country_id," +
+	"slug=:slug where profile_id=:profile_id;"
+
+func (obj *Object) Update() error {
+	db := postgres.Db
+	_, err := db.NamedExec(sqlUpdate, obj)
+	if err != nil {
+		log.Println(err)
+		log.Println("Error updating profile")
+	}
+	return err
+}
+
 func (obj *Object) Save() error {
-	obj.Slug = Slugify(obj.FullName)
+	obj.Slug = format.Slugify(obj.FullName)
 	if obj.ProfileID == 0 {
 		dp := file.GetBlankImage()
 		obj.ImageID = dp.ImageID
@@ -107,6 +105,7 @@ func (obj *Object) Save() error {
 		if err != nil {
 			return err
 		}
+		return nil
 	}
 
 	return obj.Update()
@@ -125,21 +124,6 @@ func (obj *Object) Get() error {
 		log.Println("Error getting profile")
 	}
 
-	return err
-}
-
-var sqlUpdate = "update profile set " +
-	" full_name=:full_name,about=:about,description=:description,instagram=:instagram,linkedin=:linkedin," +
-	"facebook=:facebook,twitter=:twitter,youtube=:youtube,tiktok=:tiktok,country_id=:country_id," +
-	"slug=:slug where profile_id=:profile_id;"
-
-func (obj *Object) Update() error {
-	db := postgres.Db
-	_, err := db.NamedExec(sqlUpdate, obj)
-	if err != nil {
-		log.Println(err)
-		log.Println("Error updating profile")
-	}
 	return err
 }
 

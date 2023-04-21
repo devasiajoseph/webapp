@@ -518,8 +518,14 @@ create table news (
        cover_photo varchar(256),
        thumbnail varchar(256),
        city_id integer,
+       slug varchar(255),
+       published bool not null default false,
        CONSTRAINT news_city_id_fkey FOREIGN KEY (city_id)
        REFERENCES city (city_id) MATCH SIMPLE 
        ON DELETE CASCADE    
 
+);
+
+create table news_editor(
+       news_editor_id serial primary key,
 );

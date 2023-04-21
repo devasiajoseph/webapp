@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/devasiajoseph/webapp/api"
 	"github.com/devasiajoseph/webapp/core"
+	"github.com/devasiajoseph/webapp/libs/api"
 	"github.com/devasiajoseph/webapp/website"
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"

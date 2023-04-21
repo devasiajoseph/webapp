@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/devasiajoseph/webapp/api"
+	"github.com/devasiajoseph/webapp/libs/api"
 	"github.com/gorilla/mux"
 )
 
