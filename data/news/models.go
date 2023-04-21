@@ -35,7 +35,7 @@ func (obj *Object) UpdateSlug() error {
 	_, err := db.Exec(sqlSlug, slug, obj.NewsID)
 	if err != nil {
 		log.Println(err)
-		log.Println("Error updating news slug")
+		log.Println("error updating news slug")
 	}
 	return err
 }
@@ -47,16 +47,16 @@ func (obj *Object) Create() error {
 	if err != nil {
 		log.Println(err)
 		fmt.Println(obj)
-		log.Println("Error creating news")
+		log.Println("error creating news")
+		return err
 	}
 	defer rows.Close()
 
 	if rows.Next() {
 		rows.Scan(&obj.NewsID)
 	}
-	err = obj.UpdateSlug()
 
-	return err
+	return obj.UpdateSlug()
 }
 
 func (obj *Object) Update() error {
@@ -64,13 +64,17 @@ func (obj *Object) Update() error {
 	_, err := db.NamedExec(sqlUpdate, obj)
 	if err != nil {
 		log.Println(err)
-		log.Println("Error updating news")
+		log.Println("error updating news")
 	}
 	return err
 }
 
 func (obj *Object) Save() error {
-	return nil
+	if obj.NewsID == 0 {
+		return obj.Create()
+	}
+
+	return obj.Update()
 }
 
 func (obj *Object) Delete() error {

@@ -10,6 +10,7 @@ import (
 	"github.com/devasiajoseph/webapp/data/location"
 	"github.com/devasiajoseph/webapp/data/profile"
 	"github.com/devasiajoseph/webapp/db/postgres"
+	"github.com/devasiajoseph/webapp/libs/format"
 	"github.com/devasiajoseph/webapp/uauth"
 )
 
@@ -62,7 +63,7 @@ func main() {
 			FullName:  cleanName(each[0]),
 			About:     each[2] + "," + each[3],
 			CountryID: c.CountryID,
-			Slug:      profile.Slugify(each[0])}
+			Slug:      format.Slugify(each[0])}
 
 		err = pro.Create()
 		if err != nil {
