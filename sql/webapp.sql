@@ -528,4 +528,27 @@ create table news (
 
 create table news_editor(
        news_editor_id serial primary key,
+       company_id integer
+);
+
+
+
+CREATE TABLE customers (
+    id serial primary key,
+    full_name VARCHAR(255),
+    phone VARCHAR(20),
+    email VARCHAR(255),
+    building varchar(255),
+    address varchar(1024),
+    city VARCHAR(255),
+    postal_code varchar(10),
+    company_id integer
+);
+
+
+CREATE TABLE sales (
+    id INT PRIMARY KEY,
+    customer_id INT,
+    item_id integer,
+    
 );

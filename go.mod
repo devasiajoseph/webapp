@@ -4,9 +4,11 @@ go 1.20
 
 require (
 	github.com/NYTimes/gziphandler v1.1.1
+	github.com/boombuler/barcode v1.0.1
 	github.com/btcsuite/btcd v0.23.4
 	github.com/btcsuite/btcd/btcec/v2 v2.3.2
 	github.com/btcsuite/btcd/btcutil v1.1.3
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/csrf v1.7.1
 	github.com/gorilla/mux v1.8.0
@@ -17,6 +19,7 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/spf13/viper v1.15.0
 	golang.org/x/crypto v0.6.0
+	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d
 )
 
 require (
